@@ -7,11 +7,11 @@ import * as user from './utils/userUtils'
 function App() {
 
   // Handle login/register submission
-  const handleSubmit = (formData, type) => {
+  const handleSubmit = (formData, submissionType) => {
     const username = formData.get("username"), password = formData.get("password")
 
-    type == user.OPTIONS.LOGIN      && user.login(username, password)
-    type == user.OPTIONS.REGISTER   && user.register(username, password)
+    submissionType == user.OPTIONS.LOGIN      && user.login(username, password)
+    submissionType == user.OPTIONS.REGISTER   && user.register(username, password)
 
     if (type != user.OPTIONS.LOGIN && type != user.OPTIONS.REGISTER) {
       console.error("Invalid type for handleSubmit")
