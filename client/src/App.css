@@ -4,13 +4,3 @@
   padding: 2rem;
   text-align: center;
 }
-
-.landingModal {
-  display: flex;
-  flex-flow: column wrap;
-  gap: 30px;
-
-  padding: 30px;
-  border: 1px solid black;
-  border-radius: 3px;
-}

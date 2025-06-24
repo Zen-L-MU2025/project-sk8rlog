@@ -1,5 +1,9 @@
 import { useState } from 'react'
 import { Routes, Route, BrowserRouter, Link } from "react-router"
+
+import LoginModal from './auth/LoginModal'
+import RegisterModal from './auth/RegisterModal'
+
 import './App.css'
 
 import * as user from './utils/userUtils'
@@ -26,25 +30,9 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        <Route path='/' element={
-          <form className='landingModal' action={(formData) => handleSubmit(formData, "login")}>
-            <h1>Welcome back!</h1>
-            <input type='text' name='username' placeholder='Username' required />
-            <input type='text' name='password' placeholder='Password' required />
-            <button type='submit'>Log In</button>
-            <Link to='/register'> I want to create a new account </Link>
-          </form>
-        } />
+        <Route path='/' element={<LoginModal handleSubmit={handleSubmit} />} />
 
-        <Route path='/register' element={
-          <form className='landingModal' action={(formData) => handleSubmit(formData, "register")}>
-            <h1>Let's get started</h1>
-            <input type='text' name='username' placeholder='New Username' required />
-            <input type='text' name='password' placeholder='New Password' required />
-            <button type='submit'>Register</button>
-            <Link to='/'> I already have an account </Link>
-          </form>
-        } />
+        <Route path='/register' element={<RegisterModal handleSubmit={handleSubmit} />} />
 
         <Route path='*' element={ <>
           <p>Bailed! (404 Not Found)</p>
