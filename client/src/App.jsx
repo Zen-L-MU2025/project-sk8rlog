@@ -2,8 +2,21 @@ import { useState } from 'react'
 import { Routes, Route, BrowserRouter, Link } from "react-router"
 import './App.css'
 
+import * as user from './utils/userUtils'
+
 function App() {
 
+  // Handle login/register submission
+  const handleSubmit = (formData, type) => {
+    const username = formData.get("username"), password = formData.get("password")
+
+    type == user.OPTIONS.LOGIN      && user.login(username, password)
+    type == user.OPTIONS.REGISTER   && user.register(username, password)
+
+    if (type != user.OPTIONS.LOGIN && type != user.OPTIONS.REGISTER) {
+      console.error("Invalid type for handleSubmit")
+    }
+  }
   return (<>
 
     <header>
@@ -14,9 +27,9 @@ function App() {
       <Routes>
 
         <Route path='/' element={
-          <form className='landingModal'>
+          <form className='landingModal' action={(formData) => handleSubmit(formData, "login")}>
             <h1>Welcome back!</h1>
-            <input type='text' name='identifier' placeholder='Username or (not) Email' required />
+            <input type='text' name='username' placeholder='Username' required />
             <input type='text' name='password' placeholder='Password' required />
             <button type='submit'>Log In</button>
             <Link to='/register'> I want to create a new account </Link>
@@ -24,11 +37,10 @@ function App() {
         } />
 
         <Route path='/register' element={
-          <form className='landingModal'>
+          <form className='landingModal' action={(formData) => handleSubmit(formData, "register")}>
             <h1>Let's get started</h1>
-            <input type='text' name='identifier' placeholder='Email (inactive)' readonly='true' />
-            <input type='text' name='identifier' placeholder='Username' required />
-            <input type='text' name='password' placeholder='Password' required />
+            <input type='text' name='username' placeholder='New Username' required />
+            <input type='text' name='password' placeholder='New Password' required />
             <button type='submit'>Register</button>
             <Link to='/'> I already have an account </Link>
           </form>

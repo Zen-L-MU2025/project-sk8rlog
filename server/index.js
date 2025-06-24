@@ -1,9 +1,8 @@
-const { PrismaClient } = require('./generated/prisma');
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 
-const prisma = new PrismaClient();
+const usersRouter = require('./routes/users');
 
 const sessionConfig = {
     name: 'sessionId',
@@ -19,10 +18,11 @@ const sessionConfig = {
 
 const app = express();
 
-
 app.use(express.json());
 app.use(session(sessionConfig));
 app.use(cors());
+
+app.use(usersRouter);
 
 const PORT = 3000;
 
