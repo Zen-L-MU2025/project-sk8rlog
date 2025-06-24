@@ -13,7 +13,7 @@ function App() {
     submissionType == user.OPTIONS.LOGIN      && user.login(username, password)
     submissionType == user.OPTIONS.REGISTER   && user.register(username, password)
 
-    if (type != user.OPTIONS.LOGIN && type != user.OPTIONS.REGISTER) {
+    if (submissionType != user.OPTIONS.LOGIN && submissionType != user.OPTIONS.REGISTER) {
       console.error("Invalid type for handleSubmit")
     }
   }

@@ -9,11 +9,12 @@ export const OPTIONS = {
 }
 
 export const login = (username, password) => {
-    console.log(username, password)
+    console.log("Login:", username, password)
     // stuff will happen here
 }
 
 export const register = (username, password) => {
-    axios.post(`${baseUrl}/register`, {username, password})
+    console.log("Register:", username, password)
+    //axios.post(`${baseUrl}/register`, {username, password})
     // stuff will happen here
 }
