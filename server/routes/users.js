@@ -11,7 +11,7 @@ router.use('/register', async (req, res) => {
         const user = await prisma.user.findUnique({ where: { username } })
 
         if (user) {
-            return res.status(403).json({ message: 'Username taken!', isSuccessful: false })
+            return res.status(401).json({ message: 'Username taken!', isSuccessful: false })
         }
 
         const password = await bcrypt.hash(plaintextPassword, 11)
@@ -35,7 +35,7 @@ router.use('/login', async (req, res) => {
         let passwordMatch = false
         user && (passwordMatch = await bcrypt.compare(plaintextPassword, user.password))
         if (!user || !passwordMatch) {
-            return res.status(403).json({ message: 'Invalid username or password', isSuccessful: false })
+            return res.status(401).json({ message: 'Invalid username or password', isSuccessful: false })
         }
 
         return res.status(200).json({ user, isSuccessful: true })
