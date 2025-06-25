@@ -7,16 +7,17 @@ import '../css/landingModal.css';
 
 const LoginModal = () => {
     const navigate = useNavigate();
-    const [isSuccessful, setIsSuccessful] = useState(false);
+    const [isSuccessful, setIsSuccessful] = useState(null);
 
     return (
         <form className='landingModal' action={(formData) => user.handleLoginRegister(formData, "login", setIsSuccessful)}>
             <h1>Welcome back!</h1>
             <input type='text' name='username' placeholder='Username' required />
             <input type='password' name='password' placeholder='Password' required />
-            <button type='submit'>Log In</button>
+            <button type='submit' onSubmit={(event) => event.preventDefault()}>Log In</button>
             <Link to='/register'> I want to create a new account </Link>
             {isSuccessful && navigate('/home')}
+            {isSuccessful === false && <p>Invalid username or password</p>}
         </form>
     )
 }

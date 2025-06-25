@@ -7,7 +7,7 @@ import '../css/landingModal.css';
 
 const RegisterModal = () => {
     const navigate = useNavigate();
-    const [isSuccessful, setIsSuccessful] = useState(false);
+    const [isSuccessful, setIsSuccessful] = useState(null);
 
     return (
         <form className='landingModal' action={(formData) => user.handleLoginRegister(formData, "register", setIsSuccessful)}>
@@ -17,6 +17,7 @@ const RegisterModal = () => {
             <button type='submit'>Register</button>
             <Link to='/'> I already have an account </Link>
             {isSuccessful && navigate('/home')}
+            {isSuccessful === false && <p>Something went wrong</p>}
         </form>
     )
 }
