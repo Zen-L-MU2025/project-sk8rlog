@@ -24,15 +24,23 @@ export const handleLoginRegister = (formData, submissionType, setIsSuccessful) =
 export const login = (username, password, setIsSuccessful) => {
     axios.post(`${baseUrl}/users/login`, {username, password})
         .then(res => {
-            console.log(res.data)
+            console.log("Login successful!")
             setIsSuccessful(res.data.isSuccessful)
+        })
+        .catch(err => {
+            console.log("Login failed!")
+            setIsSuccessful(false)
         })
 }
 
 export const register = (username, password, setIsSuccessful) => {
     axios.post(`${baseUrl}/users/register`, {username, password})
         .then(res => {
-            console.log(res.data)
+            console.log("Registration successful!")
             setIsSuccessful(res.data.isSuccessful)
+        })
+        .catch(err => {
+            console.log("Registration failed!")
+            setIsSuccessful(false)
         })
 }

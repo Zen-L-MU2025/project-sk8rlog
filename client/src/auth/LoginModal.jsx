@@ -24,7 +24,7 @@ const LoginModal = () => {
             <input type='password' name='password' placeholder='Password' required />
             <button type='submit' onSubmit={(event) => event.preventDefault()}>Log In</button>
             <Link to='/register'> I want to create a new account </Link>
-            {isSuccessful === false && <p>Invalid username or password</p>}
+            {isSuccessful === false && <p color='red'>Invalid username or password</p>}
         </form>
     )
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router';
 
 import * as user from '../utils/userUtils'
@@ -25,7 +25,7 @@ const RegisterModal = () => {
             <input type='password' name='password' placeholder='New Password' required />
             <button type='submit'>Register</button>
             <Link to='/'> I already have an account </Link>
-            {isSuccessful === false && <p>Something went wrong</p>}
+            {isSuccessful === false && <p color='red'>Something went wrong</p>}
         </form>
     )
 }
