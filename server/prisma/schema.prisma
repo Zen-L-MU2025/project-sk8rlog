@@ -16,14 +16,13 @@ datasource db {
 
 model User {
   userID            String  @id @default(cuid())
-  email             String  @unique
   name              String?
   username          String @unique
   password          String
   joinDate          DateTime @default(now())
-  location          String
-  bio               String
-  profilePicUrl     String
+  location          String?
+  bio               String?
+  profilePicUrl     String?
   following         String[] @default([])
   favorites         String[] @default([])
   likedPosts        String[] @default([])

@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(session(sessionConfig));
 app.use(cors());
 
-app.use(usersRouter);
+app.use('/users', usersRouter);
 
 const PORT = 3000;
 
