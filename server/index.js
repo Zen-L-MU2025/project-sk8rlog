@@ -1,8 +1,8 @@
-const express = require('express');
-const session = require('express-session');
-const cors = require('cors');
+const express = require('express')
+const session = require('express-session')
+const cors = require('cors')
 
-const usersRouter = require('./routes/users');
+const usersRouter = require('./routes/users')
 
 const sessionConfig = {
     name: 'sessionId',
@@ -16,16 +16,16 @@ const sessionConfig = {
     saveUninitialized: false,
 }
 
-const app = express();
+const app = express()
 
-app.use(express.json());
-app.use(session(sessionConfig));
-app.use(cors());
+app.use(express.json())
+app.use(session(sessionConfig))
+app.use(cors())
 
-app.use('/users', usersRouter);
+app.use('/users', usersRouter)
 
-const PORT = 3000;
+const PORT = 3000
 
 app.listen(PORT, () => {
-    console.log(`Server listening on port http://localhost:${PORT}`);
+    console.log(`Server listening on port http://localhost:${PORT}`)
 })
