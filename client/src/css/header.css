@@ -1,0 +1,39 @@
+.mainHeader {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 5%;
+    align-items: center;
+}
+
+.logo {
+    width: 50px;
+    height: 50px
+}
+.logo:hover {
+    cursor: pointer;
+}
+
+.toProfile {
+    width: 130px;
+    height: 50px;
+}
+
+.profilePic {
+    width: 50px;
+    height: 50px;
+
+    border: 1px solid white;
+    border-radius: 50%;
+}
+.profilePic:hover {
+    cursor: pointer;
+}
+
+.iconOverlay {
+    position: fixed;
+    translate: 230% 150%;
+    z-index: 999;
+    display: flex;
+    flex-direction: column wrap;
+}

@@ -1,17 +1,37 @@
-import { Link } from 'react-router';
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router'
 
-import '../css/landingModal.css';
+import * as user from '/src/utils/userUtils'
 
-const RegisterModal = ({handleSubmit}) => {
-    return (
-        <form className='landingModal' action={(formData) => handleSubmit(formData, "register")}>
+import '/src/css/landingModal.css'
+
+const RegisterModal = () => {
+    const navigate = useNavigate()
+    const [isSuccessful, setIsSuccessful] = useState(null)
+
+    useEffect(() => {
+        isSuccessful && navigate('/home')
+    }, [isSuccessful])
+
+
+    const handleForm = async (formData) => {
+        user.handleLoginRegister(formData, "register", setIsSuccessful)
+    }
+
+    return (<>
+        <header>
+        <h1>Sk8rlog</h1>
+        </header>
+
+        <form className='landingModal' action={handleForm}>
             <h1>Let's get started</h1>
             <input type='text' name='username' placeholder='New Username' required />
-            <input type='text' name='password' placeholder='New Password' required />
+            <input type='password' name='password' placeholder='New Password' required />
             <button type='submit'>Register</button>
             <Link to='/'> I already have an account </Link>
+            {isSuccessful === false && <p color='red'>Something went wrong</p>}
         </form>
-    )
+    </>)
 }
 
-export default RegisterModal;
+export default RegisterModal

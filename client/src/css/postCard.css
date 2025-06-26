@@ -1,0 +1,11 @@
+.clipsPostCard {
+    width: 200px;
+    min-height: 300px;
+    border: 1px solid white;
+}
+
+.blogsPostCard {
+    width: 200px;
+    height: 100px;
+    border: 1px solid white;
+}

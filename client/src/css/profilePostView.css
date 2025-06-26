@@ -1,0 +1,8 @@
+.profilePostsView {
+    padding-top: 20px;
+    height: 30vh;
+    display: flex;
+    flex-flow: row wrap;
+    gap: 20px;
+    overflow: scroll;
+}
