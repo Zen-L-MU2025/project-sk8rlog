@@ -64,6 +64,7 @@ export const verifyAccess = (setHasAccess) => {
 
     if (!token) {
         setHasAccess(false)
+        return
     }
 
     axios.get(`${baseUrl}/auth/verify`, {headers : { 'Authorization' : `Bearer ${token}` }})
