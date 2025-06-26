@@ -4,3 +4,11 @@
   padding: 2rem;
   text-align: center;
 }
+
+footer {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  border-top: 1px solid white;
+}

@@ -1,0 +1,18 @@
+.newsCard,
+.blogCard {
+    width: 200px;
+    height: 70px;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    border: 1px solid white;
+}
+
+.clipCard {
+    width: 200px;
+    min-height: 300px;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    border: 1px solid white;
+}

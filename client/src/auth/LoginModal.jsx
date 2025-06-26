@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router'
 
 import * as user from '../utils/userUtils'
 
-import '../css/landingModal.css';
+import '../css/landingModal.css'
 
 const LoginModal = () => {
-    const navigate = useNavigate();
-    const [isSuccessful, setIsSuccessful] = useState(null);
+    const navigate = useNavigate()
+    const [isSuccessful, setIsSuccessful] = useState(null)
 
     useEffect(() => {
         isSuccessful && navigate('/home')
@@ -17,7 +17,11 @@ const LoginModal = () => {
         user.handleLoginRegister(formData, "login", setIsSuccessful)
     }
 
-    return (
+    return (<>
+        <header>
+        <h1>Sk8rlog</h1>
+        </header>
+
         <form className='landingModal' action={handleForm}>
             <h1>Welcome back!</h1>
             <input type='text' name='username' placeholder='Username' required />
@@ -26,7 +30,7 @@ const LoginModal = () => {
             <Link to='/register'> I want to create a new account </Link>
             {isSuccessful === false && <p color='red'>Invalid username or password</p>}
         </form>
-    )
+    </>)
 }
 
-export default LoginModal;
+export default LoginModal
