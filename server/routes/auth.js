@@ -15,9 +15,8 @@ router.use('/verify', async (req, res) => {
             if (error) {
                 return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: error.message, isSuccessful: false })
             }
-            else {
-                return res.status(STATUS_CODES.OK).json({ message: 'Token verified successfully', isSuccessful: true })
-            }
+
+            return res.status(STATUS_CODES.OK).json({ message: 'Token verified successfully', isSuccessful: true })
         })
 
     } catch (error) {
