@@ -1,11 +1,10 @@
 
+import { CLIPS, BLOGS } from '/src/utils/constants'
 import skateboard from '/src/assets/skateboard.png'
 
-import '/src/css/profileHead.css'
+import '/src/css/profile.css'
 
 const ProfileHead = ({ toggleContentView }) => {
-    const CLIPS = "clips"
-    const BLOGS = "blogs"
 
     return (
         <section className="profileHead">

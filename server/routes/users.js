@@ -2,12 +2,15 @@ const { PrismaClient } = require('../generated/prisma');
 const bcrypt = require('bcryptjs')
 const router = require('express').Router()
 
+const webtoken = require('jsonwebtoken')
+const TOKEN_SECRET = process.env.TOKEN_SECRET
+
 const STATUS_CODES = require('../statusCodes')
 
 const prisma = new PrismaClient()
 
 // POST /users/register
-// Takes desired username and password and creates a new user, returns the new user object and confirmation boolean
+// Takes desired username and password and creates a new user, returns the new user object, confirmation boolean, and a token
 router.use('/register', async (req, res) => {
     const { username, password: plaintextPassword } = req.body
 
@@ -24,7 +27,11 @@ router.use('/register', async (req, res) => {
                 username, password
             }
         })
-        return res.status(STATUS_CODES.CREATED).json({ newUser, isSuccessful: true })
+
+        const tokenPayload = { userID: newUser.userID, username: newUser.username}
+        const token = webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
+
+        return res.status(STATUS_CODES.CREATED).json({ newUser, isSuccessful: true, token })
 
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
@@ -32,7 +39,7 @@ router.use('/register', async (req, res) => {
 })
 
 // POST /users/login
-// Takes username and password and returns the user object and confirmation boolean
+// Takes username and password and returns the user object, confirmation boolean, and a token
 router.use('/login', async (req, res) => {
     const { username, password: plaintextPassword } = req.body
 
@@ -44,7 +51,10 @@ router.use('/login', async (req, res) => {
             return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: 'Invalid username or password', isSuccessful: false })
         }
 
-        return res.status(parseInt(STATUS_CODES.OK)).json({ user, isSuccessful: true })
+        const tokenPayload = { userID: user.userID, username: user.username}
+        const token = webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
+
+        return res.status(STATUS_CODES.OK).json({ user, isSuccessful: true, token })
 
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })

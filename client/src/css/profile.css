@@ -1,0 +1,44 @@
+.profileContent {
+    width: 100vw;
+}
+
+.profileHead {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    border-bottom: 1px solid white;
+}
+
+.profilePicture {
+    width: 150px;
+    height: 150px;
+
+    border: 1px solid white;
+    border-radius: 50%;
+}
+
+.contentButtons {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 50px;
+}
+
+.contentButton {
+    padding: 3px;
+    transition: 0.5s ease-in-out;
+}
+.contentButton:hover {
+    cursor: pointer;
+    border: 1px solid white;
+    border-radius: 3px;
+}
+
+.profilePostsView {
+    padding-top: 20px;
+    height: 30vh;
+    display: flex;
+    flex-flow: row wrap;
+    gap: 20px;
+    overflow: scroll;
+}
