@@ -28,32 +28,15 @@ const Profile = () => {
 
     const HEADER_TEXT = `User's Profile`
 
-    const [isViewingClips, setIsViewingClips] = useState(true)
-    const [isViewingBlogs, setIsViewingBlogs] = useState(false)
-    const toggleContentView = (option) => {
-        switch (option) {
-            case CLIPS:
-                setIsViewingClips(true)
-                setIsViewingBlogs(false)
-                break
-
-            case BLOGS:
-                setIsViewingClips(false)
-                setIsViewingBlogs(true)
-                break
-
-            default:
-                console.error("Invalid option for toggleContentView")
-        }
-    }
+    const [profileContentView, setProfileContentView] = useState(CLIPS)
 
     return (<>
         <Header HEADER_TEXT={HEADER_TEXT} />
         <section className='pageMain'>
             <Sidebar />
             <div className='profileContent'>
-                <ProfileHead toggleContentView={toggleContentView}/>
-                <ProfilePostsView isViewingClips={isViewingClips} isViewingBlogs={isViewingBlogs} />
+                <ProfileHead setProfileContentView={setProfileContentView}/>
+                <ProfilePostsView profileContentView={profileContentView} />
             </div>
 
         </section>
