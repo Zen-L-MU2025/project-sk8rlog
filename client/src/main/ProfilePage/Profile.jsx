@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router'
 
 import Header from '/src/main/Header'
 import Sidebar from '/src/main/Sidebar'
@@ -6,39 +7,36 @@ import ProfileHead from './ProfileHead'
 import ProfilePostsView from './ProfilePostsView'
 import Footer from '/src/main/Footer'
 
+import { CLIPS, BLOGS } from '/src/utils/constants'
+import * as user from '/src/utils/userUtils'
+
 import '/src/css/hasSidebar.css'
+import '/src/css/profile.css'
 
 const Profile = () => {
-    const headerText = `User's Profile`
-    const CLIPS = "clips"
-    const BLOGS = "blogs"
+    const navigate = useNavigate()
 
-    const [isViewingClips, setIsViewingClips] = useState(true)
-    const [isViewingBlogs, setIsViewingBlogs] = useState(false)
-    const toggleContentView = (option) => {
-        switch (option) {
-            case CLIPS:
-                setIsViewingClips(true)
-                setIsViewingBlogs(false)
-                break
+    const [hasAccess, setHasAccess] = useState(null)
 
-            case BLOGS:
-                setIsViewingClips(false)
-                setIsViewingBlogs(true)
-                break
+    useEffect( () => {
+        user.verifyAccess(setHasAccess)
+    }, [])
 
-            default:
-                console.error("Invalid option for toggleContentView")
-        }
-    }
+    useEffect( () => {
+        hasAccess === false && navigate('/unauthorized')
+    }, [hasAccess])
+
+    const HEADER_TEXT = `User's Profile`
+
+    const [profileContentView, setProfileContentView] = useState(CLIPS)
 
     return (<>
-        <Header headerText={headerText} />
+        <Header HEADER_TEXT={HEADER_TEXT} />
         <section className='pageMain'>
             <Sidebar />
             <div className='profileContent'>
-                <ProfileHead toggleContentView={toggleContentView}/>
-                <ProfilePostsView isViewingClips={isViewingClips} isViewingBlogs={isViewingBlogs} />
+                <ProfileHead setProfileContentView={setProfileContentView}/>
+                <ProfilePostsView profileContentView={profileContentView} />
             </div>
 
         </section>
