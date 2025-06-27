@@ -1,7 +1,3 @@
-.profileContent {
-    width: 100vw;
-}
-
 .profileHead {
     display: flex;
     flex-flow: column;
@@ -21,10 +17,11 @@
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
-    gap: 50px;
+    gap: 20px;
 }
 
 .contentButton {
+    margin-bottom: 10px;
     padding: 3px;
     transition: 0.5s ease-in-out;
 }
@@ -35,10 +32,12 @@
 }
 
 .profilePostsView {
-    padding-top: 20px;
+    padding: 10px 0 60px 0;
     height: 30vh;
     display: flex;
     flex-flow: row wrap;
+    justify-content: center;
     gap: 20px;
     overflow: scroll;
+    border-bottom: 1px solid white;
 }

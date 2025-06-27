@@ -31,12 +31,14 @@ const Home = () => {
         <Header HEADER_TEXT={HEADER_TEXT} />
 
         <h2 className='subHeading'>Today in Sk8rlog</h2>
+        <p className='scrollNote'><em>Scroll down to see Blogs!</em></p>
 
         <section className='columns'>
-            <Home_News />
             <Home_Clips />
             <Home_Blogs />
         </section>
+
+        <p className='scrollNote' id='footerNote'><em>Scroll up to see Clips!</em></p>
 
         <Footer />
 

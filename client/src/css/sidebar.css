@@ -1,12 +1,27 @@
-.sidebar {
+@media screen and (min-width: 750px) {
+    .sidebar {
+        display: flex;
+        flex-flow: column wrap;
+        justify-content: center;
 
-    display: flex;
-    flex-flow: column wrap;
-    justify-content: center;
+        gap: 60px;
 
-    gap: 60px;
+        padding-right: 30px;
+        margin-right: 20px;
+        border-right: 1px solid white;
+    }
+}
 
-    padding-right: 30px;
-    margin-right: 20px;
-    border-right: 1px solid white;
+@media screen and (max-width: 749px) {
+    .sidebar {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+
+        gap: 30px;
+
+        padding-bottom: 20px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid white;
+    }
 }
