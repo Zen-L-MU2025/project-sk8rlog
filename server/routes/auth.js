@@ -8,6 +8,7 @@ const STATUS_CODES = require('../statusCodes')
 router.use('/verify', async (req, res) => {
     try {
         // Extract the JWT token from the request header
+        // TODO Find better way to accomplish this
         const token = req.headers.authorization.split(' ')[1]
 
         // Verify the token
