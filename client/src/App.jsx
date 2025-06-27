@@ -4,6 +4,9 @@ import LoginModal from './auth/LoginModal'
 import RegisterModal from './auth/RegisterModal'
 import Home from './main/HomePage/Home'
 import Profile from './main//ProfilePage/Profile'
+import Posts from './main/Posts'
+
+import { CLIPS, BLOGS } from '/src/utils/constants'
 
 import './App.css'
 
@@ -21,6 +24,10 @@ function App() {
         <Route path='/home' element={<Home />} />
 
         <Route path='/profile' element={<Profile />} />
+
+        <Route path='/clips' element={<Posts postType={CLIPS} />} />
+
+        <Route path='/blogs' element={<Posts postType={BLOGS} />} />
 
         <Route path='/unauthorized' element={<>
           <p>Snaked! <em>(401 Unauthorized)</em></p>

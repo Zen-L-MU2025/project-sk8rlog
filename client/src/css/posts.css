@@ -1,0 +1,13 @@
+.postsHeader {
+    margin: 0 0 20px 0;
+}
+.posts {
+    padding: 10px 0 60px 0;
+    height: 55vh;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 20px;
+    overflow: scroll;
+    border-bottom: 1px solid #3b0747;
+}

@@ -7,7 +7,7 @@ import ProfileHead from './ProfileHead'
 import ProfilePostsView from './ProfilePostsView'
 import Footer from '/src/main/Footer'
 
-import { CLIPS, BLOGS } from '/src/utils/constants'
+import { CLIPS } from '/src/utils/constants'
 import * as user from '/src/utils/userUtils'
 
 import '/src/css/hasSidebar.css'
