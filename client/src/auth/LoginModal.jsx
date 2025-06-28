@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 
-import * as user from '../utils/userUtils'
+import * as user from '/src/utils/userUtils'
 
-import '../css/landingModal.css'
+import '/src/css/landingModal.css'
 
 const LoginModal = () => {
     const navigate = useNavigate()
@@ -14,7 +14,7 @@ const LoginModal = () => {
     }, [isSuccessful])
 
     const handleForm = async (formData) => {
-        user.handleLoginRegister(formData, "login", setIsSuccessful)
+        user.handleLoginOrRegister(formData, "login", setIsSuccessful)
     }
 
     return (<>
@@ -23,12 +23,12 @@ const LoginModal = () => {
         </header>
 
         <form className='landingModal' action={handleForm}>
-            <h1>Welcome back!</h1>
+            <h2>Welcome back!</h2>
             <input type='text' name='username' placeholder='Username' required />
             <input type='password' name='password' placeholder='Password' required />
             <button type='submit' onSubmit={(event) => event.preventDefault()}>Log In</button>
             <Link to='/register'> I want to create a new account </Link>
-            {isSuccessful === false && <p color='red'>Invalid username or password</p>}
+            {isSuccessful === false && <p className='error'>Invalid username or password</p>}
         </form>
     </>)
 }

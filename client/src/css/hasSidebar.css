@@ -1,4 +1,16 @@
-.pageMain {
-    display: flex;
-    flex-direction: row;
+
+@media screen and (min-width: 750px) {
+    .pageMain {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 50px;
+    }
+}
+
+@media screen and (max-width: 749px) {
+    .pageMain {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 50px;
+    }
 }

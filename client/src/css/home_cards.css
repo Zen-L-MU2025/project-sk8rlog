@@ -5,7 +5,8 @@
     display: flex;
     flex-flow: row;
     justify-content: center;
-    border: 1px solid white;
+    border: 1px solid #3b0747;
+    border-radius: 3px;
 }
 
 .clipCard {
@@ -14,5 +15,6 @@
     display: flex;
     flex-flow: row;
     justify-content: center;
-    border: 1px solid white;
+    border: 1px solid #3b0747;
+    border-radius: 3px;
 }
