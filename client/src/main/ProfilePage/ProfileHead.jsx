@@ -4,7 +4,7 @@ import skateboard from '/src/assets/skateboard.png'
 
 import '/src/css/profile.css'
 
-const ProfileHead = ({ toggleContentView }) => {
+const ProfileHead = ({ setProfileContentView }) => {
 
     return (
         <section className="profileHead">
@@ -15,8 +15,8 @@ const ProfileHead = ({ toggleContentView }) => {
                 <p>About</p>
             </div>
             <div className="contentButtons">
-                <p className="contentButton" onClick={() => toggleContentView(CLIPS)}>(my) Clips</p>
-                <p className="contentButton" onClick={() => toggleContentView(BLOGS)}>(my) Blogs)</p>
+                <p className="contentButton" onClick={() => setProfileContentView(CLIPS)}>(my) Clips</p>
+                <p className="contentButton" onClick={() => setProfileContentView(BLOGS)}>(my) Blogs</p>
             </div>
         </section>
     )
