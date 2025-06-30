@@ -17,6 +17,7 @@ const ProfileHead = ({ setProfileContentView }) => {
             <div className="contentButtons">
                 <p className="contentButton" onClick={() => setProfileContentView(CLIPS)}>(my) Clips</p>
                 <p className="contentButton" onClick={() => setProfileContentView(BLOGS)}>(my) Blogs</p>
+                <p className="contentButton">+ Create</p>
             </div>
         </section>
     )

@@ -1,5 +1,5 @@
-export const CLIPS = "clips"
-export const BLOGS = "blogs"
+export const CLIPS = "Clips"
+export const BLOGS = "Blogs"
 
 export const WEEKDAYS = {
     0: 'Sunday',
