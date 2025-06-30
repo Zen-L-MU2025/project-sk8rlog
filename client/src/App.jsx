@@ -18,14 +18,20 @@ function App() {
 
         <Route path='/register' element={<RegisterModal />} />
 
-        <Route path='*' element={ <>
-          <p>Bailed! (404 Not Found)</p>
-          <Link to='/home'>Go Home</Link>
-        </> } />
-
         <Route path='/home' element={<Home />} />
 
         <Route path='/profile' element={<Profile />} />
+
+        <Route path='/unauthorized' element={<>
+          <p>Snaked! <em>(401 Unauthorized)</em></p>
+          <p>Unable to verify access, please sign back in.</p>
+          <Link to='/'>Go Back</Link>
+        </> } />
+
+        <Route path='*' element={ <>
+          <p>Bailed! <em>(404 Not Found)</em></p>
+          <Link to='/home'>Go Home</Link>
+        </> } />
 
       </Routes>
     </BrowserRouter>

@@ -1,5 +1,4 @@
 .sidebar {
-    height: 100%;
 
     display: flex;
     flex-flow: column wrap;
@@ -7,5 +6,7 @@
 
     gap: 60px;
 
+    padding-right: 30px;
+    margin-right: 20px;
     border-right: 1px solid white;
 }

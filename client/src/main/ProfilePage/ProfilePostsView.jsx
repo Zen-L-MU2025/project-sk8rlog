@@ -1,10 +1,10 @@
 import PostCard from './PostCard'
 
-import '/src/css/profilePostView.css'
+import { CLIPS, BLOGS } from '/src/utils/constants'
+
+import '/src/css/profile.css'
 
 const ProfilePostView = ({ isViewingClips, isViewingBlogs }) => {
-    const CLIPS = "clips"
-    const BLOGS = "blogs"
 
     const type = isViewingClips ? CLIPS : BLOGS
 

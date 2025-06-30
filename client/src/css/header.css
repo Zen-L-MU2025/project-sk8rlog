@@ -4,6 +4,9 @@
     justify-content: center;
     gap: 5%;
     align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid white;
+    margin-bottom: 20px;
 }
 
 .logo {
