@@ -8,7 +8,7 @@ import Home_Blogs from './Home_Blogs'
 import Footer from '/src/main/Footer'
 
 import { WEEKDAYS } from '/src/utils/constants'
-import * as user from '/src/utils/userUtils'
+import { verifyAccess } from '/src/utils/UserUtils'
 
 import '/src/css/home_main.css'
 
@@ -18,7 +18,7 @@ const Home = () => {
     const [hasAccess, setHasAccess] = useState(null)
 
     useEffect( () => {
-        user.verifyAccess(setHasAccess)
+        verifyAccess(setHasAccess)
     }, [])
 
     useEffect( () => {
