@@ -32,9 +32,15 @@ export const login = (username, password, setIsSuccessful) => {
         .then(res => {
             setIsSuccessful(res.data.isSuccessful)
             sessionStorage.setItem("webtoken", res.data.token)
-            sessionStorage.setItem("user", res.data.user)
+
+            const userData = res.data.user
+            // No need to store password in session
+            delete userData.password
+            const user = JSON.stringify(userData)
+            sessionStorage.setItem("user", user)
         })
         .catch(error => {
+            console.log("login error: ", error)
             setIsSuccessful(false)
         })
 }
@@ -46,12 +52,14 @@ export const register = (username, password, setIsSuccessful) => {
             setIsSuccessful(res.data.isSuccessful)
             sessionStorage.setItem("webtoken", res.data.token)
 
-            const newUser = res.data.newUser
+            const newUserData = res.data.newUser
             // No need to store password in session
-            newUser.remove("password")
+            delete newUserData.password
+            const newUser = JSON.stringify(newUserData)
             sessionStorage.setItem("user", newUser)
         })
         .catch(error => {
+            console.log("register error: ", error)
             setIsSuccessful(false)
         })
 }
@@ -67,11 +75,12 @@ export const verifyAccess = (setHasAccess) => {
         return
     }
 
-    axios.get(`${baseUrl}/auth/verify`, {headers : { 'Authorization' : `Bearer ${token}` }})
+    axios.get(`${baseUrl}/auth/verify`, {headers : { 'Authorization' : `Bearer ${token}` }, withCredentials: true})
         .then(res => {
             setHasAccess(res.data.isSuccessful)
         })
         .catch(error => {
+            console.error("verifyAccess error: ", error)
             setHasAccess(false)
         })
 

@@ -5,7 +5,7 @@ const TOKEN_SECRET = process.env.TOKEN_SECRET
 
 const STATUS_CODES = require('../statusCodes')
 
-router.use('/verify', async (req, res) => {
+router.use('/verify', async (req, res, next) => {
     try {
         // Extract the JWT token from the request header
         // TODO Find better way to accomplish this
@@ -17,7 +17,10 @@ router.use('/verify', async (req, res) => {
                 return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: error.message, isSuccessful: false })
             }
 
-            return res.status(STATUS_CODES.OK).json({ message: 'Token verified successfully', isSuccessful: true })
+
+            res.cookie('webtoken', token, { Domain: "localhost", Path: "/", maxAge: 3600000, })
+            res.status(STATUS_CODES.OK).json({ message: 'Token verified successfully', isSuccessful: true })
+            next()
         })
 
     } catch (error) {
