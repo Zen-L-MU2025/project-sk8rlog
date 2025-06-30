@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import Footer from './Footer'
-import PostCard from '/src/main/ProfilePage/PostCard'
+import PostCard from './PostCard'
 
 import { verifyAccess } from '/src/utils/UserUtils'
 
@@ -33,7 +33,7 @@ const Posts = ({ postType }) => {
             <Sidebar />
             <section className='postsContent'>
                 <form className='postsHeader'>
-                    <select>
+                    <select name='filter'>
                         <option value='latest'>Latest Content</option>
                         <option value='recommended'>Recommended</option>
                         <option value='popular'>Popular</option>

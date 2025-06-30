@@ -2,12 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 
 import Header from '/src/main/Header'
-import Home_News from './Home_News'
-import Home_Clips from './Home_Clips'
-import Home_Blogs from './Home_Blogs'
+import HomePostsView from './HomePostsView'
 import Footer from '/src/main/Footer'
 
-import { WEEKDAYS } from '/src/utils/constants'
+import { WEEKDAYS, CLIPS, BLOGS } from '/src/utils/constants'
 import { verifyAccess } from '/src/utils/UserUtils'
 
 import '/src/css/home_main.css'
@@ -34,8 +32,8 @@ const Home = () => {
         <p className='scrollNote'><em>Scroll down to see Blogs!</em></p>
 
         <section className='columns'>
-            <Home_Clips />
-            <Home_Blogs />
+            <HomePostsView postType={CLIPS} />
+            <HomePostsView postType={BLOGS} />
         </section>
 
         <p className='scrollNote' id='footerNote'><em>Scroll up to see Clips!</em></p>
