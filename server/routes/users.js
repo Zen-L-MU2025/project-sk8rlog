@@ -11,7 +11,7 @@ const prisma = new PrismaClient()
 
 // POST /users/register
 // Takes desired username and password and creates a new user, returns the new user object, confirmation boolean, and a token
-router.use('/register', async (req, res) => {
+router.use('/register', async (req, res, next) => {
     const { username, password: plaintextPassword } = req.body
 
     try {
@@ -29,9 +29,11 @@ router.use('/register', async (req, res) => {
         })
 
         const tokenPayload = { userID: newUser.userID, username: newUser.username}
-        const token = webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
+        const token = await webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
 
-        return res.status(STATUS_CODES.CREATED).json({ newUser, isSuccessful: true, token })
+        await res.cookie('webtoken', token, { Domain: "localhost", Path: "/", maxAge: 3600000, })
+        res.status(STATUS_CODES.CREATED).json({ newUser, isSuccessful: true, token })
+        next()
 
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
@@ -40,7 +42,7 @@ router.use('/register', async (req, res) => {
 
 // POST /users/login
 // Takes username and password and returns the user object, confirmation boolean, and a token
-router.use('/login', async (req, res) => {
+router.use('/login', async (req, res, next) => {
     const { username, password: plaintextPassword } = req.body
 
     try {
@@ -52,9 +54,10 @@ router.use('/login', async (req, res) => {
         }
 
         const tokenPayload = { userID: user.userID, username: user.username}
-        const token = webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
+        const token = await webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
 
-        return res.status(STATUS_CODES.OK).json({ user, isSuccessful: true, token })
+        res.status(STATUS_CODES.OK).json({ user, isSuccessful: true, token })
+        next()
 
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
