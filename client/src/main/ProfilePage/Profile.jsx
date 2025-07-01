@@ -7,15 +7,19 @@ import ProfileHead from './ProfileHead'
 import ProfilePostsView from './ProfilePostsView'
 import Footer from '/src/main/Footer'
 
-import UserContext from '/src/utils/UserContext.js'
+import UserContext from '/src/utils/UserContext'
 import { CLIPS } from '/src/utils/constants'
-import { verifyAccess } from '/src/utils/UserUtils'
+import { verifyAccess, loadUserSession } from '/src/utils/UserUtils'
 
 import '/src/css/hasSidebar.css'
 import '/src/css/profile.css'
 
 const Profile = () => {
-    const { activeUser } = useContext(UserContext)
+    const { activeUser, setActiveUser } = useContext(UserContext)
+    useEffect( () => {
+        const load = async () => { await loadUserSession(setActiveUser) }
+        load()
+    }, [])
 
     const navigate = useNavigate()
 

@@ -5,14 +5,18 @@ import Header from '/src/main/Header'
 import HomePostsView from './HomePostsView'
 import Footer from '/src/main/Footer'
 
-import UserContext from '/src/utils/UserContext.js'
+import UserContext from '/src/utils/UserContext'
 import { WEEKDAYS, CLIPS, BLOGS } from '/src/utils/constants'
-import { verifyAccess } from '/src/utils/UserUtils'
+import { verifyAccess, loadUserSession } from '/src/utils/UserUtils'
 
 import '/src/css/home_main.css'
 
 const Home = () => {
-    const { activeUser } = useContext(UserContext)
+    const { activeUser, setActiveUser } = useContext(UserContext)
+    useEffect( () => {
+        const load = async () => { await loadUserSession(setActiveUser) }
+        load()
+    }, [])
 
     const navigate = useNavigate()
 

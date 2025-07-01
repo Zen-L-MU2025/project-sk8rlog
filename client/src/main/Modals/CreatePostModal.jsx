@@ -1,12 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
 
+import UserContext from '/src/utils/UserContext'
+import { loadUserSession } from '/src/utils/userUtils'
 import { CLIPS, BLOGS, DEFAULT } from '/src/utils/constants'
 
 import '/src/css/createPostModal.css'
 
 const CreatePostModal = ({ toggleCreatePostModal }) => {
+    const { activeUser, setActiveUser } = useContext(UserContext)
+    useEffect( () => {
+        const load = async () => { await loadUserSession(setActiveUser) }
+        load()
+    }, [])
+
     const handleForm = (formData) => {
 
+        const formObject = Object.fromEntries([...formData])
+        console.log(formObject)
 
         toggleCreatePostModal()
     }
