@@ -1,3 +1,6 @@
+// TODO next() is a placeholder in case of some continuation of an endpoint in the future
+// Clean this up once during finishing touches
+
 const router = require('express').Router()
 
 const webtoken = require('jsonwebtoken')
