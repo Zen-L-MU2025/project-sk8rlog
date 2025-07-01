@@ -67,4 +67,16 @@ router.use('/login', async (req, res, next) => {
     }
 })
 
+// GET /users/:userID
+// Returns the user object for the given userID
+router.use('/:userID', async (req, res, next) => {
+    const { userID } = req.params
+    const user = await prisma.user.findUnique({ where: { userID } })
+    if (!user) {
+        return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'User not found' })
+    }
+
+    res.status(STATUS_CODES.OK).json({ user })
+})
+
 module.exports = router
