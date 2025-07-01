@@ -1,13 +1,11 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router'
 
-import UserContext from '/src/utils/UserContext.js'
 import { handleLoginOrRegister} from '/src/utils/UserUtils'
 
 import '/src/css/landingModal.css'
 
 const RegisterModal = () => {
-    const { setActiveUser } = useContext(UserContext)
 
     const navigate = useNavigate()
     const [isSuccessful, setIsSuccessful] = useState(null)
@@ -17,7 +15,7 @@ const RegisterModal = () => {
     }, [isSuccessful])
 
     const handleForm = async (formData) => {
-        handleLoginOrRegister(formData, "register", setIsSuccessful, setActiveUser)
+        handleLoginOrRegister(formData, "register", setIsSuccessful)
     }
 
     return (<>
