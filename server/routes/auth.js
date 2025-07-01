@@ -43,7 +43,7 @@ router.use('/setCookie', async (req, res, next) => {
 router.use('/testUpload', async (req, res, next) => {
     try {
         const filePath = process.env.DUMMY_FILE_PATH
-        const objURL = await GCS.UploadFile(filePath, process.env.DUMMY_FILE_NAME)
+        const objURL = await GCS.uploadFile(filePath, process.env.DUMMY_FILE_NAME)
 
         objURL && res.status(STATUS_CODES.OK).json({ message: 'Object created', objURL, isSuccessful: true })
         !objURL && res.status(STATUS_CODES.SERVER_ERROR).json({ message: 'Object not created', isSuccessful: false })

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { CLIPS, BLOGS } from '/src/utils/constants'
+import { CLIPS, BLOGS, DEFAULT } from '/src/utils/constants'
 
 import '/src/css/createPostModal.css'
 
@@ -10,8 +10,6 @@ const CreatePostModal = ({ toggleCreatePostModal }) => {
 
         toggleCreatePostModal()
     }
-
-    const DEFAULT = 'default'
     const [postType, setPostType] = useState(DEFAULT)
 
     const handleSelect = (event) => {
