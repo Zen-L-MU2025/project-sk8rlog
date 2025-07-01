@@ -12,6 +12,8 @@ import '/src/css/hasSidebar.css'
 import '/src/css/posts.css'
 
 const Posts = ({ postType }) => {
+    const TEST_ITEM_COUNT = 20
+    
     const navigate = useNavigate()
 
     const [hasAccess, setHasAccess] = useState(null)
@@ -42,7 +44,7 @@ const Posts = ({ postType }) => {
                 </form>
                 <div className="posts">
                 {
-                    [...Array(20)].map(i => {
+                    [...Array(TEST_ITEM_COUNT)].map(i => {
                         return (
                             <PostCard key={i} postType={postType} />
                         )
