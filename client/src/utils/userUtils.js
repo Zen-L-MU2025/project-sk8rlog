@@ -26,52 +26,74 @@ export const handleLoginOrRegister = (formData, submissionType, setIsSuccessful)
     }
 }
 
-// Handle login: store token and user in session storage on completion
-export const login = (username, password, setIsSuccessful) => {
-    axios.post(`${baseUrl}/users/login`, {username, password})
+// Handle registration: store token and new user in session storage on completion
+export const register = (username, password, setIsSuccessful) => {
+    axios.post(`${baseUrl}/users/register`, {username, password, withCredentials: true})
         .then(res => {
             setIsSuccessful(res.data.isSuccessful)
-            sessionStorage.setItem("webtoken", res.data.token)
-            sessionStorage.setItem("user", res.data.user)
+
+            const newUserData = res.data.newUser
+            // No need to store password in session
+            delete newUserData.password
+            const newUser = JSON.stringify(newUserData)
+            sessionStorage.setItem("user", newUser)
         })
         .catch(error => {
+            console.log("register error: ", error)
             setIsSuccessful(false)
         })
 }
 
-// Handle registration: store token and new user in session storage on completion
-export const register = (username, password, setIsSuccessful) => {
-    axios.post(`${baseUrl}/users/register`, {username, password})
+// Handle login: store token and user in session storage on completion
+export const login = async (username, password, setIsSuccessful) => {
+    let token;
+
+    await axios.post(`${baseUrl}/users/login`, {username, password, withCredentials: true})
         .then(res => {
             setIsSuccessful(res.data.isSuccessful)
-            sessionStorage.setItem("webtoken", res.data.token)
 
-            const newUser = res.data.newUser
+            const userData = res.data.user
             // No need to store password in session
-            newUser.remove("password")
-            sessionStorage.setItem("user", newUser)
+            delete userData.password
+            const user = JSON.stringify(userData)
+            sessionStorage.setItem("user", user)
+
+            token = res.data.token
         })
         .catch(error => {
+            console.log("login error: ", error)
             setIsSuccessful(false)
+            return
         })
+
+        await axios.get(`${baseUrl}/auth/setCookie`, {headers : { 'Authorization' : `Bearer ${token}` }, withCredentials: true})
+            .then(res => {
+                setIsSuccessful(res.data.isSuccessful)
+            })
 }
 
 // Verify user access to protected resource
 // Sets hasAccess to true if access is verified, false otherwise
 export const verifyAccess = (setHasAccess) => {
 
-    const token = sessionStorage.getItem("webtoken")
+    // Convert cookie string to array and find the webtoken
+    const cookies = document.cookie.split(';')
+    const tokenCookie = cookies.find(cookie => cookie.includes("webtoken"))
 
-    if (!token) {
+    if (!tokenCookie) {
         setHasAccess(false)
         return
     }
 
-    axios.get(`${baseUrl}/auth/verify`, {headers : { 'Authorization' : `Bearer ${token}` }})
+    // Split tokenCookie and acquire the value
+    const token = tokenCookie.split('=')[1].trim()
+
+    axios.get(`${baseUrl}/auth/verify`, {headers : { 'Authorization' : `Bearer ${token}` }, withCredentials: true})
         .then(res => {
             setHasAccess(res.data.isSuccessful)
         })
         .catch(error => {
+            console.error("verifyAccess error: ", error)
             setHasAccess(false)
         })
 

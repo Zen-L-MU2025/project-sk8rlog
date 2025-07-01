@@ -38,6 +38,6 @@
     flex-flow: row wrap;
     justify-content: center;
     gap: 20px;
-    overflow: scroll;
+    overflow-y: scroll;
     border-bottom: 1px solid #3b0747;
 }

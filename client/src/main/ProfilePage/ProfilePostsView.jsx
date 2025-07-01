@@ -1,4 +1,4 @@
-import PostCard from './PostCard'
+import PostCard from '/src/main/PostCard'
 
 import '/src/css/profile.css'
 

@@ -8,7 +8,7 @@ import ProfilePostsView from './ProfilePostsView'
 import Footer from '/src/main/Footer'
 
 import { CLIPS } from '/src/utils/constants'
-import * as user from '/src/utils/userUtils'
+import { verifyAccess } from '/src/utils/UserUtils'
 
 import '/src/css/hasSidebar.css'
 import '/src/css/profile.css'
@@ -19,7 +19,7 @@ const Profile = () => {
     const [hasAccess, setHasAccess] = useState(null)
 
     useEffect( () => {
-        user.verifyAccess(setHasAccess)
+        verifyAccess(setHasAccess)
     }, [])
 
     useEffect( () => {

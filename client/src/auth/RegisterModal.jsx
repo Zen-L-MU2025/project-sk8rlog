@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router'
 
-import * as user from '/src/utils/userUtils'
+import { handleLoginOrRegister} from '/src/utils/UserUtils'
 
 import '/src/css/landingModal.css'
 
@@ -15,7 +15,7 @@ const RegisterModal = () => {
 
 
     const handleForm = async (formData) => {
-        user.handleLoginOrRegister(formData, "register", setIsSuccessful)
+        handleLoginOrRegister(formData, "register", setIsSuccessful)
     }
 
     return (<>
