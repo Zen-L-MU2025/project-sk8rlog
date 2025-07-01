@@ -1,0 +1,42 @@
+#createPostModal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#createModalContent {
+    width: 90%;
+    max-width: 800px;
+    max-height: 1200px;
+    background-color: transparent;
+    background-color: #316685;
+
+    padding: 20px;
+    border: 3px solid #3b0747;
+    border-radius: 3px;
+
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 50px;
+    overflow-y: scroll;
+}
+
+input, textarea {
+    border-radius: 3px;
+}
+
+textarea {
+    background-color: transparent;
+    height: 300px;
+    border: 1px solid #3b0747;
+}
+textarea::placeholder {
+    color: #3b0747;
+}

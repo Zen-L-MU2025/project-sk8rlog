@@ -39,7 +39,7 @@ export const register = (username, password, setIsSuccessful) => {
             sessionStorage.setItem("user", newUser)
         })
         .catch(error => {
-            console.log("register error: ", error)
+            console.error("register error: ", error)
             setIsSuccessful(false)
         })
 }
@@ -61,7 +61,7 @@ export const login = async (username, password, setIsSuccessful) => {
             token = res.data.token
         })
         .catch(error => {
-            console.log("login error: ", error)
+            console.error("login error: ", error)
             setIsSuccessful(false)
             return
         })

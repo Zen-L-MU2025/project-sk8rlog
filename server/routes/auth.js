@@ -5,6 +5,8 @@ const TOKEN_SECRET = process.env.TOKEN_SECRET
 
 const STATUS_CODES = require('../statusCodes')
 
+const GCS = require('../utils/GCS')
+
 router.use('/verify', async (req, res, next) => {
     try {
         // Extract the JWT token from the request header
@@ -31,6 +33,21 @@ router.use('/setCookie', async (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1]
         await res.cookie('webtoken', token, { Domain: "localhost", Path: "/", maxAge: 3600000, })
         res.status(STATUS_CODES.OK).json({ message: 'Cookie created', isSuccessful: true })
+        next()
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
+    }
+})
+
+router.use('/testUpload', async (req, res, next) => {
+    try {
+        const filePath = process.env.DUMMY_FILE_PATH
+        const objURL = await GCS.UploadFile(filePath, process.env.DUMMY_FILE_NAME)
+
+        objURL && res.status(STATUS_CODES.OK).json({ message: 'Object created', objURL, isSuccessful: true })
+        !objURL && res.status(STATUS_CODES.SERVER_ERROR).json({ message: 'Object not created', isSuccessful: false })
+
         next()
 
     } catch (error) {
