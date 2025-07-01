@@ -2,6 +2,7 @@ const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
 
+
 // Tracks if landing page submission is login or register
 export const OPTIONS = {
     LOGIN : "login",
@@ -9,16 +10,17 @@ export const OPTIONS = {
 }
 
 // Handle login/register submission
-export const handleLoginOrRegister = (formData, submissionType, setIsSuccessful) => {
-    const username = formData.get("username"), password = formData.get("password")
+export const handleLoginOrRegister = (formData, submissionType, setIsSuccessful, setActiveUser) => {
+
+    const formObject = Object.fromEntries([...formData])
 
     switch (submissionType) {
         case OPTIONS.LOGIN:
-            login(username, password, setIsSuccessful)
+            login(formObject, setIsSuccessful, setActiveUser)
             break
 
         case OPTIONS.REGISTER:
-            register(username, password, setIsSuccessful)
+            register(formObject, setIsSuccessful, setActiveUser)
             break
 
         default:
@@ -27,14 +29,18 @@ export const handleLoginOrRegister = (formData, submissionType, setIsSuccessful)
 }
 
 // Handle registration: store token and new user in session storage on completion
-export const register = (username, password, setIsSuccessful) => {
-    axios.post(`${baseUrl}/users/register`, {username, password, withCredentials: true})
+export const register = (formObject, setIsSuccessful, setActiveUser) => {
+
+    axios.post(`${baseUrl}/users/register`, {formObject, withCredentials: true})
         .then(res => {
             setIsSuccessful(res.data.isSuccessful)
 
             const newUserData = res.data.newUser
             // No need to store password in session
             delete newUserData.password
+
+            setActiveUser(newUserData)
+
             const newUser = JSON.stringify(newUserData)
             sessionStorage.setItem("user", newUser)
         })
@@ -45,16 +51,19 @@ export const register = (username, password, setIsSuccessful) => {
 }
 
 // Handle login: store token and user in session storage on completion
-export const login = async (username, password, setIsSuccessful) => {
+export const login = async (formObject, setIsSuccessful, setActiveUser) => {
     let token;
 
-    await axios.post(`${baseUrl}/users/login`, {username, password, withCredentials: true})
+    await axios.post(`${baseUrl}/users/login`, {formObject, withCredentials: true})
         .then(res => {
             setIsSuccessful(res.data.isSuccessful)
 
             const userData = res.data.user
             // No need to store password in session
             delete userData.password
+
+            setActiveUser(userData)
+
             const user = JSON.stringify(userData)
             sessionStorage.setItem("user", user)
 

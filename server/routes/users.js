@@ -12,7 +12,7 @@ const prisma = new PrismaClient()
 // POST /users/register
 // Takes desired username and password and creates a new user, returns the new user object, confirmation boolean, and a token
 router.use('/register', async (req, res, next) => {
-    const { username, password: plaintextPassword } = req.body
+    const { username, password: plaintextPassword, name, location } = req.body.formObject
 
     try {
         const user = await prisma.user.findUnique({ where: { username } })
@@ -24,7 +24,7 @@ router.use('/register', async (req, res, next) => {
         const password = await bcrypt.hash(plaintextPassword, 11)
         const newUser = await prisma.user.create({
             data: {
-                username, password
+                username, password, name, location
             }
         })
 
@@ -43,7 +43,7 @@ router.use('/register', async (req, res, next) => {
 // POST /users/login
 // Takes username and password and returns the user object, confirmation boolean, and a token
 router.use('/login', async (req, res, next) => {
-    const { username, password: plaintextPassword } = req.body
+    const { username, password: plaintextPassword } = req.body.formObject
 
     try {
         const user = await prisma.user.findUnique({ where: { username } })

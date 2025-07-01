@@ -1,16 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router'
 
 import Header from '/src/main/Header'
 import HomePostsView from './HomePostsView'
 import Footer from '/src/main/Footer'
 
+import UserContext from '/src/utils/UserContext.js'
 import { WEEKDAYS, CLIPS, BLOGS } from '/src/utils/constants'
 import { verifyAccess } from '/src/utils/UserUtils'
 
 import '/src/css/home_main.css'
 
 const Home = () => {
+    const { activeUser } = useContext(UserContext)
+
     const navigate = useNavigate()
 
     const [hasAccess, setHasAccess] = useState(null)
@@ -23,7 +26,8 @@ const Home = () => {
         hasAccess === false && navigate('/unauthorized')
     }, [hasAccess])
 
-    const HEADER_TEXT = `Happy ${WEEKDAYS[new Date().getDay()]}, User!`
+    const user_title = activeUser.name ? activeUser.name : `@${activeUser.username}`
+    const HEADER_TEXT = `Happy ${WEEKDAYS[new Date().getDay()]}, ${user_title} !`
 
     return (<>
         <Header HEADER_TEXT={HEADER_TEXT} />

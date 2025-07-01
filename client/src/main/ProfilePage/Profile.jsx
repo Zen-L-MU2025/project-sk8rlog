@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router'
 
 import Header from '/src/main/Header'
@@ -7,6 +7,7 @@ import ProfileHead from './ProfileHead'
 import ProfilePostsView from './ProfilePostsView'
 import Footer from '/src/main/Footer'
 
+import UserContext from '/src/utils/UserContext.js'
 import { CLIPS } from '/src/utils/constants'
 import { verifyAccess } from '/src/utils/UserUtils'
 
@@ -14,6 +15,8 @@ import '/src/css/hasSidebar.css'
 import '/src/css/profile.css'
 
 const Profile = () => {
+    const { activeUser } = useContext(UserContext)
+
     const navigate = useNavigate()
 
     const [hasAccess, setHasAccess] = useState(null)
@@ -26,7 +29,8 @@ const Profile = () => {
         hasAccess === false && navigate('/unauthorized')
     }, [hasAccess])
 
-    const HEADER_TEXT = `User's Profile`
+    const user_title = activeUser.name ? activeUser.name : `@${activeUser.username}`
+    const HEADER_TEXT = `${user_title}'s Profile`
 
     const [profileContentView, setProfileContentView] = useState(CLIPS)
 
