@@ -39,7 +39,7 @@ const CreatePostModal = ({ toggleCreatePostModal }) => {
 
 
                 { postType !== DEFAULT &&
-                    <button type='submit' onSubmit={(event) => event.preventDefault()}>Upload</button>
+                    <button type='submit'>Upload</button>
                 }
             </form>
         </section>
