@@ -33,8 +33,12 @@ router.use('/verify', async (req, res, next) => {
 
 router.use('/setCookie', async (req, res, next) => {
     try {
-        const token = req.headers.authorization.split(' ')[1]
+        const auth = req.headers.authorization.split(' ')[1].split(':')
+        const token = auth[0]
+        const userID = auth[1]
+
         await res.cookie('webtoken', token, { Domain: "localhost", Path: "/", maxAge: 3600000, })
+        await res.cookie('userid', userID, { Domain: "localhost", Path: "/", maxAge: 3600000, })
         res.status(STATUS_CODES.OK).json({ message: 'Cookie created', isSuccessful: true })
         next()
 
