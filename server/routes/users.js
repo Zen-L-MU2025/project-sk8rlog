@@ -4,10 +4,8 @@
 const { PrismaClient } = require('../generated/prisma');
 const bcrypt = require('bcryptjs')
 const router = require('express').Router()
-
 const webtoken = require('jsonwebtoken')
 const TOKEN_SECRET = process.env.TOKEN_SECRET
-
 const STATUS_CODES = require('../statusCodes')
 
 const prisma = new PrismaClient()
@@ -73,7 +71,8 @@ router.use('/:userID', async (req, res, next) => {
     const { userID } = req.params
     const user = await prisma.user.findUnique({ where: { userID } })
     if (!user) {
-        return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'User not found' })
+        console.error(`User with ID ${userID} not found`)
+        return res.status(STATUS_CODES.NOT_FOUND)
     }
 
     res.status(STATUS_CODES.OK).json({ user })
