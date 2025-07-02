@@ -18,7 +18,6 @@ const Profile = () => {
     const { activeUser, setActiveUser } = useContext(UserContext)
 
     const[ isReady, setIsReady ] = useState(false)
-
     useEffect( () => {
         const load = async () => { await loadUserSession(setActiveUser) }
         load()
