@@ -9,7 +9,7 @@ const prisma = new PrismaClient()
 
 // POST /users/register
 // Takes desired username and password and creates a new user, returns the new user object, confirmation boolean, and a token
-router.post('/register', async (req, res, next) => {
+router.post('/register', async (req, res) => {
     const { username, password: plaintextPassword, name, location } = req.body.formObject
 
     try {
