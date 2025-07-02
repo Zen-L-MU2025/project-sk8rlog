@@ -2,6 +2,7 @@ const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
 
+// Uploads a post, starting with the file attachment to GCS and then the full post data to server
 export const uploadPost = async ( postType, formData, userID, location ) => {
     const textContent = await formData.get('textContent')
     const file = await formData.get('postFile')
@@ -24,5 +25,16 @@ export const uploadPost = async ( postType, formData, userID, location ) => {
     await axios.post(`${baseUrl}/posts/${userID}`, { textContent, location, postType, fileURL })
         .then(res => {
             console.log(res.data.post)
+        })
+}
+
+// Provided a userID, gets all posts for that user by specified postType and sets the userPosts array state
+export const getUserPostsByType = async ( activeUser, postType, setUserPosts ) => {
+    await axios.get(`${baseUrl}/posts/${activeUser.userID}/${postType}`)
+        .then(res => {
+            setUserPosts(res.data.posts)
+        })
+        .catch(error => {
+            console.error("getUserPostsByType error: ", error)
         })
 }
