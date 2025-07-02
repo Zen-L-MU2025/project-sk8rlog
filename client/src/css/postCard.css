@@ -5,7 +5,19 @@
 }
 
 .BlogsPostCard {
-    width: 200px;
-    height: 100px;
+    width: 300px;
+    height: 300px;
     border: 1px solid #3b0747; border-radius: 3px;
+}
+
+.ClipsPostCardEmbed {
+    margin-top: 20px;
+    width: 150px;
+    height: 100px;
+}
+
+.BlogsPostCardEmbed {
+    margin-top: 20px;
+    width: 200px;
+    height: 150px;
 }

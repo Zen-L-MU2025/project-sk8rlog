@@ -23,7 +23,7 @@ const ProfilePostView = ({ activeUser, profileContentView }) => {
                 {
                     userPosts.map(post => {
                         return (
-                            <PostCard key={post.postID} postContent={post} postType={profileContentView}/>
+                            <PostCard key={post.postID} post={post} postType={profileContentView}/>
                         )
                     })
                 }
