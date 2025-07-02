@@ -53,4 +53,19 @@ router.post('/:userID', async (req, res, next) => {
     }
 })
 
+router.get('/:userID/:type', async (req, res, next) => {
+    try {
+        const { userID, type } = req.params
+
+        const posts = await prisma.post.findMany({
+            where: { authorID: userID, type }
+        })
+
+        return res.status(STATUS_CODES.OK).json({ posts, message: 'Posts retrieved' })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
+    }
+})
+
 module.exports = router
