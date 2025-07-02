@@ -8,22 +8,25 @@ import '/src/css/profile.css'
 
 const ProfilePostView = ({ activeUser, profileContentView }) => {
     const [userPosts, setUserPosts] = useState([])
+
+    const [ isReady, setIsReady ] = useState(false)
     useEffect(() => {
         // TODO Sample implementation, not functional yet
         getUserPostsByType(activeUser, profileContentView, setUserPosts)
+        setIsReady(true)
     }, [])
 
-    return (<>
+    if (!isReady) return (<p>Loading posts...</p>)
+
+    if (isReady) return (<>
         <section className="profilePostsView">
-                <PostCard postType={profileContentView} />
-                <PostCard postType={profileContentView} />
-                <PostCard postType={profileContentView} />
-                <PostCard postType={profileContentView} />
-                <PostCard postType={profileContentView} />
-                <PostCard postType={profileContentView} />
-                <PostCard postType={profileContentView} />
-                <PostCard postType={profileContentView} />
-                <PostCard postType={profileContentView} />
+                {
+                    userPosts.map(post => {
+                        return (
+                            <PostCard key={post.postID} postContent={post} postType={profileContentView}/>
+                        )
+                    })
+                }
         </section>
     </>)
 }
