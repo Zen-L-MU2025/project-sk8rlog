@@ -13,7 +13,7 @@ const prisma = new PrismaClient()
 
 // POST /posts/uploadFile
 // Uploads a pending post's file to GCS and returns the URL
-router.use('/uploadFile', multer.single('postFile'), async (req, res, next) => {
+router.post('/uploadFile', multer.single('postFile'), async (req, res, next) => {
     try {
         if (!req.file) {
             return res.status(STATUS_CODES.BAD_REQUEST).json({ message: 'No file provided', isSuccessful: false })
@@ -35,7 +35,7 @@ router.use('/uploadFile', multer.single('postFile'), async (req, res, next) => {
 
 // POST /posts/:userID
 // Uploads a post to the database and subsequently links it to the user through their ID
-router.use('/:userID', async (req, res, next) => {
+router.post('/:userID', async (req, res, next) => {
     try {
         const { userID } = req.params
         const { textContent, location, postType, fileURL } = req.body

@@ -6,7 +6,8 @@ const webtoken = require('jsonwebtoken')
 const TOKEN_SECRET = process.env.TOKEN_SECRET
 const STATUS_CODES = require('../statusCodes')
 
-router.use('/verify', async (req, res, next) => {
+// Verifies access to protected resource via provided token
+router.get('/verify', async (req, res, next) => {
     try {
         // Extract the JWT token from the request header
         // TODO Find better way to accomplish this
@@ -27,7 +28,8 @@ router.use('/verify', async (req, res, next) => {
     }
 })
 
-router.use('/setCookie', async (req, res, next) => {
+// Formally initializes a sesssion by setting a cookie contianing the webtoken and user ID
+router.get('/setCookie', async (req, res, next) => {
     try {
         const auth = req.headers.authorization.split(' ')[1].split(':')
         const token = auth[0]
