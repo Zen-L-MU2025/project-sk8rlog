@@ -16,9 +16,13 @@ import '/src/css/profile.css'
 
 const Profile = () => {
     const { activeUser, setActiveUser } = useContext(UserContext)
+
+    const[ isReady, setIsReady ] = useState(false)
+
     useEffect( () => {
         const load = async () => { await loadUserSession(setActiveUser) }
         load()
+        setIsReady(true)
     }, [])
 
     const navigate = useNavigate()
@@ -38,7 +42,9 @@ const Profile = () => {
 
     const [profileContentView, setProfileContentView] = useState(CLIPS)
 
-    return (<>
+    if (!isReady) return (<p>Loading profile...</p>)
+
+    if (isReady) return (<>
         <Header HEADER_TEXT={HEADER_TEXT} />
         <section className='pageMain'>
             <Sidebar />
