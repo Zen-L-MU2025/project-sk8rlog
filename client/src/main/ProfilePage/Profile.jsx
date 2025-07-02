@@ -36,8 +36,8 @@ const Profile = () => {
         hasAccess === false && navigate('/unauthorized')
     }, [hasAccess])
 
-    const user_title = activeUser.name ? activeUser.name : `@${activeUser.username}`
-    const HEADER_TEXT = `${user_title}'s Profile`
+    const userTitle = activeUser.name || `@${activeUser.username}`
+    const HEADER_TEXT = `${userTitle}'s Profile`
 
     const [profileContentView, setProfileContentView] = useState(CLIPS)
 
