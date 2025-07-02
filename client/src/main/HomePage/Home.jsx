@@ -33,8 +33,8 @@ const Home = () => {
         hasAccess === false && navigate('/unauthorized')
     }, [hasAccess])
 
-    const user_title = activeUser.name ? activeUser.name : `@${activeUser.username}`
-    const HEADER_TEXT = `Happy ${WEEKDAYS[new Date().getDay()]}, ${user_title} !`
+    const userTitle = activeUser.name || `@${activeUser.username}`
+    const HEADER_TEXT = `Happy ${WEEKDAYS[new Date().getDay()]}, ${userTitle} !`
 
     if (!isReady) return (<p>Loading profile...</p>)
 

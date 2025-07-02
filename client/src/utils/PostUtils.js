@@ -24,7 +24,7 @@ export const uploadPost = async ( postType, formData, userID, location ) => {
 
     await axios.post(`${baseUrl}/posts/${userID}`, { textContent, location, postType, fileURL })
         .then(res => {
-            console.log(res.data.post)
+            // TODO Update the user's posts array here
         })
 }
 

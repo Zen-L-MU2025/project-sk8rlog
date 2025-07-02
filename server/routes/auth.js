@@ -1,6 +1,3 @@
-// TODO next() is a placeholder in case of some continuation of an endpoint in the future
-// Clean this up once during finishing touches
-
 const router = require('express').Router()
 const webtoken = require('jsonwebtoken')
 const TOKEN_SECRET = process.env.TOKEN_SECRET
@@ -19,8 +16,7 @@ router.get('/verify', async (req, res, next) => {
                 return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: error.message, isSuccessful: false })
             }
 
-            res.status(STATUS_CODES.OK).json({ message: 'Token verified successfully', isSuccessful: true })
-            next()
+            return res.status(STATUS_CODES.OK).json({ message: 'Token verified successfully', isSuccessful: true })
         })
 
     } catch (error) {
@@ -37,8 +33,7 @@ router.get('/setCookie', async (req, res, next) => {
 
         await res.cookie('webtoken', token, { Domain: "localhost", Path: "/", maxAge: 3600000, })
         await res.cookie('userid', userID, { Domain: "localhost", Path: "/", maxAge: 3600000, })
-        res.status(STATUS_CODES.OK).json({ message: 'Cookie created', isSuccessful: true })
-        next()
+        return res.status(STATUS_CODES.OK).json({ message: 'Cookie created', isSuccessful: true })
 
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
