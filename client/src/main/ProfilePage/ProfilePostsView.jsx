@@ -14,7 +14,7 @@ const ProfilePostView = ({ activeUser, profileContentView }) => {
         // TODO Sample implementation, not functional yet
         getUserPostsByType(activeUser, profileContentView, setUserPosts)
         setIsReady(true)
-    }, [])
+    }, [profileContentView])
 
     if (!isReady) return (<p>Loading posts...</p>)
 
