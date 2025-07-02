@@ -21,6 +21,8 @@ const Profile = () => {
 
     const { activeUser, setActiveUser } = useContext(UserContext)
 
+    const [userPosts, setUserPosts] = useState([])
+
     const[ isReady, setIsReady ] = useState(false)
     useEffect( () => {
         const load = async () => { await loadUserSession(setActiveUser) }
@@ -52,13 +54,24 @@ const Profile = () => {
         <section className='pageMain'>
             <Sidebar />
             <div className='profileContent'>
-                <ProfileHead activeUser={activeUser} setProfileContentView={setProfileContentView} toggleCreatePostModal={toggleCreatePostModal}/>
-                <ProfilePostsView activeUser={activeUser} profileContentView={profileContentView} />
+                <ProfileHead
+                    activeUser={activeUser}
+                    setProfileContentView={setProfileContentView}
+                    toggleCreatePostModal={toggleCreatePostModal}
+                />
+                <ProfilePostsView
+                    activeUser={activeUser}
+                    profileContentView={profileContentView}
+                    userPosts={userPosts} setUserPosts={setUserPosts}
+                />
             </div>
         </section>
 
         { showCreatePostModal &&
-            <CreatePostModal toggleCreatePostModal={toggleCreatePostModal} />
+            <CreatePostModal
+                toggleCreatePostModal={toggleCreatePostModal}
+                userPosts={userPosts} setUserPosts={setUserPosts}
+            />
         }
 
         <Footer />

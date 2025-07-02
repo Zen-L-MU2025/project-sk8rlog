@@ -6,8 +6,7 @@ import  { getUserPostsByType } from '/src/utils/PostUtils'
 
 import '/src/css/profile.css'
 
-const ProfilePostView = ({ activeUser, profileContentView }) => {
-    const [userPosts, setUserPosts] = useState([])
+const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPosts }) => {
 
     const [ isReady, setIsReady ] = useState(false)
     useEffect(() => {

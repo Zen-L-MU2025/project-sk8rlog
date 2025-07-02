@@ -7,7 +7,7 @@ import { CLIPS, BLOGS, DEFAULT } from '/src/utils/constants'
 
 import '/src/css/createPostModal.css'
 
-const CreatePostModal = ({ toggleCreatePostModal }) => {
+const CreatePostModal = ({ toggleCreatePostModal, userPosts, setUserPosts }) => {
     const { activeUser, setActiveUser } = useContext(UserContext)
     useEffect( () => {
         const load = async () => { await loadUserSession(setActiveUser) }
@@ -17,7 +17,7 @@ const CreatePostModal = ({ toggleCreatePostModal }) => {
     const [postType, setPostType] = useState(DEFAULT)
 
     const handleForm = (formData) => {
-        uploadPost(postType, formData, activeUser.userID, activeUser.location)
+        uploadPost(postType, formData, activeUser.userID, activeUser.location, userPosts, setUserPosts)
         toggleCreatePostModal()
     }
 
