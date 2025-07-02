@@ -43,8 +43,8 @@ const Profile = () => {
         <section className='pageMain'>
             <Sidebar />
             <div className='profileContent'>
-                <ProfileHead setProfileContentView={setProfileContentView}/>
-                <ProfilePostsView profileContentView={profileContentView} />
+                <ProfileHead activeUser={activeUser} setProfileContentView={setProfileContentView}/>
+                <ProfilePostsView activeUser={activeUser} profileContentView={profileContentView} />
             </div>
 
         </section>

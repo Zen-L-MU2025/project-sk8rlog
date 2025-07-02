@@ -1,20 +1,13 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState } from 'react'
 
 import CreatePostModal from '/src/main/Modals/CreatePostModal'
 
-import UserContext from '/src/utils/UserContext'
 import { CLIPS, BLOGS } from '/src/utils/constants'
-import { loadUserSession } from '/src/utils/userUtils'
 import skateboard from '/src/assets/skateboard.png'
 
 import '/src/css/profile.css'
 
-const ProfileHead = ({ setProfileContentView }) => {
-    const { activeUser, setActiveUser } = useContext(UserContext)
-    useEffect( () => {
-        const load = async () => { await loadUserSession(setActiveUser) }
-        load()
-    }, [])
+const ProfileHead = ({ activeUser, setProfileContentView }) => {
 
     const [showCreatePostModal, setShowCreatePostModal] = useState(false)
     const toggleCreatePostModal = () => setShowCreatePostModal(!showCreatePostModal)
