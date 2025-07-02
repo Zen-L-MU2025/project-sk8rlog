@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router'
 
+import CreatePostModal from '/src/main/Modals/CreatePostModal'
 import Header from '/src/main/Header'
 import Sidebar from '/src/main/Sidebar'
 import ProfileHead from './ProfileHead'
@@ -15,6 +16,9 @@ import '/src/css/hasSidebar.css'
 import '/src/css/profile.css'
 
 const Profile = () => {
+    const [showCreatePostModal, setShowCreatePostModal] = useState(false)
+    const toggleCreatePostModal = () => setShowCreatePostModal(!showCreatePostModal)
+
     const { activeUser, setActiveUser } = useContext(UserContext)
 
     const[ isReady, setIsReady ] = useState(false)
@@ -48,11 +52,14 @@ const Profile = () => {
         <section className='pageMain'>
             <Sidebar />
             <div className='profileContent'>
-                <ProfileHead activeUser={activeUser} setProfileContentView={setProfileContentView}/>
+                <ProfileHead activeUser={activeUser} setProfileContentView={setProfileContentView} toggleCreatePostModal={toggleCreatePostModal}/>
                 <ProfilePostsView activeUser={activeUser} profileContentView={profileContentView} />
             </div>
-
         </section>
+
+        { showCreatePostModal &&
+            <CreatePostModal toggleCreatePostModal={toggleCreatePostModal} />
+        }
 
         <Footer />
 
