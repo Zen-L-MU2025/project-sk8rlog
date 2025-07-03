@@ -3,18 +3,18 @@ import { Link } from 'react-router';
 
 import PostCard from '/src/main/PostCard'
 
-import  { getUserPostsByType } from '/src/utils/PostUtils'
+import  { getAllPostsByType } from '/src/utils/PostUtils'
 
 import '/src/css/home.css'
 
 const HomePostsView = ({ activeUser, postType }) => {
     const postType_lowercase = postType.toLowerCase()
 
-    const [userPosts, setUserPosts] = useState([])
+    const [posts, setPosts] = useState([])
 
     useEffect( () => {
         const loadPosts = async () => {
-            await getUserPostsByType(activeUser, postType, setUserPosts)
+            await getAllPostsByType(postType, setPosts)
         }
         loadPosts()
     }, [])
@@ -28,7 +28,7 @@ const HomePostsView = ({ activeUser, postType }) => {
 
             <div id={`${postType_lowercase}ColumnContent`} className="columnContent" >
                 {
-                    userPosts.map(post => {
+                    posts.slice(0, 4).map(post => {
                         return (
                             <PostCard key={post.postID} post={post} postType={postType}/>
                         )
