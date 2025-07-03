@@ -24,11 +24,11 @@ const Profile = () => {
     const [userPosts, setUserPosts] = useState([])
     const [isOutdated, setIsOutdated] = useState(false)
 
-    const[ isReady, setIsReady ] = useState(false)
+    const[ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
     useEffect( () => {
         const loadUser = async () => { await loadUserSession(setActiveUser) }
         loadUser()
-        setIsReady(true)
+        setIsReadyToDisplayContent(true)
     }, [])
 
     const navigate = useNavigate()
@@ -48,9 +48,9 @@ const Profile = () => {
 
     const [profileContentView, setProfileContentView] = useState(CLIPS)
 
-    if (!isReady) return (<p>Loading profile...</p>)
+    if (!isReadyToDisplayContent) return (<p>Loading profile...</p>)
 
-    if (isReady) return (<>
+    if (isReadyToDisplayContent) return (<>
         <Header HEADER_TEXT={HEADER_TEXT} />
         <section className='pageMain'>
             <Sidebar />

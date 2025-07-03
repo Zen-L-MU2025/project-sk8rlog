@@ -14,11 +14,11 @@ import '/src/css/home.css'
 const Home = () => {
     const { activeUser, setActiveUser } = useContext(UserContext)
 
-    const[ isReady, setIsReady ] = useState(false)
+    const[ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
     useEffect( () => {
         const loadUser = async () => { await loadUserSession(setActiveUser) }
         loadUser()
-        setIsReady(true)
+        setIsReadyToDisplayContent(true)
     }, [])
 
     const navigate = useNavigate()
@@ -36,9 +36,9 @@ const Home = () => {
     const userTitle = activeUser.name || `@${activeUser.username}`
     const HEADER_TEXT = `Happy ${WEEKDAYS[new Date().getDay()]}, ${userTitle} !`
 
-    if (!isReady) return (<p>Loading profile...</p>)
+    if (!isReadyToDisplayContent) return (<p>Loading profile...</p>)
 
-    if (isReady) return (<>
+    if (isReadyToDisplayContent) return (<>
         <Header HEADER_TEXT={HEADER_TEXT} />
 
         <h2 className='subHeading'>Today in Sk8rlog</h2>

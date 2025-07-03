@@ -8,27 +8,27 @@ import '/src/css/profile.css'
 
 const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPosts, isOutdated, setIsOutdated }) => {
 
-    const [ isReady, setIsReady ] = useState(false)
+    const [ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
     useEffect(() => {
         getUserPostsByType(activeUser, profileContentView, setUserPosts)
-        setIsReady(true)
+        setIsReadyToDisplayContent(true)
     }, [profileContentView])
 
     useEffect(() => {
         const reload = async () => {
-            await setIsReady(false)
+            await setIsReadyToDisplayContent(false)
             await getUserPostsByType(activeUser, profileContentView, setUserPosts)
-            await setIsReady(true)
+            await setIsReadyToDisplayContent(true)
             await setIsOutdated(false)
         }
         if (isOutdated) reload()
     }, [isOutdated])
 
-    if (!isReady) {
+    if (!isReadyToDisplayContent) {
         return (<p>Loading posts...</p>)
     }
 
-    if (isReady) return (<>
+    if (isReadyToDisplayContent) return (<>
         <section className="profilePostsView">
                 { userPosts.length === 0 &&
                     <p>You haven't posted any {profileContentView} yet!</p>

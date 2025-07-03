@@ -23,13 +23,13 @@ const Posts = ({ postType }) => {
         hasAccess === false && navigate('/unauthorized')
     }, [hasAccess])
 
-    const [isReady, setIsReady] = useState(false)
+    const [isReadyToDisplayContent, setIsReadyToDisplayContent] = useState(false)
     const [posts, setPosts] = useState([])
     useEffect( () => {
         const loadPosts = async () => {
-            await setIsReady(false)
+            await setIsReadyToDisplayContent(false)
             await getAllPostsByType(postType, setPosts)
-            await setIsReady(true)
+            await setIsReadyToDisplayContent(true)
         }
         loadPosts()
     }, [postType])
@@ -37,9 +37,9 @@ const Posts = ({ postType }) => {
 
     const HEADER_TEXT = `Sk8rlog: ${postType}`
 
-    if (!isReady) return (<p>Loading posts...</p>)
+    if (!isReadyToDisplayContent) return (<p>Loading posts...</p>)
 
-    if (isReady) return (<>
+    if (isReadyToDisplayContent) return (<>
         <Header HEADER_TEXT={HEADER_TEXT}/>
 
         <section className='pageMain'>
