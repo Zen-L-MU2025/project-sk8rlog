@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { uploadPost } from '/src/utils/PostUtils'
+import { uploadPost } from '/src/utils/postUtils'
 import { CLIPS, BLOGS, DEFAULT } from '/src/utils/constants'
 
 import '/src/css/createPostModal.css'

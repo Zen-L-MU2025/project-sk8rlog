@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 
 import PostCard from '/src/main/PostCard'
 
-import  { getAllPostsByType } from '/src/utils/PostUtils'
+import  { getAllPostsByType } from '/src/utils/postUtils'
 
 import '/src/css/home.css'
 

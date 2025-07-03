@@ -15,7 +15,7 @@ const LoginModal = () => {
     }, [isSuccessful])
 
     const handleForm = async (formData) => {
-        handleLoginOrRegister(formData, "login", setIsSuccessful)
+        await handleLoginOrRegister(formData, "login", setIsSuccessful)
     }
 
     return (<>

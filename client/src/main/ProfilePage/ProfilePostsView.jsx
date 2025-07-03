@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import PostCard from '/src/main/PostCard'
 
-import  { getUserPostsByType } from '/src/utils/PostUtils'
+import  { getUserPostsByType } from '/src/utils/postUtils'
 
 import '/src/css/profile.css'
 
