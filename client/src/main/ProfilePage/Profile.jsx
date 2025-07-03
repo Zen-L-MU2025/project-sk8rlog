@@ -50,7 +50,7 @@ const Profile = () => {
 
     if (!isReadyToDisplayContent) return (<p>Loading profile...</p>)
 
-    if (isReadyToDisplayContent) return (<>
+    return (<>
         <Header HEADER_TEXT={HEADER_TEXT} />
         <section className='pageMain'>
             <Sidebar />

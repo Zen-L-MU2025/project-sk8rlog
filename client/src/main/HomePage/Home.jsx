@@ -38,7 +38,7 @@ const Home = () => {
 
     if (!isReadyToDisplayContent) return (<p>Loading profile...</p>)
 
-    if (isReadyToDisplayContent) return (<>
+    return (<>
         <Header HEADER_TEXT={HEADER_TEXT} />
 
         <h2 className='subHeading'>Today in Sk8rlog</h2>

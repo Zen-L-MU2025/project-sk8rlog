@@ -28,7 +28,7 @@ const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPos
         return (<p>Loading posts...</p>)
     }
 
-    if (isReadyToDisplayContent) return (<>
+    return (<>
         <section className="profilePostsView">
                 { userPosts.length === 0 &&
                     <p>You haven't posted any {profileContentView} yet!</p>

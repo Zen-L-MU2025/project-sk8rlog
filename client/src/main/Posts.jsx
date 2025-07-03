@@ -39,7 +39,7 @@ const Posts = ({ postType }) => {
 
     if (!isReadyToDisplayContent) return (<p>Loading posts...</p>)
 
-    if (isReadyToDisplayContent) return (<>
+    return (<>
         <Header HEADER_TEXT={HEADER_TEXT}/>
 
         <section className='pageMain'>
