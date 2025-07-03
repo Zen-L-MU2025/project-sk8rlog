@@ -59,9 +59,7 @@
 
     gap: 30px;
     padding: 20px 0 20px 0;
-}
 
-#clipsColumnContent {
     height: 80%;
     overflow-y: scroll;
 }

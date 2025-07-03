@@ -6,7 +6,7 @@
 
 .BlogsPostCard {
     width: 300px;
-    height: 300px;
+    min-height: 300px;
     border: 1px solid #3b0747; border-radius: 3px;
 }
 
