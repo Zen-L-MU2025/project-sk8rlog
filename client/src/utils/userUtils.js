@@ -2,6 +2,7 @@ const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
 
+
 // Tracks if landing page submission is login or register
 export const OPTIONS = {
     LOGIN : "login",
@@ -10,15 +11,16 @@ export const OPTIONS = {
 
 // Handle login/register submission
 export const handleLoginOrRegister = (formData, submissionType, setIsSuccessful) => {
-    const username = formData.get("username"), password = formData.get("password")
+
+    const formObject = Object.fromEntries([...formData])
 
     switch (submissionType) {
         case OPTIONS.LOGIN:
-            login(username, password, setIsSuccessful)
+            login(formObject, setIsSuccessful)
             break
 
         case OPTIONS.REGISTER:
-            register(username, password, setIsSuccessful)
+            register(formObject, setIsSuccessful)
             break
 
         default:
@@ -27,15 +29,15 @@ export const handleLoginOrRegister = (formData, submissionType, setIsSuccessful)
 }
 
 // Handle registration: store token and new user in session storage on completion
-export const register = (username, password, setIsSuccessful) => {
-    axios.post(`${baseUrl}/users/register`, {username, password, withCredentials: true})
+export const register = (formObject, setIsSuccessful) => {
+
+    axios.post(`${baseUrl}/users/register`, {formObject, withCredentials: true})
         .then(res => {
             setIsSuccessful(res.data.isSuccessful)
 
             const newUserData = res.data.newUser
             // No need to store password in session
             delete newUserData.password
-            const newUser = JSON.stringify(newUserData)
             sessionStorage.setItem("user", newUser)
         })
         .catch(error => {
@@ -45,20 +47,22 @@ export const register = (username, password, setIsSuccessful) => {
 }
 
 // Handle login: store token and user in session storage on completion
-export const login = async (username, password, setIsSuccessful) => {
-    let token;
+export const login = async (formObject, setIsSuccessful) => {
+    let token, userID
 
-    await axios.post(`${baseUrl}/users/login`, {username, password, withCredentials: true})
+    await axios.post(`${baseUrl}/users/login`, {formObject, withCredentials: true})
         .then(res => {
             setIsSuccessful(res.data.isSuccessful)
 
             const userData = res.data.user
             // No need to store password in session
             delete userData.password
+
             const user = JSON.stringify(userData)
             sessionStorage.setItem("user", user)
 
             token = res.data.token
+            userID = userData.userID
         })
         .catch(error => {
             console.error("login error: ", error)
@@ -66,7 +70,7 @@ export const login = async (username, password, setIsSuccessful) => {
             return
         })
 
-        await axios.get(`${baseUrl}/auth/setCookie`, {headers : { 'Authorization' : `Bearer ${token}` }, withCredentials: true})
+        await axios.get(`${baseUrl}/auth/setCookie`, {headers : { 'Authorization' : `Bearer ${token}:${userID}` }, withCredentials: true})
             .then(res => {
                 setIsSuccessful(res.data.isSuccessful)
             })
@@ -76,17 +80,12 @@ export const login = async (username, password, setIsSuccessful) => {
 // Sets hasAccess to true if access is verified, false otherwise
 export const verifyAccess = (setHasAccess) => {
 
-    // Convert cookie string to array and find the webtoken
-    const cookies = document.cookie.split(';')
-    const tokenCookie = cookies.find(cookie => cookie.includes("webtoken"))
+    const token = locateCookie("webtoken")
 
-    if (!tokenCookie) {
+    if (!token) {
         setHasAccess(false)
         return
     }
-
-    // Split tokenCookie and acquire the value
-    const token = tokenCookie.split('=')[1].trim()
 
     axios.get(`${baseUrl}/auth/verify`, {headers : { 'Authorization' : `Bearer ${token}` }, withCredentials: true})
         .then(res => {
@@ -98,4 +97,42 @@ export const verifyAccess = (setHasAccess) => {
         })
 
 
+}
+
+// Fetch user data to load into session storage
+// Sets activeUser to user data if successful, logs error to console otherwise
+// This function is only called from protected routes under the assumption that user is already logged in
+export const loadUserSession = (setActiveUser) => {
+    const user = JSON.parse(sessionStorage.getItem('user'))
+    if (user) {
+        setActiveUser(user)
+    }
+
+    const userID = locateCookie("userid")
+    if (!userID) {
+        console.error("No user ID cookie found")
+    }
+
+    axios.get(`${baseUrl}/users/${userID}`, {withCredentials: true})
+        .then(res => {
+            sessionStorage.setItem("user", JSON.stringify(res.data.user))
+            setActiveUser(res.data.user)
+        })
+        .catch(error => {
+            console.error("verifyAccess error: ", error)
+        })
+}
+
+// Helper function that returns the content of a specified cookie
+const locateCookie = (cookieName) => {
+
+    // Convert cookie string to array and find desired cookie
+    const cookies = document.cookie.split(';')
+    const locatedCookie = cookies.find(cookie => cookie.includes(cookieName))
+
+    if (!locatedCookie) {
+        return null
+    }
+
+    return locatedCookie.split('=')[1].trim()
 }

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Routes, Route, BrowserRouter, Link } from "react-router"
 
 import LoginModal from './auth/LoginModal'
@@ -6,13 +7,17 @@ import Home from './main/HomePage/Home'
 import Profile from './main//ProfilePage/Profile'
 import Posts from './main/Posts'
 
+import UserContext from '/src/utils/UserContext.js'
 import { CLIPS, BLOGS } from '/src/utils/constants'
 
 import './App.css'
 
 function App() {
 
+  const [activeUser, setActiveUser] = useState({})
+
   return (<>
+    <UserContext.Provider value={{ activeUser, setActiveUser }}>
 
     <BrowserRouter>
       <Routes>
@@ -43,6 +48,7 @@ function App() {
       </Routes>
     </BrowserRouter>
 
+    </UserContext.Provider>
   </>)
 }
 

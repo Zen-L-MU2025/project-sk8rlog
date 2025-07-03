@@ -6,6 +6,7 @@ import { handleLoginOrRegister} from '/src/utils/UserUtils'
 import '/src/css/landingModal.css'
 
 const LoginModal = () => {
+
     const navigate = useNavigate()
     const [isSuccessful, setIsSuccessful] = useState(null)
 

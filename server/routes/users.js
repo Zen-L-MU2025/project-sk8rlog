@@ -1,3 +1,6 @@
+// TODO next() is a placeholder in case of some continuation of an endpoint in the future
+// Clean this up once during finishing touches
+
 const { PrismaClient } = require('../generated/prisma');
 const bcrypt = require('bcryptjs')
 const router = require('express').Router()
@@ -12,7 +15,7 @@ const prisma = new PrismaClient()
 // POST /users/register
 // Takes desired username and password and creates a new user, returns the new user object, confirmation boolean, and a token
 router.use('/register', async (req, res, next) => {
-    const { username, password: plaintextPassword } = req.body
+    const { username, password: plaintextPassword, name, location } = req.body.formObject
 
     try {
         const user = await prisma.user.findUnique({ where: { username } })
@@ -24,7 +27,7 @@ router.use('/register', async (req, res, next) => {
         const password = await bcrypt.hash(plaintextPassword, 11)
         const newUser = await prisma.user.create({
             data: {
-                username, password
+                username, password, name, location
             }
         })
 
@@ -43,7 +46,7 @@ router.use('/register', async (req, res, next) => {
 // POST /users/login
 // Takes username and password and returns the user object, confirmation boolean, and a token
 router.use('/login', async (req, res, next) => {
-    const { username, password: plaintextPassword } = req.body
+    const { username, password: plaintextPassword } = req.body.formObject
 
     try {
         const user = await prisma.user.findUnique({ where: { username } })
@@ -62,6 +65,18 @@ router.use('/login', async (req, res, next) => {
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
     }
+})
+
+// GET /users/:userID
+// Returns the user object for the given userID
+router.use('/:userID', async (req, res, next) => {
+    const { userID } = req.params
+    const user = await prisma.user.findUnique({ where: { userID } })
+    if (!user) {
+        return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'User not found' })
+    }
+
+    res.status(STATUS_CODES.OK).json({ user })
 })
 
 module.exports = router

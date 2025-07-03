@@ -1,17 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
 
-import { CLIPS, BLOGS } from '/src/utils/constants'
+import UserContext from '/src/utils/UserContext'
+import { loadUserSession } from '/src/utils/userUtils'
+import { CLIPS, BLOGS, DEFAULT } from '/src/utils/constants'
 
 import '/src/css/createPostModal.css'
 
 const CreatePostModal = ({ toggleCreatePostModal }) => {
+    const { activeUser, setActiveUser } = useContext(UserContext)
+    useEffect( () => {
+        const load = async () => { await loadUserSession(setActiveUser) }
+        load()
+    }, [])
+
     const handleForm = (formData) => {
 
+        const formObject = Object.fromEntries([...formData])
+        console.log(formObject)
 
         toggleCreatePostModal()
     }
-
-    const DEFAULT = 'default'
     const [postType, setPostType] = useState(DEFAULT)
 
     const handleSelect = (event) => {
@@ -41,7 +49,7 @@ const CreatePostModal = ({ toggleCreatePostModal }) => {
 
 
                 { postType !== DEFAULT &&
-                    <button type='submit' onSubmit={(event) => event.preventDefault()}>Upload</button>
+                    <button type='submit'>Upload</button>
                 }
             </form>
         </section>

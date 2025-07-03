@@ -1,3 +1,6 @@
+// TODO next() is a placeholder in case of some continuation of an endpoint in the future
+// Clean this up once during finishing touches
+
 const router = require('express').Router()
 
 const webtoken = require('jsonwebtoken')
@@ -30,8 +33,12 @@ router.use('/verify', async (req, res, next) => {
 
 router.use('/setCookie', async (req, res, next) => {
     try {
-        const token = req.headers.authorization.split(' ')[1]
+        const auth = req.headers.authorization.split(' ')[1].split(':')
+        const token = auth[0]
+        const userID = auth[1]
+
         await res.cookie('webtoken', token, { Domain: "localhost", Path: "/", maxAge: 3600000, })
+        await res.cookie('userid', userID, { Domain: "localhost", Path: "/", maxAge: 3600000, })
         res.status(STATUS_CODES.OK).json({ message: 'Cookie created', isSuccessful: true })
         next()
 
@@ -43,7 +50,7 @@ router.use('/setCookie', async (req, res, next) => {
 router.use('/testUpload', async (req, res, next) => {
     try {
         const filePath = process.env.DUMMY_FILE_PATH
-        const objURL = await GCS.UploadFile(filePath, process.env.DUMMY_FILE_NAME)
+        const objURL = await GCS.uploadFile(filePath, process.env.DUMMY_FILE_NAME)
 
         objURL && res.status(STATUS_CODES.OK).json({ message: 'Object created', objURL, isSuccessful: true })
         !objURL && res.status(STATUS_CODES.SERVER_ERROR).json({ message: 'Object not created', isSuccessful: false })
