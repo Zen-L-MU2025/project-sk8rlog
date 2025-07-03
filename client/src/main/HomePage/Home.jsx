@@ -9,7 +9,7 @@ import UserContext from '/src/utils/UserContext'
 import { WEEKDAYS, CLIPS, BLOGS } from '/src/utils/constants'
 import { verifyAccess, loadUserSession } from '/src/utils/UserUtils'
 
-import '/src/css/home_main.css'
+import '/src/css/home.css'
 
 const Home = () => {
     const { activeUser, setActiveUser } = useContext(UserContext)

@@ -6,16 +6,27 @@ import  { getUserPostsByType } from '/src/utils/PostUtils'
 
 import '/src/css/profile.css'
 
-const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPosts }) => {
+const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPosts, isOutdated, setIsOutdated }) => {
 
     const [ isReady, setIsReady ] = useState(false)
     useEffect(() => {
-        // TODO Sample implementation, not functional yet
         getUserPostsByType(activeUser, profileContentView, setUserPosts)
         setIsReady(true)
     }, [profileContentView])
 
-    if (!isReady) return (<p>Loading posts...</p>)
+    useEffect(() => {
+        const reload = async () => {
+            await setIsReady(false)
+            await getUserPostsByType(activeUser, profileContentView, setUserPosts)
+            await setIsReady(true)
+            await setIsOutdated(false)
+        }
+        if (isOutdated) reload()
+    }, [isOutdated])
+
+    if (!isReady) {
+        return (<p>Loading posts...</p>)
+    }
 
     if (isReady) return (<>
         <section className="profilePostsView">

@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 
 import PostCard from '/src/main/PostCard'
 
-import '/src/css/home_main.css'
+import '/src/css/home.css'
 
 const HomePostsView = ({ postType }) => {
     const postType_lowercase = postType.toLowerCase()

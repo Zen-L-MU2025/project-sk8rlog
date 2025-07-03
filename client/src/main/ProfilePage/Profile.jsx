@@ -22,6 +22,7 @@ const Profile = () => {
     const { activeUser, setActiveUser } = useContext(UserContext)
 
     const [userPosts, setUserPosts] = useState([])
+    const [isOutdated, setIsOutdated] = useState(false)
 
     const[ isReady, setIsReady ] = useState(false)
     useEffect( () => {
@@ -63,14 +64,16 @@ const Profile = () => {
                     activeUser={activeUser}
                     profileContentView={profileContentView}
                     userPosts={userPosts} setUserPosts={setUserPosts}
+                    isOutdated={isOutdated} setIsOutdated={setIsOutdated}
                 />
             </div>
         </section>
 
         { showCreatePostModal &&
             <CreatePostModal
+                activeUser={activeUser}
                 toggleCreatePostModal={toggleCreatePostModal}
-                userPosts={userPosts} setUserPosts={setUserPosts}
+                setIsOutdated={setIsOutdated}
             />
         }
 
