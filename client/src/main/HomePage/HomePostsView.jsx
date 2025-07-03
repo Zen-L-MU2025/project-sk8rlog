@@ -13,10 +13,11 @@ const HomePostsView = ({ activeUser, postType }) => {
 
     const [posts, setPosts] = useState([])
 
+    const loadPosts = async () => {
+        await getAllPostsByType(postType, setPosts)
+    }
+
     useEffect( () => {
-        const loadPosts = async () => {
-            await getAllPostsByType(postType, setPosts)
-        }
         loadPosts()
     }, [])
 
