@@ -45,8 +45,8 @@ const Home = () => {
         <p className='scrollNote'><em>Scroll down to see Blogs!</em></p>
 
         <section className='columns'>
-            <HomePostsView postType={CLIPS} />
-            <HomePostsView postType={BLOGS} />
+            <HomePostsView activeUser={activeUser} postType={CLIPS} />
+            <HomePostsView activeUser={activeUser} postType={BLOGS} />
         </section>
 
         <p className='scrollNote' id='footerNote'><em>Scroll up to see Clips!</em></p>
