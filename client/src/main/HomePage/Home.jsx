@@ -16,8 +16,8 @@ const Home = () => {
 
     const[ isReady, setIsReady ] = useState(false)
     useEffect( () => {
-        const load = async () => { await loadUserSession(setActiveUser) }
-        load()
+        const loadUser = async () => { await loadUserSession(setActiveUser) }
+        loadUser()
         setIsReady(true)
     }, [])
 

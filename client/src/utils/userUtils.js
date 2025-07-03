@@ -115,6 +115,7 @@ export const loadUserSession = (setActiveUser) => {
 
     axios.get(`${baseUrl}/users/${userID}`, {withCredentials: true})
         .then(res => {
+            delete res.data.user.password
             sessionStorage.setItem("user", JSON.stringify(res.data.user))
             setActiveUser(res.data.user)
         })
