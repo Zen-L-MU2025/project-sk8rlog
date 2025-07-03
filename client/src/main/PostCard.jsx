@@ -25,7 +25,7 @@ const PostCard = ({ post, postType }) => {
         <article className={`${postType}PostCard`}>
             { postType === CLIPS &&
                 <video ref={embedRef} className={`${postType}PostCardEmbed`} src={post.fileURL}
-                    onMouseEnter={onEnter} onMouseLeave={onLeave}
+                    muted onMouseEnter={onEnter} onMouseLeave={onLeave}
                 />
             }
             { postType === BLOGS &&
