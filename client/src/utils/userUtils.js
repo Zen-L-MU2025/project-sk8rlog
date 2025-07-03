@@ -4,7 +4,7 @@ import axios from 'axios'
 
 
 // Tracks if landing page submission is login or register
-export const OPTIONS = {
+const OPTIONS = {
     LOGIN : "login",
     REGISTER : "register"
 }
@@ -70,10 +70,10 @@ export const login = async (formObject, setIsSuccessful) => {
             return
         })
 
-        await axios.get(`${baseUrl}/auth/setCookie`, {headers : { 'Authorization' : `Bearer ${token}:${userID}` }, withCredentials: true})
-            .then(res => {
-                setIsSuccessful(res.data.isSuccessful)
-            })
+    await axios.get(`${baseUrl}/auth/setCookie`, {headers : { 'Authorization' : `Bearer ${token}:${userID}` }, withCredentials: true})
+        .then(res => {
+            setIsSuccessful(res.data.isSuccessful)
+        })
 }
 
 // Verify user access to protected resource

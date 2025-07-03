@@ -35,6 +35,7 @@ model Post {
   description       String
   location          String
   type              String
+  fileURL           String
   likeCount         Int     @default(0)
   comments          String[]  @default([])
 }

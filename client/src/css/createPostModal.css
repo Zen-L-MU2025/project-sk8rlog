@@ -28,6 +28,13 @@
     overflow-y: scroll;
 }
 
+.upload {
+    text-align: left;
+    align-self: self-start;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+}
+
 input, textarea {
     border-radius: 3px;
 }

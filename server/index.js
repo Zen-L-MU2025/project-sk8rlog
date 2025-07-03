@@ -4,6 +4,7 @@ const session = require('express-session')
 
 const usersRouter = require('./routes/users')
 const authRouter = require('./routes/auth')
+const postsRouter = require('./routes/posts')
 
 const app = express()
 app.use(express.json())
@@ -31,6 +32,7 @@ app.use(express.json())
 
 app.use('/users', usersRouter)
 app.use('/auth', authRouter)
+app.use('/posts', postsRouter)
 
 const PORT = 3000
 
