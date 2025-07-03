@@ -7,28 +7,39 @@ import Footer from './Footer'
 import PostCard from './PostCard'
 
 import { verifyAccess } from '/src/utils/UserUtils'
+import  { getAllPostsByType } from '/src/utils/PostUtils'
 
 import '/src/css/hasSidebar.css'
 import '/src/css/posts.css'
 
 const Posts = ({ postType }) => {
-    const TEST_ITEM_COUNT = 20
-    
+
     const navigate = useNavigate()
-
     const [hasAccess, setHasAccess] = useState(null)
-
     useEffect( () => {
         verifyAccess(setHasAccess)
     }, [])
-
     useEffect( () => {
         hasAccess === false && navigate('/unauthorized')
     }, [hasAccess])
 
+    const [isReady, setIsReady] = useState(false)
+    const [posts, setPosts] = useState([])
+    useEffect( () => {
+        const loadPosts = async () => {
+            await setIsReady(false)
+            await getAllPostsByType(postType, setPosts)
+            await setIsReady(true)
+        }
+        loadPosts()
+    }, [postType])
+
+
     const HEADER_TEXT = `Sk8rlog: ${postType}`
 
-    return (<>
+    if (!isReady) return (<p>Loading posts...</p>)
+
+    if (isReady) return (<>
         <Header HEADER_TEXT={HEADER_TEXT}/>
 
         <section className='pageMain'>
@@ -42,11 +53,12 @@ const Posts = ({ postType }) => {
                         <option value='near'>Near You</option>
                     </select>
                 </form>
+
                 <div className="posts">
                 {
-                    [...Array(TEST_ITEM_COUNT)].map(i => {
+                    posts.map(post => {
                         return (
-                            <PostCard key={i} postType={postType} />
+                            <PostCard key={post.postID} post={post} postType={postType}/>
                         )
                     })
                 }

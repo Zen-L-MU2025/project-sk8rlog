@@ -13,7 +13,7 @@ const prisma = new PrismaClient()
 
 // POST /posts/uploadFile
 // Uploads a pending post's file to GCS and returns the URL
-router.post('/uploadFile', multer.single('postFile'), async (req, res) => {
+router.post('/uploadFile', multer.single('postFile'), async (req, res, next) => {
     try {
         if (!req.file) {
             return res.status(STATUS_CODES.BAD_REQUEST).json({ message: 'No file provided', isSuccessful: false })
@@ -29,13 +29,13 @@ router.post('/uploadFile', multer.single('postFile'), async (req, res) => {
         return res.status(STATUS_CODES.CREATED).json({ fileURL : objectURL, message: 'File uploaded' })
 
     } catch (error) {
-        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
     }
 })
 
 // POST /posts/:userID
 // Uploads a post to the database and subsequently links it to the user through their ID
-router.post('/:userID', async (req, res, next) => {
+router.post('/create/:userID', async (req, res, next) => {
     try {
         const { userID } = req.params
         const { textContent, location, postType, fileURL } = req.body
@@ -49,11 +49,13 @@ router.post('/:userID', async (req, res, next) => {
         return res.status(STATUS_CODES.CREATED).json({ post, message: 'Post created' })
 
     } catch (error) {
-        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
     }
 })
 
-router.get('/:userID/:type', async (req, res, next) => {
+// GET /posts/by/:userID/:type
+// Retrieves all posts by specified user of specified type
+router.get('/by/:userID/:type', async (req, res, next) => {
     try {
         const { userID, type } = req.params
 
@@ -64,7 +66,28 @@ router.get('/:userID/:type', async (req, res, next) => {
         return res.status(STATUS_CODES.OK).json({ posts, message: 'Posts retrieved' })
 
     } catch (error) {
-        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
+    }
+})
+
+// GET /posts/all/:type
+// Retrieves *all* posts of specified type
+router.get('/all/:type', async (req, res, next) => {
+    try {
+        const { type } = req.params
+
+        const posts = await prisma.post.findMany({
+            where: { type }
+        })
+
+        if (posts.length < 1) {
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'No posts found' })
+        }
+
+        return res.status(STATUS_CODES.OK).json({ posts, message: 'Posts retrieved' })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
     }
 })
 

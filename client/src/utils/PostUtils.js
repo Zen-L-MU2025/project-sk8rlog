@@ -23,14 +23,25 @@ export const uploadPost = async ( postType, formData, userID, location ) => {
             console.error("uploadFile error: ", error)
         })
 
-    await axios.post(`${baseUrl}/posts/${userID}`, { textContent, location, postType, fileURL })
+    await axios.post(`${baseUrl}/posts/create/${userID}`, { textContent, location, postType, fileURL })
 }
 
 // Provided a userID, gets all posts for that user by specified postType and sets the userPosts array state
 export const getUserPostsByType = async ( activeUser, postType, setUserPosts ) => {
-    await axios.get(`${baseUrl}/posts/${activeUser.userID}/${postType}`)
+    await axios.get(`${baseUrl}/posts/by/${activeUser.userID}/${postType}`)
         .then(res => {
             setUserPosts(res.data.posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate)))
+        })
+        .catch(error => {
+            console.error("getUserPostsByType error: ", error)
+        })
+}
+
+// Gets all posts by specified postType and sets the posts array state
+export const getAllPostsByType = async ( postType, setPosts ) => {
+    await axios.get(`${baseUrl}/posts/all/${postType}`)
+        .then(res => {
+            setPosts(res.data.posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate)))
         })
         .catch(error => {
             console.error("getUserPostsByType error: ", error)
