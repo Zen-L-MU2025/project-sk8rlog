@@ -15,11 +15,10 @@ const PostCard = ({ post, postType }) => {
         embedRef.current.pause()
     }
 
-    if (!post) return (
-        <article className={`${postType}PostCard`}>
-            <p>No post data found! This is a dummy card.</p>
-        </article>
-    )
+    if (!post) {
+        console.error('Post failed to load')
+        return
+    }
 
     return (
         <article className={`${postType}PostCard`}>
