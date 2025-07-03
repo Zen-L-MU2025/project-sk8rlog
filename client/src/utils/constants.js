@@ -10,4 +10,6 @@ export const WEEKDAYS = {
     4: 'Thursday',
     5: 'Friday',
     6: 'Saturday'
-  }
+}
+
+export const HOME_PAGE_POST_COUNT = 4
