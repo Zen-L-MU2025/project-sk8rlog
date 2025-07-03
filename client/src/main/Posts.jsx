@@ -7,7 +7,7 @@ import Footer from './Footer'
 import PostCard from './PostCard'
 
 import { verifyAccess } from '/src/utils/UserUtils'
-import  { getAllPostsByType } from '/src/utils/PostUtils'
+import  { getAllPostsByType } from '/src/utils/postUtils'
 
 import '/src/css/hasSidebar.css'
 import '/src/css/posts.css'
