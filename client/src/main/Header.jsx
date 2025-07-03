@@ -13,6 +13,15 @@ const Header = ({ HEADER_TEXT }) => {
         setIsIconOverlayOpen(!isIconOverlayOpen)
     }
 
+    const handleLogout = () => {
+        sessionStorage.clear()
+        const cookies = document.cookie.split(';')
+        cookies.forEach(cookie => {
+            // Arbitrarily older date that will force the cookie to instantenously expire
+            document.cookie = cookie.split('=')[0] + '=;expires=Thu, 01 Jan 1984; path=/'
+        })
+    }
+
     return (
         <header className="mainHeader">
             <Link to='/home'> <img className='logo' src={skateboard} alt="skateboard" /> </Link>
@@ -27,7 +36,7 @@ const Header = ({ HEADER_TEXT }) => {
                 <div className='iconOverlay'>
                     <img className='gearIcon' onClick={toggleIconOverlay} src={gear} alt='gear icon' />
                     <button>Settings</button>
-                    <button>Log Out</button>
+                    <Link to='/'><button onClick={handleLogout}>Log Out</button></Link>
                 </div>
             }
         </header>
