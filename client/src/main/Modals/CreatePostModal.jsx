@@ -1,6 +1,5 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState } from 'react'
 
-import { loadUserSession } from '/src/utils/UserUtils'
 import { uploadPost } from '/src/utils/PostUtils'
 import { CLIPS, BLOGS, DEFAULT } from '/src/utils/constants'
 

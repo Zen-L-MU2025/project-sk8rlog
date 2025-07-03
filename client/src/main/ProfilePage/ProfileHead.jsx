@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import { CLIPS, BLOGS } from '/src/utils/constants'
 import skateboard from '/src/assets/skateboard.png'
 
