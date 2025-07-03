@@ -1,23 +1,16 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState } from 'react'
 
-import UserContext from '/src/utils/UserContext'
-import { loadUserSession } from '/src/utils/UserUtils'
-import { uploadPost } from '/src/utils/PostUtils'
+import { uploadPost } from '/src/utils/postUtils'
 import { CLIPS, BLOGS, DEFAULT } from '/src/utils/constants'
 
 import '/src/css/createPostModal.css'
 
-const CreatePostModal = ({ toggleCreatePostModal }) => {
-    const { activeUser, setActiveUser } = useContext(UserContext)
-    useEffect( () => {
-        const load = async () => { await loadUserSession(setActiveUser) }
-        load()
-    }, [])
-
+const CreatePostModal = ({ activeUser, toggleCreatePostModal, setIsOutdated }) => {
     const [postType, setPostType] = useState(DEFAULT)
 
-    const handleForm = (formData) => {
-        uploadPost(postType, formData, activeUser.userID, activeUser.location)
+    const handleForm = async (formData) => {
+        await uploadPost(postType, formData, activeUser.userID, activeUser.location)
+        setIsOutdated(true)
         toggleCreatePostModal()
     }
 

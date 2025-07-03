@@ -9,13 +9,16 @@ import UserContext from '/src/utils/UserContext'
 import { WEEKDAYS, CLIPS, BLOGS } from '/src/utils/constants'
 import { verifyAccess, loadUserSession } from '/src/utils/UserUtils'
 
-import '/src/css/home_main.css'
+import '/src/css/home.css'
 
 const Home = () => {
     const { activeUser, setActiveUser } = useContext(UserContext)
+
+    const[ isReady, setIsReady ] = useState(false)
     useEffect( () => {
-        const load = async () => { await loadUserSession(setActiveUser) }
-        load()
+        const loadUser = async () => { await loadUserSession(setActiveUser) }
+        loadUser()
+        setIsReady(true)
     }, [])
 
     const navigate = useNavigate()
@@ -30,18 +33,20 @@ const Home = () => {
         hasAccess === false && navigate('/unauthorized')
     }, [hasAccess])
 
-    const user_title = activeUser.name ? activeUser.name : `@${activeUser.username}`
-    const HEADER_TEXT = `Happy ${WEEKDAYS[new Date().getDay()]}, ${user_title} !`
+    const userTitle = activeUser.name || `@${activeUser.username}`
+    const HEADER_TEXT = `Happy ${WEEKDAYS[new Date().getDay()]}, ${userTitle} !`
 
-    return (<>
+    if (!isReady) return (<p>Loading profile...</p>)
+
+    if (isReady) return (<>
         <Header HEADER_TEXT={HEADER_TEXT} />
 
         <h2 className='subHeading'>Today in Sk8rlog</h2>
         <p className='scrollNote'><em>Scroll down to see Blogs!</em></p>
 
         <section className='columns'>
-            <HomePostsView postType={CLIPS} />
-            <HomePostsView postType={BLOGS} />
+            <HomePostsView activeUser={activeUser} postType={CLIPS} />
+            <HomePostsView activeUser={activeUser} postType={BLOGS} />
         </section>
 
         <p className='scrollNote' id='footerNote'><em>Scroll up to see Clips!</em></p>

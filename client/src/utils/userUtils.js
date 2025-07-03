@@ -10,17 +10,17 @@ const OPTIONS = {
 }
 
 // Handle login/register submission
-export const handleLoginOrRegister = (formData, submissionType, setIsSuccessful) => {
+export const handleLoginOrRegister = async (formData, submissionType, setIsSuccessful) => {
 
     const formObject = Object.fromEntries([...formData])
 
     switch (submissionType) {
         case OPTIONS.LOGIN:
-            login(formObject, setIsSuccessful)
+            await login(formObject, setIsSuccessful)
             break
 
         case OPTIONS.REGISTER:
-            register(formObject, setIsSuccessful)
+            await register(formObject, setIsSuccessful)
             break
 
         default:
@@ -106,15 +106,18 @@ export const loadUserSession = (setActiveUser) => {
     const user = JSON.parse(sessionStorage.getItem('user'))
     if (user) {
         setActiveUser(user)
+        return
     }
 
     const userID = locateCookie("userid")
     if (!userID) {
         console.error("No user ID cookie found")
+        return
     }
 
     axios.get(`${baseUrl}/users/${userID}`, {withCredentials: true})
         .then(res => {
+            delete res.data.user.password
             sessionStorage.setItem("user", JSON.stringify(res.data.user))
             setActiveUser(res.data.user)
         })

@@ -1,6 +1,3 @@
-// TODO next() is a placeholder in case of some continuation of an endpoint in the future
-// Clean this up once during finishing touches
-
 const { PrismaClient } = require('../generated/prisma');
 const bcrypt = require('bcryptjs')
 const router = require('express').Router()
@@ -12,7 +9,7 @@ const prisma = new PrismaClient()
 
 // POST /users/register
 // Takes desired username and password and creates a new user, returns the new user object, confirmation boolean, and a token
-router.post('/register', async (req, res, next) => {
+router.post('/register', async (req, res) => {
     const { username, password: plaintextPassword, name, location } = req.body.formObject
 
     try {
@@ -33,8 +30,7 @@ router.post('/register', async (req, res, next) => {
         const token = await webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
 
         await res.cookie('webtoken', token, { Domain: "localhost", Path: "/", maxAge: 3600000, })
-        res.status(STATUS_CODES.CREATED).json({ newUser, isSuccessful: true, token })
-        next()
+        return res.status(STATUS_CODES.CREATED).json({ newUser, isSuccessful: true, token })
 
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
@@ -57,8 +53,7 @@ router.post('/login', async (req, res, next) => {
         const tokenPayload = { userID: user.userID, username: user.username}
         const token = await webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
 
-        res.status(STATUS_CODES.OK).json({ user, isSuccessful: true, token })
-        next()
+        return res.status(STATUS_CODES.OK).json({ user, isSuccessful: true, token })
 
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
