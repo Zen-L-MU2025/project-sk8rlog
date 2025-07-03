@@ -26,14 +26,10 @@ const Posts = ({ postType }) => {
     const [isReadyToDisplayContent, setIsReadyToDisplayContent] = useState(false)
     const [posts, setPosts] = useState([])
 
-    const loadPosts = async () => {
-        await setIsReadyToDisplayContent(false)
-        await getAllPostsByType(postType, setPosts)
-        await setIsReadyToDisplayContent(true)
-    }
-
     useEffect( () => {
-        loadPosts()
+        setIsReadyToDisplayContent(false)
+        getAllPostsByType(postType, setPosts)
+        setIsReadyToDisplayContent(true)
     }, [postType])
 
 

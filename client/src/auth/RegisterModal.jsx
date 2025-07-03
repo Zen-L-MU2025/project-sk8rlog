@@ -15,7 +15,7 @@ const RegisterModal = () => {
     }, [isSuccessful])
 
     const handleForm = async (formData) => {
-        handleLoginOrRegister(formData, "register", setIsSuccessful)
+        await handleLoginOrRegister(formData, "register", setIsSuccessful)
     }
 
     return (<>
@@ -31,7 +31,7 @@ const RegisterModal = () => {
             <input type='text' name='location' placeholder='Location (optional)' />
             <button type='submit'>Register</button>
             <Link to='/'> I already have an account </Link>
-            {isSuccessful === false && <p className='error'>Something went wrong</p>}
+            {isSuccessful === false && <p className='error'>Something went wrong, please try registering again</p>}
         </form>
     </>)
 }

@@ -8,17 +8,13 @@ import  { getAllPostsByType } from '/src/utils/postUtils'
 
 import '/src/css/home.css'
 
-const HomePostsView = ({ activeUser, postType }) => {
+const HomePostsView = ({ postType }) => {
     const postType_lowercase = postType.toLowerCase()
 
     const [posts, setPosts] = useState([])
 
-    const loadPosts = async () => {
-        await getAllPostsByType(postType, setPosts)
-    }
-
     useEffect( () => {
-        loadPosts()
+        getAllPostsByType(postType, setPosts)
     }, [])
 
     return(<>

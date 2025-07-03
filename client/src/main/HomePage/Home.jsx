@@ -36,7 +36,7 @@ const Home = () => {
     const userTitle = activeUser.name || `@${activeUser.username}`
     const HEADER_TEXT = `Happy ${WEEKDAYS[new Date().getDay()]}, ${userTitle} !`
 
-    if (!isReadyToDisplayContent) return (<p>Loading profile...</p>)
+    if (!isReadyToDisplayContent) return (<p>Loading home page...</p>)
 
     return (<>
         <Header HEADER_TEXT={HEADER_TEXT} />
