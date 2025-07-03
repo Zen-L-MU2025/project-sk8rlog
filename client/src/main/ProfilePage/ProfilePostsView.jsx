@@ -30,7 +30,11 @@ const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPos
 
     if (isReady) return (<>
         <section className="profilePostsView">
-                {
+                { userPosts.length === 0 &&
+                    <p>You haven't posted any {profileContentView} yet!</p>
+                }
+
+                { userPosts.length > 0 &&
                     userPosts.map(post => {
                         return (
                             <PostCard key={post.postID} post={post} postType={profileContentView}/>
