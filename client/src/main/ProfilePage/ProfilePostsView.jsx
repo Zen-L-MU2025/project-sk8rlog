@@ -15,13 +15,12 @@ const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPos
     }, [profileContentView])
 
     useEffect(() => {
-        const reload = async () => {
-            await setIsReadyToDisplayContent(false)
-            await getUserPostsByType(activeUser, profileContentView, setUserPosts)
-            await setIsReadyToDisplayContent(true)
-            await setIsOutdated(false)
+        if (isOutdated) {
+            setIsReadyToDisplayContent(false)
+            getUserPostsByType(activeUser, profileContentView, setUserPosts)
+            setIsReadyToDisplayContent(true)
+            setIsOutdated(false)
         }
-        if (isOutdated) reload()
     }, [isOutdated])
 
     if (!isReadyToDisplayContent) {
