@@ -1,3 +1,7 @@
+.profileContent {
+    width: 100%;
+}
+
 .profileHead {
     display: flex;
     flex-flow: column;
