@@ -62,6 +62,17 @@ export const register = async (formObject, setIsSuccessful) => {
         })
 }
 
+// Finds a user by provided ID and sets corresponding user in state
+export const getUserByID = async (userID, setUser) => {
+    await axios.get(`${baseUrl}/users/${userID}`, {withCredentials: true})
+        .then(res => {
+            setUser(res.data.user)
+        })
+        .catch(error => {
+            console.error("getUserByID error: ", error)
+        })
+}
+
 // Handle login: store token and user in session storage on completion
 export const login = async (formObject, setIsSuccessful) => {
     let token, userID
