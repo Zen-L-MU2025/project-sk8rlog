@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { Link } from 'react-router'
 
 import { CLIPS, BLOGS } from '/src/utils/constants'
 
@@ -21,6 +22,7 @@ const PostCard = ({ post, postType }) => {
     }
 
     return (
+        <Link to={`/post/${post.postID}`} className='postRedirect'>
         <article className={`${postType}PostCard`}>
             { postType === CLIPS &&
                 <video ref={embedRef} className={`${postType}PostCardEmbed`} src={post.fileURL}
@@ -32,6 +34,7 @@ const PostCard = ({ post, postType }) => {
             }
             <p>{post.description}</p>
         </article>
+        </Link>
     )
 }
 

@@ -27,3 +27,16 @@
     border: 1px solid #3b0747;
     border-radius: 3px;
 }
+
+[class$="PostCard"] {
+    transition: 0.5s;
+}
+[class$="PostCard"]:hover {
+    box-shadow: 1px 1px 25px 7px rgba(59, 7, 71, 0.75);
+    -webkit-box-shadow: 1px 1px 25px 7px rgba(59, 7, 71, 0.75);
+    -moz-box-shadow: 1px 1px 25px 7px rgba(59, 7, 71, 0.75);
+}
+
+.postRedirect {
+    color: rgba(255, 255, 255, 0.87)
+}
