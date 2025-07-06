@@ -8,6 +8,7 @@ import PostCard from './PostCard'
 
 import { verifyAccess } from '/src/utils/UserUtils'
 import  { getAllPostsByType } from '/src/utils/postUtils'
+import { POSTS } from '/src/utils/constants'
 
 import '/src/css/hasSidebar.css'
 import '/src/css/posts.css'
@@ -56,7 +57,7 @@ const Posts = ({ postType }) => {
                 {
                     posts.map(post => {
                         return (
-                            <PostCard key={post.postID} post={post} postType={postType}/>
+                            <PostCard key={post.postID} post={post} postType={postType} origin={POSTS[postType]} />
                         )
                     })
                 }

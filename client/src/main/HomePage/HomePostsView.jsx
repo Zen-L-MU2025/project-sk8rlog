@@ -5,6 +5,7 @@ import PostCard from '/src/main/PostCard'
 
 import { HOME_PAGE_POST_COUNT } from '/src/utils/constants'
 import  { getAllPostsByType } from '/src/utils/postUtils'
+import { HOME } from '/src/utils/constants'
 
 import '/src/css/home.css'
 
@@ -28,7 +29,7 @@ const HomePostsView = ({ postType }) => {
                 {
                     posts.slice(0, HOME_PAGE_POST_COUNT).map(post => {
                         return (
-                            <PostCard key={post.postID} post={post} postType={postType}/>
+                            <PostCard key={post.postID} post={post} postType={postType} origin={HOME} />
                         )
                     })
                 }

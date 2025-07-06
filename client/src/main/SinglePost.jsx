@@ -6,12 +6,12 @@ import Footer from './Footer'
 
 import { getUserByID } from '/src/utils/userUtils'
 import { getPostByID } from '/src/utils/postUtils'
-import { CLIPS, BLOGS, toSingular } from '/src/utils/constants'
+import { CLIPS, BLOGS, toSingular, ORIGINS } from '/src/utils/constants'
 
 import '/src/css/singlePost.css'
 
 const SinglePost = () => {
-    const { postID } = useParams()
+    const { origin, postID } = useParams()
     const HEADER_TEXT = 'Sk8rlog'
     const [post, setPost] = useState(null)
     const [postAuthor, setPostAuthor] = useState(null)
@@ -31,7 +31,7 @@ const SinglePost = () => {
         <p>📍 {post?.location}</p>
         <p>{post?.description}</p>
         <p>{post?.likeCount} likes</p>
-        <Link to='/home'>Go Back</Link>
+        <Link to={`/${ORIGINS[origin]}`}>Go Back</Link>
         <Footer />
     </>)
 }

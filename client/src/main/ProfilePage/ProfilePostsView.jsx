@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import PostCard from '/src/main/PostCard'
 
 import  { getUserPostsByType } from '/src/utils/postUtils'
+import { PROFILE } from '/src/utils/constants'
 
 import '/src/css/profile.css'
 
@@ -36,7 +37,7 @@ const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPos
                 { userPosts.length > 0 &&
                     userPosts.map(post => {
                         return (
-                            <PostCard key={post.postID} post={post} postType={profileContentView}/>
+                            <PostCard key={post.postID} post={post} postType={profileContentView} origin={PROFILE} />
                         )
                     })
                 }

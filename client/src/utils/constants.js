@@ -23,3 +23,20 @@ export const WEEKDAYS = {
 }
 
 export const HOME_PAGE_POST_COUNT = 4
+
+const CLIPS_ORIGIN = "c"
+const BLOGS_ORIGIN = "b"
+
+export const POSTS = {
+    "Clips": CLIPS_ORIGIN,
+    "Blogs": BLOGS_ORIGIN
+}
+export const HOME = "h"
+export const PROFILE = "u"
+
+export const ORIGINS = {
+    [CLIPS_ORIGIN]: "clips",
+    [BLOGS_ORIGIN]: "blogs",
+    [HOME]: "home",
+    [PROFILE]: "profile"
+}

@@ -5,7 +5,7 @@ import { CLIPS, BLOGS } from '/src/utils/constants'
 
 import '/src/css/postCard.css';
 
-const PostCard = ({ post, postType }) => {
+const PostCard = ({ post, postType, origin }) => {
     const embedRef = useRef(null)
 
     const onEnter = () => {
@@ -22,7 +22,7 @@ const PostCard = ({ post, postType }) => {
     }
 
     return (
-        <Link to={`/post/${post.postID}`} className='postRedirect'>
+        <Link to={`/${origin}/post/${post.postID}`} className='postRedirect'>
         <article className={`${postType}PostCard`}>
             { postType === CLIPS &&
                 <video ref={embedRef} className={`${postType}PostCardEmbed`} src={post.fileURL}
