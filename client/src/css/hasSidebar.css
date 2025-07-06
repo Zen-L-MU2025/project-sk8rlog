@@ -1,4 +1,11 @@
+@keyframes slowFadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
 
+.pageMain {
+    animation: slowFadeIn 2.5s;
+}
 @media screen and (min-width: 750px) {
     .pageMain {
         display: flex;
