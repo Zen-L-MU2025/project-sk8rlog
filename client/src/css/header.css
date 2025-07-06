@@ -34,7 +34,7 @@
     border-radius: 50%;
 }
 .gearIcon:hover {
-    cursor: pointer;
+    cursor: url(/src/assets/skateboard.png) 100 0, pointer;
 }
 
 .iconOverlay {
