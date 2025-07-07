@@ -37,7 +37,9 @@ const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPos
                 { userPosts.length > 0 &&
                     userPosts.map(post => {
                         return (
-                            <PostCard key={post.postID} post={post} postType={profileContentView} origin={PROFILE_ORIGIN} />
+                            <PostCard key={post.postID} post={post} postType={profileContentView} origin={PROFILE_ORIGIN}
+                                setUserPosts={setUserPosts}
+                            />
                         )
                     })
                 }
