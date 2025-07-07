@@ -31,12 +31,12 @@ export const POSTS = {
     "Clips": CLIPS_ORIGIN,
     "Blogs": BLOGS_ORIGIN
 }
-export const HOME = "h"
-export const PROFILE = "u"
+export const HOME_ORIGIN = "h"
+export const PROFILE_ORIGIN = "u"
 
 export const ORIGINS = {
     [CLIPS_ORIGIN]: "clips",
     [BLOGS_ORIGIN]: "blogs",
-    [HOME]: "home",
-    [PROFILE]: "profile"
+    [HOME_ORIGIN]: "home",
+    [PROFILE_ORIGIN]: "profile"
 }
