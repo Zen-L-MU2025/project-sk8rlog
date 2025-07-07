@@ -58,3 +58,22 @@ export const getPostByID = async ( postID, setPost ) => {
             console.error("getPostByID error: ", error)
         })
 }
+
+// Provided a postID, deletes the post and updates the user's posts array state
+export const deletePost = async ( post, setUserPosts ) => {
+    const postIDtoDelete = post.postID
+    const fileURL = post.fileURL
+
+    await axios.delete(`${baseUrl}/posts/delete/${postIDtoDelete}`)
+        .then(() => {
+            setUserPosts(userPosts => userPosts.filter(post => post.postID !== postIDtoDelete))
+        })
+        .catch(error => {
+            console.error("deletePost/DB error: ", error)
+        })
+
+    await axios.delete(`${baseUrl}/posts/deleteFile`, { data : { fileURL } })
+        .catch(error => {
+            console.error("deletePost/File: ", error)
+        })
+}
