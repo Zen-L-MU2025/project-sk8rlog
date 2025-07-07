@@ -111,4 +111,35 @@ router.get('/single/:postID', async (req, res, next) => {
     }
 })
 
+// DELETE /posts/delete/:postID
+// Deletes a post by its ID in the database
+router.delete('/delete/:postID', async (req, res, next) => {
+    try {
+        const { postID } = req.params
+
+        await prisma.post.delete({
+            where: { postID }
+        })
+
+        return res.status(STATUS_CODES.OK).json({ message: 'Post deleted' })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
+    }
+})
+
+// DELETE /posts/deleteFile
+// Deletes a post's file from GCS
+router.delete('/deleteFile', async (req, res, next) => {
+    try {
+        const { fileURL } = req.body
+        await GCS.deleteFile(fileURL)
+
+        return res.status(STATUS_CODES.OK).json({ message: 'File deleted' })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
+    }
+})
+
 module.exports = router
