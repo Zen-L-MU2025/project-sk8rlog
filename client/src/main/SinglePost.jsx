@@ -25,13 +25,15 @@ const SinglePost = () => {
 
     return (<>
         <Header HEADER_TEXT={HEADER_TEXT}/>
-        <p>{ toSingular(post?.type) } posted by <em>@{ postAuthor?.username }</em> on { post?.creationDate }</p>
-        { post?.type === CLIPS && <video src={post?.fileURL} controls={true} className='singlePostMedia'/>}
-        { post?.type === BLOGS && <img src={post?.fileURL} className='singlePostMedia' /> }
-        <p>📍 {post?.location}</p>
-        <p>{post?.description}</p>
-        <p>{post?.likeCount} likes</p>
-        <Link to={`/${ORIGINS[origin]}`}>Go Back</Link>
+        <div className='singlePostContent'>
+            <p>{ toSingular(post?.type) } posted by <em>@{ postAuthor?.username }</em> on { post?.creationDate }</p>
+            { post?.type === CLIPS && <video src={post?.fileURL} controls={true} className='singlePostMedia'/>}
+            { post?.type === BLOGS && <img src={post?.fileURL} className='singlePostMedia' /> }
+            <p>📍 {post?.location}</p>
+            <p>{post?.description}</p>
+            <p>{post?.likeCount} likes</p>
+            <Link to={`/${ORIGINS[origin]}`}>Go Back</Link>
+        </div>
         <Footer />
     </>)
 }

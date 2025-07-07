@@ -1,4 +1,22 @@
+@keyframes slowFadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.singlePostContent {
+    animation: slowFadeIn 2.5s;
+}
+
 .singlePostMedia {
     width: 500px;
     height: 400px;
+
+
+    /* Pending Implementation */
+    /* width: 80vw;
+    height: 40vh;
+    max-width: 500px;
+    max-height: 400px;
+    object-fit: cover;
+    aspect-ratio: auto; */
 }
