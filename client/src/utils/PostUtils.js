@@ -77,3 +77,29 @@ export const deletePost = async ( post, setUserPosts ) => {
             console.error("deletePost/File: ", error)
         })
 }
+
+// Handles data related to liking/unliking a post
+export const handleLikeOrUnlikePost = (event, postID, action, activeUser, setActiveUser) => {
+    const LIKE = "like"
+    const UNLIKE = "unlike"
+
+    event.preventDefault()
+
+    switch (action) {
+        case LIKE:
+            setActiveUser({...activeUser, likedPosts: [...activeUser.likedPosts, postID]})
+            // update in database
+            // send to rec algo
+            break
+
+        case UNLIKE:
+            const newLikedPosts = activeUser.likedPosts.filter(postID => postID !== postID)
+            setActiveUser({...activeUser, likedPosts: newLikedPosts})
+            // update in database
+            // send to rec algo
+            break
+
+        default:
+            console.error('Invalid handleLikeOrUnlike action')
+    }
+}

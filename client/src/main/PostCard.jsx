@@ -1,7 +1,7 @@
 import { useRef, useContext } from 'react'
 import { Link } from 'react-router'
 
-import { deletePost } from '/src/utils/postUtils'
+import { deletePost, handleLikeOrUnlikePost } from '/src/utils/postUtils'
 
 import UserContext from '/src/utils/UserContext'
 import { CLIPS, BLOGS, LIKE, UNLIKE } from '/src/utils/constants'
@@ -30,26 +30,8 @@ const PostCard = ({ post, postType, origin, setUserPosts }) => {
         deletePost(post, setUserPosts)
     }
 
-    const handleLikeOrUnlikePost = (event, action) => {
-        event.preventDefault()
-
-        switch (action) {
-            case LIKE:
-                setActiveUser({...activeUser, likedPosts: [...activeUser.likedPosts, post.postID]})
-                // update in database
-                // send to rec algo
-                break
-
-            case UNLIKE:
-                const newLikedPosts = activeUser.likedPosts.filter(postID => postID !== post.postID)
-                setActiveUser({...activeUser, likedPosts: newLikedPosts})
-                // update in database
-                // send to rec algo
-                break
-
-            default:
-                console.error('Invalid handleLikeOrUnlike action')
-        }
+    const handleHeartClick = (event, action) => {
+        handleLikeOrUnlikePost(event, post.postID, action, activeUser, setActiveUser)
     }
 
     if (!post) {
@@ -71,9 +53,9 @@ const PostCard = ({ post, postType, origin, setUserPosts }) => {
             <p>{post.description}</p>
 
             { activeUser.likedPosts.includes(post.postID) ?
-                <img className='likeButton' src={fullheart} onClick={(event) => handleLikeOrUnlikePost(event, UNLIKE)} />
+                <img className='likeButton' src={fullheart} onClick={(event) => handleHeartClick(event, UNLIKE)} />
                 :
-                <img className='likeButton' src={emptyheart} onClick={(event) => handleLikeOrUnlikePost(event, LIKE)} />
+                <img className='likeButton' src={emptyheart} onClick={(event) => handleHeartClick(event, LIKE)} />
             }
 
             { origin === PROFILE_ORIGIN &&

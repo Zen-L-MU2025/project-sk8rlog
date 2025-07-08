@@ -6,7 +6,7 @@ import Footer from './Footer'
 
 import UserContext from '/src/utils/UserContext'
 import { getUserByID } from '/src/utils/userUtils'
-import { getPostByID } from '/src/utils/postUtils'
+import { getPostByID, handleLikeOrUnlikePost } from '/src/utils/postUtils'
 import { CLIPS, BLOGS, toSingular, ORIGINS, LIKE, UNLIKE } from '/src/utils/constants'
 
 import '/src/css/singlePost.css'
@@ -29,26 +29,8 @@ const SinglePost = () => {
         getUserByID(post?.authorID, setPostAuthor)
     }, [post])
 
-    const handleLikeOrUnlikePost = (event, action) => {
-        event.preventDefault()
-
-        switch (action) {
-            case LIKE:
-                setActiveUser({...activeUser, likedPosts: [...activeUser.likedPosts, postID]})
-                // update in database
-                // send to rec algo
-                break
-
-            case UNLIKE:
-                const newLikedPosts = activeUser.likedPosts.filter(postID => postID !== postID)
-                setActiveUser({...activeUser, likedPosts: newLikedPosts})
-                // update in database
-                // send to rec algo
-                break
-
-            default:
-                console.error('Invalid handleLikeOrUnlike action')
-        }
+    const handleHeartClick = (event, action) => {
+        handleLikeOrUnlikePost(event, postID, action, activeUser, setActiveUser)
     }
 
     return (<>
@@ -62,9 +44,9 @@ const SinglePost = () => {
             <p className='likes'>
                 {`${post?.likeCount} likes` }
                 { activeUser.likedPosts?.includes(postID) ?
-                    <img className='likeButton' src={fullheart} onClick={(event) => handleLikeOrUnlikePost(event, UNLIKE)} />
+                    <img className='likeButton' src={fullheart} onClick={(event) => handleHeartClick(event, UNLIKE)} />
                     :
-                    <img className='likeButton' src={emptyheart} onClick={(event) => handleLikeOrUnlikePost(event, LIKE)} />
+                    <img className='likeButton' src={emptyheart} onClick={(event) => handleHeartClick(event, LIKE)} />
                 }
             </p>
             <Link to={`/${ORIGINS[origin]}`}>Go Back</Link>
