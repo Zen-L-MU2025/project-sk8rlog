@@ -15,6 +15,8 @@ const SinglePost = () => {
     const HEADER_TEXT = 'Sk8rlog'
     const [post, setPost] = useState(null)
     const [postAuthor, setPostAuthor] = useState(null)
+    const postDate = new Date(post?.creationDate)
+    const postDateFormatted = postDate.toLocaleDateString()
 
     useEffect(() => {
         getPostByID(postID, setPost)
@@ -26,7 +28,7 @@ const SinglePost = () => {
     return (<>
         <Header HEADER_TEXT={HEADER_TEXT}/>
         <div className='singlePostContent'>
-            <p>{ toSingular(post?.type) } posted by <em>@{ postAuthor?.username }</em> on { post?.creationDate }</p>
+            <p>{ toSingular(post?.type) } posted by <em>@{ postAuthor?.username }</em> on {postDateFormatted}</p>
             { post?.type === CLIPS && <video src={post?.fileURL} controls={true} className='singlePostMedia'/>}
             { post?.type === BLOGS && <img src={post?.fileURL} className='singlePostMedia' /> }
             <p>📍 {post?.location}</p>
