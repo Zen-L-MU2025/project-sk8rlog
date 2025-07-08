@@ -79,7 +79,7 @@ export const deletePost = async ( post, setUserPosts ) => {
 }
 
 // Handles data related to liking/unliking a post
-export const handleLikeOrUnlikePost = (event, postID, action, activeUser, setActiveUser) => {
+export const handleLikeOrUnlikePost = async (event, postID, action, activeUser, setActiveUser) => {
     const LIKE = "like"
     const UNLIKE = "unlike"
 
@@ -88,14 +88,22 @@ export const handleLikeOrUnlikePost = (event, postID, action, activeUser, setAct
     switch (action) {
         case LIKE:
             setActiveUser({...activeUser, likedPosts: [...activeUser.likedPosts, postID]})
-            // update in database
+            await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/like`, { postID })
+                .catch(error => {
+                    console.error("handleLikeOrUnlikePost error: ", error)
+                })
+
             // send to rec algo
             break
 
         case UNLIKE:
             const newLikedPosts = activeUser.likedPosts.filter(postID => postID !== postID)
             setActiveUser({...activeUser, likedPosts: newLikedPosts})
-            // update in database
+            await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/unlike`, { postID })
+                .catch(error => {
+                    console.error("handleLikeOrUnlikePost error: ", error)
+                })
+
             // send to rec algo
             break
 

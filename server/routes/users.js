@@ -63,13 +63,44 @@ router.post('/login', async (req, res, next) => {
 // GET /users/:userID
 // Returns the user object for the given userID
 router.get('/:userID', async (req, res, next) => {
-    const { userID } = req.params
-    const user = await prisma.user.findUnique({ where: { userID } })
-    if (!user) {
-        return res.status(STATUS_CODES.NOT_FOUND)
-    }
+    try {
+        const { userID } = req.params
+        const user = await prisma.user.findUnique({ where: { userID } })
+        if (!user) {
+            return res.status(STATUS_CODES.NOT_FOUND)
+        }
 
-    res.status(STATUS_CODES.OK).json({ user })
+        res.status(STATUS_CODES.OK).json({ user })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message })
+    }
 })
 
+// PUT /users/:userID/likedPosts/:action
+// Given a postID and an action (like or unlike), action is performed on user's likedPosts array
+router.put('/:userID/likedPosts/:action', async (req, res, next) => {
+    try {
+        const LIKE = 'like'
+
+        const { userID, action } = req.params
+        const { postID } = req.body
+
+        const user = await prisma.user.findUnique({
+            where: { userID : userID }
+        })
+
+        await prisma.user.update({
+            where: { userID : userID },
+            data: {
+                likedPosts: action === LIKE ? [...user.likedPosts, postID] : [...user.likedPosts.filter(pID => pID !== postID)]
+            }
+        })
+
+        return res.status(STATUS_CODES.OK).json({ message: 'Liked posts updated' })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message })
+    }
+})
 module.exports = router
