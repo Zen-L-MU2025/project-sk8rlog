@@ -82,12 +82,15 @@ export const deletePost = async ( post, setUserPosts ) => {
 export const handleLikeOrUnlikePost = async (event, postID, action, activeUser, setActiveUser) => {
     const LIKE = "like"
     const UNLIKE = "unlike"
+    let updatedUser = {}
 
     event.preventDefault()
 
     switch (action) {
         case LIKE:
-            setActiveUser({...activeUser, likedPosts: [...activeUser.likedPosts, postID]})
+            updatedUser = {...activeUser, likedPosts: [...activeUser.likedPosts, postID]}
+            await setActiveUser(updatedUser)
+            await sessionStorage.setItem("user", JSON.stringify(updatedUser))
             await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/like`, { postID })
                 .catch(error => {
                     console.error("handleLikeOrUnlikePost error: ", error)
@@ -97,8 +100,10 @@ export const handleLikeOrUnlikePost = async (event, postID, action, activeUser, 
             break
 
         case UNLIKE:
-            const newLikedPosts = activeUser.likedPosts.filter(postID => postID !== postID)
-            setActiveUser({...activeUser, likedPosts: newLikedPosts})
+            const newLikedPosts = activeUser.likedPosts.filter(pID => pID !== postID)
+            updatedUser = {...activeUser, likedPosts: newLikedPosts}
+            await setActiveUser(updatedUser)
+            await sessionStorage.setItem("user", JSON.stringify(updatedUser))
             await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/unlike`, { postID })
                 .catch(error => {
                     console.error("handleLikeOrUnlikePost error: ", error)
