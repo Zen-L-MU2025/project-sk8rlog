@@ -1,16 +1,20 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useParams, Link } from 'react-router'
 
 import Header from './Header'
 import Footer from './Footer'
 
+import UserContext from '/src/utils/UserContext'
 import { getUserByID } from '/src/utils/userUtils'
 import { getPostByID } from '/src/utils/postUtils'
-import { CLIPS, BLOGS, toSingular, ORIGINS } from '/src/utils/constants'
+import { CLIPS, BLOGS, toSingular, ORIGINS, LIKE, UNLIKE } from '/src/utils/constants'
 
 import '/src/css/singlePost.css'
+import emptyheart from '/src/assets/heart.png';
+import fullheart from '/src/assets/heartFull.png';
 
 const SinglePost = () => {
+    const { activeUser, setActiveUser } = useContext(UserContext)
     const { origin, postID } = useParams()
     const HEADER_TEXT = 'Sk8rlog'
     const [post, setPost] = useState(null)
@@ -25,6 +29,28 @@ const SinglePost = () => {
         getUserByID(post?.authorID, setPostAuthor)
     }, [post])
 
+    const handleLikeOrUnlikePost = (event, action) => {
+        event.preventDefault()
+
+        switch (action) {
+            case LIKE:
+                setActiveUser({...activeUser, likedPosts: [...activeUser.likedPosts, postID]})
+                // update in database
+                // send to rec algo
+                break
+
+            case UNLIKE:
+                const newLikedPosts = activeUser.likedPosts.filter(postID => postID !== postID)
+                setActiveUser({...activeUser, likedPosts: newLikedPosts})
+                // update in database
+                // send to rec algo
+                break
+
+            default:
+                console.error('Invalid handleLikeOrUnlike action')
+        }
+    }
+
     return (<>
         <Header HEADER_TEXT={HEADER_TEXT}/>
         <div className='singlePostContent'>
@@ -33,7 +59,14 @@ const SinglePost = () => {
             { post?.type === BLOGS && <img src={post?.fileURL} className='singlePostMedia' /> }
             <p>📍 {post?.location}</p>
             <p>{post?.description}</p>
-            <p>{post?.likeCount} likes</p>
+            <p className='likes'>
+                {`${post?.likeCount} likes` }
+                { activeUser.likedPosts?.includes(postID) ?
+                    <img className='likeButton' src={fullheart} onClick={(event) => handleLikeOrUnlikePost(event, UNLIKE)} />
+                    :
+                    <img className='likeButton' src={emptyheart} onClick={(event) => handleLikeOrUnlikePost(event, LIKE)} />
+                }
+            </p>
             <Link to={`/${ORIGINS[origin]}`}>Go Back</Link>
         </div>
         <Footer />

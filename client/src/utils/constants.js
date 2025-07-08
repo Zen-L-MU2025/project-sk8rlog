@@ -40,3 +40,6 @@ export const ORIGINS = {
     [HOME_ORIGIN]: "home",
     [PROFILE_ORIGIN]: "profile"
 }
+
+export const LIKE = "like"
+export const UNLIKE = "unlike"

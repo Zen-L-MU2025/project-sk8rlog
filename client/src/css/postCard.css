@@ -41,13 +41,13 @@
     color: rgba(255, 255, 255, 0.87)
 }
 
-.deletePostButton {
+.deletePostButton, .likeButton {
     width: 20px;
     height: 20px;
     padding: 2px;
     transition: 0.5s ease-in-out;
 }
-.deletePostButton:hover {
+.deletePostButton:hover, .likeButton:hover {
     border: 1px solid #3b0747;
     border-radius: 5px;
 }

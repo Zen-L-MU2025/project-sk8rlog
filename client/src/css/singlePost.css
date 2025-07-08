@@ -20,3 +20,10 @@
     object-fit: cover;
     aspect-ratio: auto; */
 }
+
+.likes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
