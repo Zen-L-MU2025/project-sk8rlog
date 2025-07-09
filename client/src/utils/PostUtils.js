@@ -98,6 +98,7 @@ export const handleLikeOrUnlikePost = async (event, post, action, activeUser, se
     }
 }
 
+// add postID to user's likedPosts array, update user's frequency object, increment post's like count
 const likePost = async ( post, activeUser, setActiveUser ) => {
     const postID = post.postID
     const updatedUserFrequency = await tokenize(post, activeUser, LIKE)
@@ -111,21 +112,18 @@ const likePost = async ( post, activeUser, setActiveUser ) => {
     setActiveUser(updatedUser)
     sessionStorage.setItem("user", JSON.stringify(updatedUser))
 
-
-    // add to likedPosts
     await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/like`, { postID, updatedUserFrequency })
         .catch(error => {
             console.error("handleLikeOrUnlikePost error: ", error)
         })
 
-    // increment post's like count
     await axios.put(`${baseUrl}/posts/${postID}/likes/increment`)
         .catch(error => {
             console.error("handleLikeOrUnlikePost error: ", error)
         })
-
 }
 
+// remove postID from user's likedPosts array, update user's frequency object, decrement post's like count
 const unlikePost = async ( post, activeUser, setActiveUser ) => {
     const postID = post.postID
     const updatedUserFrequency = await tokenize(post, activeUser, UNLIKE)
@@ -139,17 +137,13 @@ const unlikePost = async ( post, activeUser, setActiveUser ) => {
     setActiveUser(updatedUser)
     sessionStorage.setItem("user", JSON.stringify(updatedUser))
 
-    // remove from likedPosts
     await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/unlike`, { postID, updatedUserFrequency })
         .catch(error => {
             console.error("handleLikeOrUnlikePost error: ", error)
         })
 
-    // decrement post's like count
     await axios.put(`${baseUrl}/posts/${postID}/likes/decrement`)
         .catch(error => {
             console.error("handleLikeOrUnlikePost error: ", error)
         })
-
-
 }
