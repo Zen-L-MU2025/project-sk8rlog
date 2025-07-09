@@ -32,18 +32,7 @@ const SinglePost = () => {
     }, [post])
 
     const handleHeartClick = (event, action) => {
-        switch (action) {
-            case LIKE:
-                setPostLikeCount(prev => prev+1)
-                break
-
-            case UNLIKE:
-                setPostLikeCount(prev => prev-1)
-                break
-
-            default:
-                console.error('Invalid action')
-        }
+        setPostLikeCount(prev => prev + (action === LIKE ? 1 : -1) )
         handleLikeOrUnlikePost(event, post, action, activeUser, setActiveUser)
     }
 
