@@ -2,6 +2,7 @@ const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
 import { tokenize } from './tokenization.js'
+import { LIKE, UNLIKE } from './constants.js'
 
 // Uploads a post, starting with the file attachment to GCS and then the full post data to server
 // Updates user's posts array state when complete
@@ -81,9 +82,6 @@ export const deletePost = async ( post, setUserPosts ) => {
 
 // Handles data related to liking/unliking a post
 export const handleLikeOrUnlikePost = async (event, post, action, activeUser, setActiveUser) => {
-    const LIKE = "like"
-    const UNLIKE = "unlike"
-
     event.preventDefault()
 
     switch (action) {
@@ -102,7 +100,7 @@ export const handleLikeOrUnlikePost = async (event, post, action, activeUser, se
 
 const likePost = async ( post, activeUser, setActiveUser ) => {
     const postID = post.postID
-    const updatedUserFrequency = await tokenize(post, activeUser)
+    const updatedUserFrequency = await tokenize(post, activeUser, LIKE)
 
     const updatedUser = {
         ...activeUser,
@@ -130,14 +128,19 @@ const likePost = async ( post, activeUser, setActiveUser ) => {
 
 const unlikePost = async ( post, activeUser, setActiveUser ) => {
     const postID = post.postID
-    const newLikedPosts = activeUser.likedPosts.filter(pID => pID !== postID)
-    const updatedUser = {...activeUser, likedPosts: newLikedPosts}
+    const updatedUserFrequency = await tokenize(post, activeUser, UNLIKE)
+
+    const updatedUser = {
+        ...activeUser,
+        likedPosts: activeUser?.likedPosts?.filter(pID => pID !== postID),
+        user_Frequency : updatedUserFrequency
+    }
 
     setActiveUser(updatedUser)
     sessionStorage.setItem("user", JSON.stringify(updatedUser))
 
     // remove from likedPosts
-    await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/unlike`, { postID })
+    await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/unlike`, { postID, updatedUserFrequency })
         .catch(error => {
             console.error("handleLikeOrUnlikePost error: ", error)
         })

@@ -98,7 +98,7 @@ router.put('/:userID/likedPosts/:action', async (req, res, next) => {
             where: { userID : userID },
             data: {
                 likedPosts: action === LIKE ? [...user.likedPosts, postID] : [...user.likedPosts.filter(pID => pID !== postID)],
-                user_Frequency: action === LIKE ? updatedUserFrequency : user.user_Frequency
+                user_Frequency: updatedUserFrequency
             }
         })
 

@@ -1,13 +1,17 @@
 import { removeStopwords, eng } from 'stopword'
+import { LIKE } from './constants.js'
 
-export const tokenize = async (post, activeUser) => {
+// Tokenize the content of a post, remove stop words
+// If the user has liked the post, increment the frequency of the tokens in the post; decrement if user is unliking
+// Store updated frequency in user.user_Frequency
+export const tokenize = async (post, activeUser, action) => {
     const content = post.description
     const user_Frequency = activeUser.user_Frequency || {}
 
-    // Split the content by non-alphanumeric characters
+    const frequencyFactor = action === LIKE ? 1 : -1
+
     const contentToArray = content.split(/[^a-zA-Z0-9]/)
 
-    // Filter out stopwords
     const filteredContent = removeStopwords(contentToArray)
 
     const tokensUsedInThisInstance = []
@@ -20,10 +24,10 @@ export const tokenize = async (post, activeUser) => {
                 user_Frequency[token] = {}
             }
 
-            user_Frequency[token]["totalFrequencyAcrossLikedPosts"] = (user_Frequency[token]["totalFrequencyAcrossLikedPosts"] || 0) + 1
+            user_Frequency[token]["totalFrequencyAcrossLikedPosts"] = (user_Frequency[token]["totalFrequencyAcrossLikedPosts"] || 0) + frequencyFactor
 
             if (!tokensUsedInThisInstance.includes(token)) {
-                    user_Frequency[token]["likedPostsPresentIn"] = (user_Frequency[token]["likedPostsPresentIn"] || 0) + 1
+                    user_Frequency[token]["likedPostsPresentIn"] = (user_Frequency[token]["likedPostsPresentIn"] || 0) + frequencyFactor
                     tokensUsedInThisInstance.push(token)
             }
 
