@@ -1,10 +1,8 @@
-const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
-
-import axios from 'axios'
 import { removeStopwords, eng } from 'stopword'
 
-export const tokenize = async (post) => {
+export const tokenize = async (post, activeUser) => {
     const content = post.description
+    const user_Frequency = activeUser.user_Frequency || {}
 
     // Split the content by non-alphanumeric characters
     const contentToArray = content.split(/[^a-zA-Z0-9]/)
@@ -12,12 +10,25 @@ export const tokenize = async (post) => {
     // Filter out stopwords
     const filteredContent = removeStopwords(contentToArray)
 
-    let post_Frequency = {}
+    const usedTokens = []
+
     filteredContent.forEach(token => {
         // Further filter <3 character tokens
         if (token.length > 2) {
-            post_Frequency[token] = (post_Frequency[token] || 0) + 1
+
+            if (!user_Frequency[token]) {
+                user_Frequency[token] = {}
+            }
+
+            user_Frequency[token]["totalFrequencyAcrossLikedPosts"] = (user_Frequency[token]["totalFrequencyAcrossLikedPosts"] || 0) + 1
+
+            if (!usedTokens.includes(token)) {
+                    user_Frequency[token]["likedPostsPresentIn"] = (user_Frequency[token]["likedPostsPresentIn"] || 0) + 1
+                    usedTokens.push(token)
+            }
+
         }
     })
 
+    return user_Frequency
 }
