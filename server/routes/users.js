@@ -84,7 +84,7 @@ router.put('/:userID/likedPosts/:action', async (req, res, next) => {
         const LIKE = 'like'
 
         const { userID, action } = req.params
-        const { postID } = req.body
+        const { postID, updatedUserFrequency } = req.body
 
         const user = await prisma.user.findUnique({
             where: { userID : userID }
@@ -97,7 +97,8 @@ router.put('/:userID/likedPosts/:action', async (req, res, next) => {
         await prisma.user.update({
             where: { userID : userID },
             data: {
-                likedPosts: action === LIKE ? [...user.likedPosts, postID] : [...user.likedPosts.filter(pID => pID !== postID)]
+                likedPosts: action === LIKE ? [...user.likedPosts, postID] : [...user.likedPosts.filter(pID => pID !== postID)],
+                user_Frequency: action === LIKE ? updatedUserFrequency : user.user_Frequency
             }
         })
 
