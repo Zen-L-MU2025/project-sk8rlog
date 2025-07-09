@@ -44,4 +44,4 @@ export const ORIGINS = {
 export const LIKE = "like"
 export const UNLIKE = "unlike"
 
-export const ALPHANUMERIC_REGEX = /[^a-zA-Z0-9]/
+export const NON_ALPHANUMERIC_REGEX = /[^a-zA-Z0-9]/
