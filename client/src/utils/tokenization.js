@@ -12,25 +12,27 @@ export const tokenize = async (post, activeUser, action) => {
 
     const contentToArray = content.split(/[^a-zA-Z0-9]/)
 
-    const filteredContent = removeStopwords(contentToArray)
+    let filteredContent = removeStopwords(contentToArray)
+    // Further filter out tokens < 3 characters long
+    filteredContent = filteredContent.filter(token => token.length > 2)
 
     const tokensUsedInThisInstance = []
 
     filteredContent.forEach(token => {
-        // Further filter <3 character tokens
-        if (token.length > 2) {
 
-            if (!user_Frequency[token]) {
-                user_Frequency[token] = {}
-            }
+        // If the token is not in the user's frequency map, initialize it
+        if (!user_Frequency[token]) {
+            user_Frequency[token] = {}
+        }
 
-            user_Frequency[token]["totalFrequencyAcrossLikedPosts"] = (user_Frequency[token]["totalFrequencyAcrossLikedPosts"] || 0) + frequencyFactor
+        // Modify the absolute frequency of the token
+        // +1 if the user liked the post, -1 if the user unliked the post
+        user_Frequency[token]["totalFrequencyAcrossLikedPosts"] = (user_Frequency[token]["totalFrequencyAcrossLikedPosts"] || 0) + frequencyFactor
 
-            if (!tokensUsedInThisInstance.includes(token)) {
-                    user_Frequency[token]["likedPostsPresentIn"] = (user_Frequency[token]["likedPostsPresentIn"] || 0) + frequencyFactor
-                    tokensUsedInThisInstance.push(token)
-            }
-
+        // For every unique token in the post, increment/decrement the total number of posts the token is present in by 1/-1
+        if (!tokensUsedInThisInstance.includes(token)) {
+                user_Frequency[token]["likedPostsPresentIn"] = (user_Frequency[token]["likedPostsPresentIn"] || 0) + frequencyFactor
+                tokensUsedInThisInstance.push(token)
         }
     })
 
