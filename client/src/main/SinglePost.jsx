@@ -18,6 +18,7 @@ const SinglePost = () => {
     const { origin, postID } = useParams()
     const HEADER_TEXT = 'Sk8rlog'
     const [post, setPost] = useState(null)
+    const [postLikeCount, setPostLikeCount] = useState(0)
     const [postAuthor, setPostAuthor] = useState(null)
     const postDate = new Date(post?.creationDate)
     const postDateFormatted = postDate.toLocaleDateString()
@@ -26,10 +27,23 @@ const SinglePost = () => {
         getPostByID(postID, setPost)
     }, [])
     useEffect(() => {
+        setPostLikeCount(post?.likeCount)
         getUserByID(post?.authorID, setPostAuthor)
     }, [post])
 
     const handleHeartClick = (event, action) => {
+        switch (action) {
+            case LIKE:
+                setPostLikeCount(prev => prev+1)
+                break
+
+            case UNLIKE:
+                setPostLikeCount(prev => prev-1)
+                break
+
+            default:
+                console.error('Invalid action')
+        }
         handleLikeOrUnlikePost(event, postID, action, activeUser, setActiveUser)
     }
 
@@ -42,7 +56,7 @@ const SinglePost = () => {
             <p>📍 {post?.location}</p>
             <p>{post?.description}</p>
             <p className='likes'>
-                {`${post?.likeCount} likes` }
+                {`${postLikeCount} like(s)` }
                 { activeUser.likedPosts?.includes(postID) ?
                     <img className='likeButton' src={fullheart} onClick={(event) => handleHeartClick(event, UNLIKE)} />
                     :
