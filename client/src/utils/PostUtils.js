@@ -1,6 +1,7 @@
 const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
+import { tokenize } from './tokenization.js'
 
 // Uploads a post, starting with the file attachment to GCS and then the full post data to server
 // Updates user's posts array state when complete
@@ -90,12 +91,11 @@ export const handleLikeOrUnlikePost = async (event, post, action, activeUser, se
     switch (action) {
         case LIKE:
             likePost( postID, activeUser, setActiveUser )
-            // send to rec algo
+            tokenize(post)
             break
 
         case UNLIKE:
             unlikePost( postID, activeUser, setActiveUser )
-            // send to rec algo
             break
 
         default:
