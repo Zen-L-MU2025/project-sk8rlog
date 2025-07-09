@@ -88,49 +88,58 @@ export const handleLikeOrUnlikePost = async (event, postID, action, activeUser, 
 
     switch (action) {
         case LIKE:
-            updatedUser = {...activeUser, likedPosts: activeUser.likedPosts ? [...activeUser.likedPosts, postID] : [postID]}
-
-            setActiveUser(updatedUser)
-            sessionStorage.setItem("user", JSON.stringify(updatedUser))
-
-            // add to likedPosts
-            await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/like`, { postID })
-                .catch(error => {
-                    console.error("handleLikeOrUnlikePost error: ", error)
-                })
-
-            // increment post's like count
-            await axios.put(`${baseUrl}/posts/${postID}/likes/increment`)
-                .catch(error => {
-                    console.error("handleLikeOrUnlikePost error: ", error)
-                })
-
+            likePost( postID, activeUser, setActiveUser )
             // send to rec algo
             break
 
         case UNLIKE:
-            const newLikedPosts = activeUser.likedPosts.filter(pID => pID !== postID)
-            updatedUser = {...activeUser, likedPosts: newLikedPosts}
-
-            setActiveUser(updatedUser)
-            sessionStorage.setItem("user", JSON.stringify(updatedUser))
-
-            // remove from likedPosts
-            await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/unlike`, { postID })
-                .catch(error => {
-                    console.error("handleLikeOrUnlikePost error: ", error)
-                })
-
-            // decrement post's like count
-            await axios.put(`${baseUrl}/posts/${postID}/likes/decrement`)
-                .catch(error => {
-                    console.error("handleLikeOrUnlikePost error: ", error)
-                })
-
+            unlikePost( postID, activeUser, setActiveUser )
             // send to rec algo
             break
 
         default:
             console.error('Invalid handleLikeOrUnlike action')
     }
+}
+
+const likePost = async ( postID, activeUser, setActiveUser ) => {
+    const updatedUser = {...activeUser, likedPosts: activeUser.likedPosts ? [...activeUser.likedPosts, postID] : [postID]}
+
+    setActiveUser(updatedUser)
+    sessionStorage.setItem("user", JSON.stringify(updatedUser))
+
+    // add to likedPosts
+    await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/like`, { postID })
+        .catch(error => {
+            console.error("handleLikeOrUnlikePost error: ", error)
+        })
+
+    // increment post's like count
+    await axios.put(`${baseUrl}/posts/${postID}/likes/increment`)
+        .catch(error => {
+            console.error("handleLikeOrUnlikePost error: ", error)
+        })
+
+}
+
+const unlikePost = async ( postID, activeUser, setActiveUser ) => {
+    const newLikedPosts = activeUser.likedPosts.filter(pID => pID !== postID)
+    const updatedUser = {...activeUser, likedPosts: newLikedPosts}
+
+    setActiveUser(updatedUser)
+    sessionStorage.setItem("user", JSON.stringify(updatedUser))
+
+    // remove from likedPosts
+    await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/unlike`, { postID })
+        .catch(error => {
+            console.error("handleLikeOrUnlikePost error: ", error)
+        })
+
+    // decrement post's like count
+    await axios.put(`${baseUrl}/posts/${postID}/likes/decrement`)
+        .catch(error => {
+            console.error("handleLikeOrUnlikePost error: ", error)
+        })
+
+
 }
