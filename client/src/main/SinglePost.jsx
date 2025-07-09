@@ -44,7 +44,7 @@ const SinglePost = () => {
             default:
                 console.error('Invalid action')
         }
-        handleLikeOrUnlikePost(event, postID, action, activeUser, setActiveUser)
+        handleLikeOrUnlikePost(event, post, action, activeUser, setActiveUser)
     }
 
     return (<>

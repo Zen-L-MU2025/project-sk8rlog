@@ -31,7 +31,7 @@ const PostCard = ({ post, postType, origin, setUserPosts }) => {
     }
 
     const handleHeartClick = (event, action) => {
-        handleLikeOrUnlikePost(event, post.postID, action, activeUser, setActiveUser)
+        handleLikeOrUnlikePost(event, post, action, activeUser, setActiveUser)
     }
 
     if (!post) {

@@ -79,10 +79,11 @@ export const deletePost = async ( post, setUserPosts ) => {
 }
 
 // Handles data related to liking/unliking a post
-export const handleLikeOrUnlikePost = async (event, postID, action, activeUser, setActiveUser) => {
+export const handleLikeOrUnlikePost = async (event, post, action, activeUser, setActiveUser) => {
     const LIKE = "like"
     const UNLIKE = "unlike"
     let updatedUser = {}
+    const postID = post.postID
 
     event.preventDefault()
 
