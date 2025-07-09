@@ -83,19 +83,16 @@ export const deletePost = async ( post, setUserPosts ) => {
 export const handleLikeOrUnlikePost = async (event, post, action, activeUser, setActiveUser) => {
     const LIKE = "like"
     const UNLIKE = "unlike"
-    let updatedUser = {}
-    const postID = post.postID
 
     event.preventDefault()
 
     switch (action) {
         case LIKE:
-            likePost( postID, activeUser, setActiveUser )
-            tokenize(post)
+            likePost( post, activeUser, setActiveUser )
             break
 
         case UNLIKE:
-            unlikePost( postID, activeUser, setActiveUser )
+            unlikePost( post, activeUser, setActiveUser )
             break
 
         default:
@@ -103,14 +100,22 @@ export const handleLikeOrUnlikePost = async (event, post, action, activeUser, se
     }
 }
 
-const likePost = async ( postID, activeUser, setActiveUser ) => {
-    const updatedUser = {...activeUser, likedPosts: activeUser.likedPosts ? [...activeUser.likedPosts, postID] : [postID]}
+const likePost = async ( post, activeUser, setActiveUser ) => {
+    const postID = post.postID
+    const updatedUserFrequency = await tokenize(post, activeUser)
+
+    const updatedUser = {
+        ...activeUser,
+        likedPosts: activeUser.likedPosts ? [...activeUser.likedPosts, postID] : [postID],
+        user_Frequency : updatedUserFrequency
+    }
 
     setActiveUser(updatedUser)
     sessionStorage.setItem("user", JSON.stringify(updatedUser))
 
+
     // add to likedPosts
-    await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/like`, { postID })
+    await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/like`, { postID, updatedUserFrequency })
         .catch(error => {
             console.error("handleLikeOrUnlikePost error: ", error)
         })
@@ -123,7 +128,8 @@ const likePost = async ( postID, activeUser, setActiveUser ) => {
 
 }
 
-const unlikePost = async ( postID, activeUser, setActiveUser ) => {
+const unlikePost = async ( post, activeUser, setActiveUser ) => {
+    const postID = post.postID
     const newLikedPosts = activeUser.likedPosts.filter(pID => pID !== postID)
     const updatedUser = {...activeUser, likedPosts: newLikedPosts}
 
