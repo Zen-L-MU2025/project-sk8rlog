@@ -90,6 +90,10 @@ router.put('/:userID/likedPosts/:action', async (req, res, next) => {
             where: { userID : userID }
         })
 
+        if (!user) {
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'User not found' })
+        }
+
         await prisma.user.update({
             where: { userID : userID },
             data: {
