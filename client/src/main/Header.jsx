@@ -35,7 +35,6 @@ const Header = ({ HEADER_TEXT }) => {
             { isIconOverlayOpen &&
                 <div className='iconOverlay'>
                     <img className='gearIcon' onClick={toggleIconOverlay} src={gear} alt='gear icon' />
-                    <button>Settings</button>
                     <Link to='/'><button onClick={handleLogout}>Log Out</button></Link>
                 </div>
             }

@@ -25,3 +25,20 @@ export const uploadFile = async (file, DESTINATION) => {
         return null
     }
 }
+
+export const deleteFile = async (fileURL) => {
+    try {
+        // Init bucket
+        const { BUCKET_NAME, PROJECT_ID, KEYFILE_NAME : keyFilename } = process.env
+        const storage = new Storage({PROJECT_ID, keyFilename})
+        const bucket = storage.bucket(BUCKET_NAME)
+
+        // Everything after bucket_name/ is the file name in GCS, split the URL and take the second half
+        const FILE_NAME = fileURL.split(`${BUCKET_NAME}/`)[1]
+
+        await bucket.file(FILE_NAME).delete()
+
+    } catch (error) {
+        console.error(error)
+    }
+}
