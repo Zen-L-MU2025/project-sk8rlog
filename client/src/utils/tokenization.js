@@ -1,5 +1,5 @@
 import { removeStopwords, eng } from 'stopword'
-import { LIKE } from './constants.js'
+import { LIKE, ALPHANUMERIC_REGEX } from './constants.js'
 
 // Tokenize the content of a post, remove stop words
 // If the user has liked the post, increment the frequency of the tokens in the post; decrement if user is unliking
@@ -10,7 +10,7 @@ export const tokenize = async (post, activeUser, action) => {
 
     const frequencyFactor = action === LIKE ? 1 : -1
 
-    const contentToArray = content.split(/[^a-zA-Z0-9]/)
+    const contentToArray = content.split(ALPHANUMERIC_REGEX)
 
     let filteredContent = removeStopwords(contentToArray)
     // Further filter out tokens < 3 characters long
