@@ -4,7 +4,7 @@
     margin: 0;
 }
 
-@media screen and (min-width: 550px) {
+@media screen and (min-width: 600px) {
     .scrollNote {
         display: none;
     }
@@ -14,7 +14,7 @@
     margin-bottom: 30px;
 }
 
-@media screen and (min-width: 550px) {
+@media screen and (min-width: 600px) {
     .columns {
         border-top: 1px solid #3b0747;
         border-left: 1px solid #3b0747;
@@ -25,7 +25,7 @@
     }
 }
 
-@media screen and (max-width: 549px) {
+@media screen and (max-width: 599px) {
     .columns {
         display: flex;
         flex-flow: column;
@@ -38,7 +38,7 @@
     border-right: 1px solid #3b0747;
 }
 
-@media screen and (max-width: 549px) {
+@media screen and (max-width: 599px) {
     .column {
         border-top: 1px solid #3b0747;
         border-left: 1px solid #3b0747;

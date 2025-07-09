@@ -47,3 +47,14 @@ export const getAllPostsByType = async ( postType, setPosts ) => {
             console.error("getUserPostsByType error: ", error)
         })
 }
+
+// Provided a postID, gets the post data and sets the single post state
+export const getPostByID = async ( postID, setPost ) => {
+    await axios.get(`${baseUrl}/posts/single/${postID}`)
+        .then(res => {
+            setPost(res.data.post)
+        })
+        .catch(error => {
+            console.error("getPostByID error: ", error)
+        })
+}

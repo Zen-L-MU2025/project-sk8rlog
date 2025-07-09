@@ -1,10 +1,11 @@
 import { useRef } from 'react'
+import { Link } from 'react-router'
 
 import { CLIPS, BLOGS } from '/src/utils/constants'
 
 import '/src/css/postCard.css';
 
-const PostCard = ({ post, postType }) => {
+const PostCard = ({ post, postType, origin }) => {
     const embedRef = useRef(null)
 
     const onEnter = () => {
@@ -15,17 +16,17 @@ const PostCard = ({ post, postType }) => {
         embedRef.current.pause()
     }
 
-    if (!post) return (
-        <article className={`${postType}PostCard`}>
-            <p>No post data found! This is a dummy card.</p>
-        </article>
-    )
+    if (!post) {
+        console.error('Post failed to load')
+        return
+    }
 
     return (
+        <Link to={`/${origin}/post/${post.postID}`} className='postRedirect'>
         <article className={`${postType}PostCard`}>
             { postType === CLIPS &&
                 <video ref={embedRef} className={`${postType}PostCardEmbed`} src={post.fileURL}
-                    onMouseEnter={onEnter} onMouseLeave={onLeave}
+                    muted onMouseEnter={onEnter} onMouseLeave={onLeave}
                 />
             }
             { postType === BLOGS &&
@@ -33,6 +34,7 @@ const PostCard = ({ post, postType }) => {
             }
             <p>{post.description}</p>
         </article>
+        </Link>
     )
 }
 

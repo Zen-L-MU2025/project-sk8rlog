@@ -33,7 +33,7 @@ router.post('/uploadFile', multer.single('postFile'), async (req, res, next) => 
     }
 })
 
-// POST /posts/:userID
+// POST /posts/create/:userID
 // Uploads a post to the database and subsequently links it to the user through their ID
 router.post('/create/:userID', async (req, res, next) => {
     try {
@@ -85,6 +85,26 @@ router.get('/all/:type', async (req, res, next) => {
         }
 
         return res.status(STATUS_CODES.OK).json({ posts, message: 'Posts retrieved' })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
+    }
+})
+
+// GET /posts/single/:postID
+// Retrieves a post by its ID in the database
+router.get('/single/:postID', async (req, res, next) => {
+    try {
+        const { postID } = req.params
+        const post = await prisma.post.findUnique({
+            where: { postID }
+        })
+
+        if (!post) {
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'Post not found' })
+        }
+
+        return res.status(STATUS_CODES.OK).json({ post, message: 'Post retrieved' })
 
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })

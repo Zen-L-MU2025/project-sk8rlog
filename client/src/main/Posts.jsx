@@ -8,6 +8,7 @@ import PostCard from './PostCard'
 
 import { verifyAccess } from '/src/utils/UserUtils'
 import  { getAllPostsByType } from '/src/utils/postUtils'
+import { POSTS } from '/src/utils/constants'
 
 import '/src/css/hasSidebar.css'
 import '/src/css/posts.css'
@@ -23,23 +24,21 @@ const Posts = ({ postType }) => {
         hasAccess === false && navigate('/unauthorized')
     }, [hasAccess])
 
-    const [isReady, setIsReady] = useState(false)
+    const [isReadyToDisplayContent, setIsReadyToDisplayContent] = useState(false)
     const [posts, setPosts] = useState([])
+
     useEffect( () => {
-        const loadPosts = async () => {
-            await setIsReady(false)
-            await getAllPostsByType(postType, setPosts)
-            await setIsReady(true)
-        }
-        loadPosts()
+        setIsReadyToDisplayContent(false)
+        getAllPostsByType(postType, setPosts)
+        setIsReadyToDisplayContent(true)
     }, [postType])
 
 
     const HEADER_TEXT = `Sk8rlog: ${postType}`
 
-    if (!isReady) return (<p>Loading posts...</p>)
+    if (!isReadyToDisplayContent) return (<p>Loading posts...</p>)
 
-    if (isReady) return (<>
+    return (<>
         <Header HEADER_TEXT={HEADER_TEXT}/>
 
         <section className='pageMain'>
@@ -58,7 +57,7 @@ const Posts = ({ postType }) => {
                 {
                     posts.map(post => {
                         return (
-                            <PostCard key={post.postID} post={post} postType={postType}/>
+                            <PostCard key={post.postID} post={post} postType={postType} origin={POSTS[postType]} />
                         )
                     })
                 }

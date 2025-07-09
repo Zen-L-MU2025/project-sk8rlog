@@ -6,6 +6,7 @@ import RegisterModal from './auth/RegisterModal'
 import Home from './main/HomePage/Home'
 import Profile from './main//ProfilePage/Profile'
 import Posts from './main/Posts'
+import SinglePost from './main/SinglePost'
 
 import UserContext from '/src/utils/UserContext.js'
 import { CLIPS, BLOGS } from '/src/utils/constants'
@@ -33,6 +34,8 @@ function App() {
         <Route path='/clips' element={<Posts postType={CLIPS} />} />
 
         <Route path='/blogs' element={<Posts postType={BLOGS} />} />
+
+        <Route path='/:origin/post/:postID' element={<SinglePost />} />
 
         <Route path='/unauthorized' element={<>
           <p>Snaked! <em>(401 Unauthorized)</em></p>

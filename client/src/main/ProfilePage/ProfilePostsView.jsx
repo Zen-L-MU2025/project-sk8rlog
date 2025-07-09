@@ -3,32 +3,32 @@ import { useState, useEffect } from 'react'
 import PostCard from '/src/main/PostCard'
 
 import  { getUserPostsByType } from '/src/utils/postUtils'
+import { PROFILE_ORIGIN } from '/src/utils/constants'
 
 import '/src/css/profile.css'
 
 const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPosts, isOutdated, setIsOutdated }) => {
 
-    const [ isReady, setIsReady ] = useState(false)
+    const [ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
     useEffect(() => {
         getUserPostsByType(activeUser, profileContentView, setUserPosts)
-        setIsReady(true)
+        setIsReadyToDisplayContent(true)
     }, [profileContentView])
 
     useEffect(() => {
-        const reload = async () => {
-            await setIsReady(false)
-            await getUserPostsByType(activeUser, profileContentView, setUserPosts)
-            await setIsReady(true)
-            await setIsOutdated(false)
+        if (isOutdated) {
+            setIsReadyToDisplayContent(false)
+            getUserPostsByType(activeUser, profileContentView, setUserPosts)
+            setIsReadyToDisplayContent(true)
+            setIsOutdated(false)
         }
-        if (isOutdated) reload()
     }, [isOutdated])
 
-    if (!isReady) {
+    if (!isReadyToDisplayContent) {
         return (<p>Loading posts...</p>)
     }
 
-    if (isReady) return (<>
+    return (<>
         <section className="profilePostsView">
                 { userPosts.length === 0 &&
                     <p>You haven't posted any {profileContentView} yet!</p>
@@ -37,7 +37,7 @@ const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPos
                 { userPosts.length > 0 &&
                     userPosts.map(post => {
                         return (
-                            <PostCard key={post.postID} post={post} postType={profileContentView}/>
+                            <PostCard key={post.postID} post={post} postType={profileContentView} origin={PROFILE_ORIGIN} />
                         )
                     })
                 }

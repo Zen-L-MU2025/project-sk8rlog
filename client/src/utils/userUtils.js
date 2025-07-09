@@ -29,20 +29,47 @@ export const handleLoginOrRegister = async (formData, submissionType, setIsSucce
 }
 
 // Handle registration: store token and new user in session storage on completion
-export const register = (formObject, setIsSuccessful) => {
+export const register = async (formObject, setIsSuccessful) => {
+    let token, newUserID
 
-    axios.post(`${baseUrl}/users/register`, {formObject, withCredentials: true})
+    await axios.post(`${baseUrl}/users/register`, {formObject, withCredentials: true})
         .then(res => {
             setIsSuccessful(res.data.isSuccessful)
 
             const newUserData = res.data.newUser
             // No need to store password in session
             delete newUserData.password
+
+            const newUser = JSON.stringify(newUserData)
             sessionStorage.setItem("user", newUser)
+
+            token = res.data.token
+            newUserID = newUserData.userID
         })
         .catch(error => {
             console.error("register error: ", error)
             setIsSuccessful(false)
+        })
+
+    await axios.get(`${baseUrl}/auth/setCookie`, {headers : { 'Authorization' : `Bearer ${token}:${newUserID}` }, withCredentials: true})
+        .then(res => {
+            setIsSuccessful(res.data.isSuccessful)
+        })
+        .catch(error => {
+            console.error("setCookie error: ", error)
+            setIsSuccessful(false)
+            return
+        })
+}
+
+// Finds a user by provided ID and sets corresponding user in state
+export const getUserByID = async (userID, setUser) => {
+    await axios.get(`${baseUrl}/users/${userID}`, {withCredentials: true})
+        .then(res => {
+            setUser(res.data.user)
+        })
+        .catch(error => {
+            console.error("getUserByID error: ", error)
         })
 }
 
@@ -73,6 +100,11 @@ export const login = async (formObject, setIsSuccessful) => {
     await axios.get(`${baseUrl}/auth/setCookie`, {headers : { 'Authorization' : `Bearer ${token}:${userID}` }, withCredentials: true})
         .then(res => {
             setIsSuccessful(res.data.isSuccessful)
+        })
+        .catch(error => {
+            console.error("setCookie error: ", error)
+            setIsSuccessful(false)
+            return
         })
 }
 
@@ -117,6 +149,7 @@ export const loadUserSession = (setActiveUser) => {
 
     axios.get(`${baseUrl}/users/${userID}`, {withCredentials: true})
         .then(res => {
+            // No need to store password in session
             delete res.data.user.password
             sessionStorage.setItem("user", JSON.stringify(res.data.user))
             setActiveUser(res.data.user)
