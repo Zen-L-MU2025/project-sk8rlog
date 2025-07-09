@@ -10,7 +10,7 @@ export const tokenize = async (post, activeUser) => {
     // Filter out stopwords
     const filteredContent = removeStopwords(contentToArray)
 
-    const usedTokens = []
+    const tokensUsedInThisInstance = []
 
     filteredContent.forEach(token => {
         // Further filter <3 character tokens
@@ -22,9 +22,9 @@ export const tokenize = async (post, activeUser) => {
 
             user_Frequency[token]["totalFrequencyAcrossLikedPosts"] = (user_Frequency[token]["totalFrequencyAcrossLikedPosts"] || 0) + 1
 
-            if (!usedTokens.includes(token)) {
+            if (!tokensUsedInThisInstance.includes(token)) {
                     user_Frequency[token]["likedPostsPresentIn"] = (user_Frequency[token]["likedPostsPresentIn"] || 0) + 1
-                    usedTokens.push(token)
+                    tokensUsedInThisInstance.push(token)
             }
 
         }
