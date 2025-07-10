@@ -52,7 +52,7 @@ const PostCard = ({ post, postType, origin, setUserPosts }) => {
             }
             <p>{post.description}</p>
 
-            { activeUser.likedPosts.includes(post.postID) ?
+            { activeUser?.likedPosts?.includes(post.postID) ?
                 <img className='likeButton' src={fullheart} onClick={(event) => handleHeartClick(event, UNLIKE)} />
                 :
                 <img className='likeButton' src={emptyheart} onClick={(event) => handleHeartClick(event, LIKE)} />
