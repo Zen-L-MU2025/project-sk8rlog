@@ -95,7 +95,14 @@ export const scorePosts = async (posts, activeUser, setPosts) => {
         post["score"] = finalScore
     })
 
-    posts = posts.toSorted((a, b) => b.score - a.score)
+    // Sort posts by score; if two posts share the same score, sort by creation date
+    posts = posts.toSorted((a, b) => {
+        if (a.score === b.score) {
+            return (new Date(b.creationDate) - new Date(a.creationDate))
+        }
+        return b.score - a.score
+    })
+
     console.log(posts)
     await setPosts(posts)
 }
