@@ -1,7 +1,7 @@
 const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
-import { tokenize, scorePosts } from './recUtils.js'
+import { tokenize } from './recUtils.js'
 import { LIKE, UNLIKE } from './constants.js'
 
 // Uploads a post, starting with the file attachment to GCS and then the full post data to server
@@ -108,8 +108,6 @@ const likePost = async ( post, activeUser, setActiveUser ) => {
         likedPosts: activeUser.likedPosts ? [...activeUser.likedPosts, postID] : [postID],
         user_Frequency : updatedUserFrequency
     }
-
-    await scorePosts(updatedUser)
 
     setActiveUser(updatedUser)
     sessionStorage.setItem("user", JSON.stringify(updatedUser))
