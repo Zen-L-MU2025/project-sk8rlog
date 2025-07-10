@@ -2,7 +2,7 @@ const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
 import { removeStopwords, eng } from 'stopword'
-import { LIKE, NON_ALPHANUMERIC_REGEX } from './constants.js'
+import { LIKE, NON_ALPHANUMERIC_REGEX, MILLISECONDS_IN_DAY, AGE_CUTOFF_IN_DAYS } from './constants.js'
 
 // Tokenize the content of a post, remove stop words
 // If the user has liked the post, increment the frequency of the tokens in the post; decrement if user is unliking
@@ -38,17 +38,22 @@ export const tokenize = async (post, activeUser, action) => {
 }
 
 // Score every post based on the user's frequency map
-export const scorePosts = async (activeUser) => {
-    let posts = []
+export const scorePosts = async (posts, activeUser) => {
     const userFrequency = activeUser.user_Frequency
 
-    await axios.get(`${baseUrl}/posts/`)
-        .then(res => posts = res.data.posts)
-        .catch(error => {
-            console.error("handleLikeOrUnlikePost error: ", error)
-        })
+    // If the user has no liked posts, return
+    if (!userFrequency) {
+        return
+    }
 
-    posts.forEach(async post => {
+    posts = posts?.filter(post => {
+        const postAgeInMS = new Date() - new Date(post.creationDate)
+        const postAgeInDays = Math.floor(postAgeInMS / MILLISECONDS_IN_DAY)
+        post["ageInDays"] = postAgeInDays
+        return postAgeInDays < AGE_CUTOFF_IN_DAYS
+    })
+
+    posts?.forEach(async post => {
         let rawPostScore = 0
 
         const filteredPostContent = await filter(post.description)
@@ -72,13 +77,16 @@ export const scorePosts = async (activeUser) => {
         for (const [tokenName, token] of Object.entries(overlap)) {
             const base = token.frequency * userFrequency[tokenName].likedPostsPresentIn
 
+            // This token holds no weight, skip it
             if (base === 0) {
                 continue
             }
 
-            // Account for repetition factor and time factor (to be implemented)
+            // Account for repetition factor and time factor
             const repetitionFactor = 1 / ( userFrequency[tokenName].totalFrequencyAcrossLikedPosts / userFrequency[tokenName].likedPostsPresentIn )
-            const tokenScore = base * repetitionFactor // * timeFactor
+            // Default the time factor to 1 if the post is less than a day old
+            const timeFactor = 1 / Math.sqrt( post.ageInDays > 0 ? post.ageInDays : 1 )
+            const tokenScore = base * repetitionFactor * timeFactor
             rawPostScore += tokenScore
         }
 
