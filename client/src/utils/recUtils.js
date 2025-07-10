@@ -38,7 +38,7 @@ export const tokenize = async (post, activeUser, action) => {
 }
 
 // Score every post based on the user's frequency map
-export const scorePosts = async (posts, activeUser) => {
+export const scorePosts = async (posts, activeUser, setPosts) => {
     const userFrequency = activeUser.user_Frequency
 
     // If the user has no liked posts, return
@@ -95,7 +95,9 @@ export const scorePosts = async (posts, activeUser) => {
         post["score"] = finalScore
     })
 
+    posts = posts.toSorted((a, b) => b.score - a.score)
     console.log(posts)
+    await setPosts(posts)
 }
 
 const filter = async (content) => {
