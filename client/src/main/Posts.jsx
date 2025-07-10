@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router'
 
 import Header from './Header'
@@ -6,6 +6,7 @@ import Sidebar from './Sidebar'
 import Footer from './Footer'
 import PostCard from './PostCard'
 
+import UserContext from '/src/utils/UserContext'
 import { verifyAccess } from '/src/utils/UserUtils'
 import  { getAllPostsByType } from '/src/utils/postUtils'
 import { POSTS } from '/src/utils/constants'
@@ -14,6 +15,7 @@ import '/src/css/hasSidebar.css'
 import '/src/css/posts.css'
 
 const Posts = ({ postType }) => {
+    const { activeUser } = useContext(UserContext)
 
     const navigate = useNavigate()
     const [hasAccess, setHasAccess] = useState(null)
@@ -29,7 +31,7 @@ const Posts = ({ postType }) => {
 
     useEffect( () => {
         setIsReadyToDisplayContent(false)
-        getAllPostsByType(postType, setPosts)
+        getAllPostsByType(postType, setPosts, { isScoring: true, activeUser })
         setIsReadyToDisplayContent(true)
     }, [postType])
 
@@ -46,8 +48,8 @@ const Posts = ({ postType }) => {
             <section className='postsContent'>
                 <form className='postsHeader'>
                     <select name='filter'>
-                        <option value='latest'>Latest Content</option>
                         <option value='recommended'>Recommended</option>
+                        <option value='latest'>Latest Content</option>
                         <option value='popular'>Popular</option>
                         <option value='near'>Near You</option>
                     </select>
