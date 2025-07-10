@@ -45,7 +45,7 @@ const SinglePost = () => {
             <p>📍 {post?.location}</p>
             <p>{post?.description}</p>
             <p className='likes'>
-                {`${postLikeCount} like(s)` }
+                {`${postLikeCount} like${postLikeCount !== 1 ? 's' : ''} `}
                 { activeUser.likedPosts?.includes(postID) ?
                     <img className='likeButton' src={fullheart} onClick={(event) => handleHeartClick(event, UNLIKE)} />
                     :
