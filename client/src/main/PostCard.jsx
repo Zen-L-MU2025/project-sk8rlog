@@ -1,15 +1,20 @@
-import { useRef } from 'react'
+import { useRef, useContext } from 'react'
 import { Link } from 'react-router'
 
-import { deletePost } from '/src/utils/postUtils'
+import { deletePost, handleLikeOrUnlikePost } from '/src/utils/postUtils'
 
-import { CLIPS, BLOGS } from '/src/utils/constants'
+import UserContext from '/src/utils/UserContext'
+import { CLIPS, BLOGS, LIKE, UNLIKE } from '/src/utils/constants'
 import { PROFILE_ORIGIN } from '/src/utils/constants'
 
 import '/src/css/postCard.css';
 import trash from '/src/assets/trash.png';
+import emptyheart from '/src/assets/heart.png';
+import fullheart from '/src/assets/heartFull.png';
 
 const PostCard = ({ post, postType, origin, setUserPosts }) => {
+    const { activeUser, setActiveUser } = useContext(UserContext)
+
     const embedRef = useRef(null)
 
     const onEnter = () => {
@@ -23,6 +28,10 @@ const PostCard = ({ post, postType, origin, setUserPosts }) => {
     const handleDeletePost = (event) => {
         event.preventDefault()
         deletePost(post, setUserPosts)
+    }
+
+    const handleHeartClick = (event, action) => {
+        handleLikeOrUnlikePost(event, post, action, activeUser, setActiveUser)
     }
 
     if (!post) {
@@ -42,6 +51,12 @@ const PostCard = ({ post, postType, origin, setUserPosts }) => {
                 <img className={`${postType}PostCardEmbed`} src={post.fileURL} alt={post.title} />
             }
             <p>{post.description}</p>
+
+            { activeUser.likedPosts.includes(post.postID) ?
+                <img className='likeButton' src={fullheart} onClick={(event) => handleHeartClick(event, UNLIKE)} />
+                :
+                <img className='likeButton' src={emptyheart} onClick={(event) => handleHeartClick(event, LIKE)} />
+            }
 
             { origin === PROFILE_ORIGIN &&
                 <img className='deletePostButton' src={trash} onClick={handleDeletePost} alt='trash icon' />

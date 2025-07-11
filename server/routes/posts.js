@@ -142,4 +142,27 @@ router.delete('/deleteFile', async (req, res, next) => {
     }
 })
 
+// PUT /posts/:postID/likes/:action
+// Reacts to a post liking interaction by adding or removing a like
+router.put('/:postID/likes/:action', async (req, res, next) => {
+    try {
+        const INCREMENT = 'increment'
+        const { postID, action } = req.params
+
+        const post = await prisma.post.findUnique({ where: { postID : postID } })
+
+        if (!post) {
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'Post not found' })
+        }
+
+        await prisma.post.update({
+            where: { postID: postID },
+            data: { likeCount: action === INCREMENT ? post.likeCount + 1 : post.likeCount - 1 }
+        })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
+    }
+})
+
 module.exports = router

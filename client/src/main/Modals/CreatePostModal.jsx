@@ -38,7 +38,7 @@ const CreatePostModal = ({ activeUser, toggleCreatePostModal, setIsOutdated }) =
                 </>}
 
                 { postType === BLOGS && <>
-                    <input type='file' id='header' name='postFile' accept='image/*' />
+                    <input type='file' id='header' name='postFile' accept='image/*' required/>
                     <textarea type='long_text' name='textContent' placeholder='Speak your truth (in 300 char. or less)!' maxLength={300} required />
                 </>}
 
