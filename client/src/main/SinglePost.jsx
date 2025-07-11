@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from 'react'
-import { useParams, Link } from 'react-router'
+import { useParams, Link, useNavigate } from 'react-router'
 
 import Header from './Header'
 import Footer from './Footer'
 
 import UserContext from '/src/utils/UserContext'
-import { getUserByID } from '/src/utils/userUtils'
-import { getPostByID, handleLikeOrUnlikePost } from '/src/utils/postUtils'
+import { getUserByID, verifyAccess, loadUserSession } from '/src/utils/userUtils'
+import { getPostByID, handleLikeOrUnlikePost, getComments, createComment } from '/src/utils/postUtils'
 import { CLIPS, BLOGS, toSingular, ORIGINS, LIKE, UNLIKE } from '/src/utils/constants'
 
 import '/src/css/singlePost.css'
@@ -16,43 +16,103 @@ import fullheart from '/src/assets/heartFull.png';
 const SinglePost = () => {
     const { activeUser, setActiveUser } = useContext(UserContext)
     const { origin, postID } = useParams()
-    const HEADER_TEXT = 'Sk8rlog'
+
+    const [hasAccess, setHasAccess] = useState(null)
     const [post, setPost] = useState(null)
     const [postLikeCount, setPostLikeCount] = useState(0)
     const [postAuthor, setPostAuthor] = useState(null)
+    const [comments, setComments] = useState([])
+    const [commentBoxContent, setCommentBoxContent] = useState('')
+    const navigate = useNavigate()
+
+    const loadUser = async () => { await loadUserSession(setActiveUser) }
+
+    const HEADER_TEXT = 'Sk8rlog'
     const postDate = new Date(post?.creationDate)
     const postDateFormatted = postDate.toLocaleDateString()
 
     useEffect(() => {
+        loadUser()
         getPostByID(postID, setPost)
     }, [])
+
+    useEffect( () => {
+        verifyAccess(setHasAccess)
+    }, [activeUser])
+
+    useEffect( () => {
+        hasAccess === false && navigate('/unauthorized')
+    }, [hasAccess])
+
     useEffect(() => {
         setPostLikeCount(post?.likeCount)
         getUserByID(post?.authorID, setPostAuthor)
+        getComments(post?.comments, setComments)
     }, [post])
+
 
     const handleHeartClick = (event, action) => {
         setPostLikeCount(prev => prev + (action === LIKE ? 1 : -1) )
         handleLikeOrUnlikePost(event, post, action, activeUser, setActiveUser)
     }
 
+    const handleCommentBoxChange = (event) => {
+        setCommentBoxContent(event.target.value)
+    }
+
+    const handleCommentFormSubmit = () => {
+        createComment(commentBoxContent, activeUser, postID, setComments)
+        setCommentBoxContent('')
+    }
+
     return (<>
         <Header HEADER_TEXT={HEADER_TEXT}/>
-        <div className='singlePostContent'>
-            <p>{ toSingular(post?.type) } posted by <em>@{ postAuthor?.username }</em> on {postDateFormatted}</p>
-            { post?.type === CLIPS && <video src={post?.fileURL} controls={true} className='singlePostMedia'/>}
-            { post?.type === BLOGS && <img src={post?.fileURL} className='singlePostMedia' /> }
-            <p>📍 {post?.location}</p>
-            <p>{post?.description}</p>
-            <p className='likes'>
-                {`${postLikeCount} like(s)` }
-                { activeUser.likedPosts?.includes(postID) ?
-                    <img className='likeButton' src={fullheart} onClick={(event) => handleHeartClick(event, UNLIKE)} />
-                    :
-                    <img className='likeButton' src={emptyheart} onClick={(event) => handleHeartClick(event, LIKE)} />
-                }
-            </p>
-            <Link to={`/${ORIGINS[origin]}`}>Go Back</Link>
+        <div className='page'>
+
+        <section className='singlePost'>
+            <div className='singlePostContent'>
+                <h3>{ toSingular(post?.type) } posted by <em>@{ postAuthor?.username }</em> on {postDateFormatted}</h3>
+                <p className='location'>📍 {post?.location}</p>
+                { post?.type === CLIPS && <video src={post?.fileURL} controls={true} className='singlePostMedia'/>}
+                { post?.type === BLOGS && <img src={post?.fileURL} className='singlePostMedia' /> }
+                <p>{post?.description}</p>
+                <p className='likes'>
+                    {`${postLikeCount} like${postLikeCount !== 1 ? 's' : ''} `}
+                    { activeUser.likedPosts?.includes(postID) ?
+                        <img className='likeButton' src={fullheart} onClick={(event) => handleHeartClick(event, UNLIKE)} />
+                        :
+                        <img className='likeButton' src={emptyheart} onClick={(event) => handleHeartClick(event, LIKE)} />
+                    }
+                </p>
+            </div>
+
+            <div className='singlePostComments'>
+                <h3>Comments</h3>
+                <div className='commentsBox'>
+                    { comments?.length === 0 && <p>None, yet!</p> }
+
+                    {  comments?.length > 0 &&
+                        comments?.map(comment => {
+                            return (
+                                <article className='comment' key={comment.commentID}>
+                                        <p className='commentDate'>{new Date(comment.creationDate).toLocaleDateString()}</p>
+                                        <p className='commentContent'><em>@{comment.author.username}</em>: {comment.content}</p>
+                                </article>
+                            )
+                        })
+                    }
+                </div>
+
+                <form className='addCommentBox' action={handleCommentFormSubmit}>
+                    <input className='commentInput' type='text' placeholder='Add a comment!' value={commentBoxContent} onChange={handleCommentBoxChange} />
+                    <button type='submit'>Post</button>
+                </form>
+            </div>
+
+        </section>
+
+        <Link to={`/${ORIGINS[origin]}`}><p className='goBackButton'>Go Back</p></Link>
+
         </div>
         <Footer />
     </>)

@@ -83,7 +83,8 @@ export const scorePosts = async (posts, activeUser, setPosts) => {
             }
 
             // Account for repetition factor and time factor
-            const repetitionFactor = 1 / ( userFrequency[tokenName].totalFrequencyAcrossLikedPosts / userFrequency[tokenName].likedPostsPresentIn )
+            const repetitionRatio = userFrequency[tokenName].totalFrequencyAcrossLikedPosts / userFrequency[tokenName].likedPostsPresentIn
+            const repetitionFactor = 1 / ( !isNaN(repetitionRatio) ? repetitionRatio : 1 )
             // Default the time factor to 1 if the post is less than a day old
             const timeFactor = 1 / Math.sqrt( post.ageInDays > 0 ? post.ageInDays : 1 )
             const tokenScore = base * repetitionFactor * timeFactor

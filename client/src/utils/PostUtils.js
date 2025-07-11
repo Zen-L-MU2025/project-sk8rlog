@@ -120,12 +120,12 @@ const likePost = async ( post, activeUser, setActiveUser ) => {
 
     await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/like`, { postID, updatedUserFrequency })
         .catch(error => {
-            console.error("handleLikeOrUnlikePost error: ", error)
+            console.error("likePost error: ", error)
         })
 
     await axios.put(`${baseUrl}/posts/${postID}/likes/increment`)
         .catch(error => {
-            console.error("handleLikeOrUnlikePost error: ", error)
+            console.error("likePost error: ", error)
         })
 }
 
@@ -145,11 +145,37 @@ const unlikePost = async ( post, activeUser, setActiveUser ) => {
 
     await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/unlike`, { postID, updatedUserFrequency })
         .catch(error => {
-            console.error("handleLikeOrUnlikePost error: ", error)
+            console.error("unlikePost error: ", error)
         })
 
     await axios.put(`${baseUrl}/posts/${postID}/likes/decrement`)
         .catch(error => {
-            console.error("handleLikeOrUnlikePost error: ", error)
+            console.error("unlikePost error: ", error)
+        })
+}
+
+// Provided any number of commentIDs, gets the comments' data and sets the comments array state
+export const getComments = async ( commentIDs, setComments ) => {
+    // Why have I not done this before
+    if (!commentIDs?.length) return
+
+    await axios.post(`${baseUrl}/posts/comments`, { commentIDs })
+        .then(res => {
+            setComments(res.data.comments)
+        })
+        .catch(error => {
+            console.error("getComments error: ", error)
+        })
+}
+
+// Creates a comment in DB and adds it to the comments array state
+export const createComment = async (commentBoxContent, activeUser, postID, setComments) => {
+    const userID = activeUser.userID
+    await axios.post(`${baseUrl}/posts/comments/${postID}`, { commentBoxContent, userID })
+        .then(res => {
+            setComments(comments => [res.data.comment, ...comments])
+        })
+        .catch(error => {
+            console.error("createComment error: ", error)
         })
 }
