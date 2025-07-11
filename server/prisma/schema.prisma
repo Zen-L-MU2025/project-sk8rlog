@@ -44,5 +44,6 @@ model Post {
 model Comment {
   commentID         String  @id @default(cuid())
   authorID          String
+  creationDate      DateTime @default(now())
   content           String
 }
