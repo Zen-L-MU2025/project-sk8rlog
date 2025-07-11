@@ -3,7 +3,11 @@ const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 import axios from 'axios'
 import { removeStopwords, eng } from 'stopword'
 import { getPostByID } from './PostUtils.js'
-import { LIKE, NON_ALPHANUMERIC_REGEX, MILLISECONDS_IN_DAY, AGE_CUTOFF_IN_DAYS, LIKE_WEIGHT, COMMENT_WEIGHT, CLIPS, BLOGS } from './constants.js'
+import {
+    LIKE, NON_ALPHANUMERIC_REGEX, MILLISECONDS_IN_DAY, AGE_CUTOFF_IN_DAYS,
+    LIKE_WEIGHT, COMMENT_WEIGHT, CLIPS, BLOGS, CLIP_DESCRIPTION_WEIGHT,
+    SECONDS_IN_MINUTE, AVERAGE_WORDS_READ_PER_MINUTE
+} from './constants.js'
 
 // Tokenize the content of a post, remove stop words
 // If the user has liked the post, increment the frequency of the tokens in the post; decrement if user is unliking
@@ -52,8 +56,11 @@ export const scorePosts = async (posts, activeUser, setPosts) => {
     //posts = filterPostsByCutoff(posts)
 
     // Find the user's post type bias
-    const portionOfLikedPostsThatAreClips = await findPortionOfLikedPostsThatAreClips(activeUser)
+    const { portionOfLikedPostsThatAreClips, avgLengthOfLikedPosts } = await calculateBiasFactors(activeUser)
     const portionOfLikedPostsThatAreBlogs = 1 - portionOfLikedPostsThatAreClips
+
+    // Uncomment in testing
+    //console.log(portionOfLikedPostsThatAreClips, portionOfLikedPostsThatAreBlogs, avgLengthOfLikedPosts)
 
     posts?.forEach(async post => {
         let rawPostScore = 0
@@ -121,22 +128,41 @@ const filterPostsByCutoff = (posts) => {
     })
 }
 
-const findPortionOfLikedPostsThatAreClips = async (activeUser) => {
+const calculateBiasFactors = async (activeUser) => {
     let likedClips = 0
     let likedBlogs = 0
+    let totalLikedContentLength = 0
     const likedPostsCount = activeUser.likedPosts?.length
 
     for(const postID of activeUser.likedPosts) {
         const post = await getPostByID(postID)
-        post?.type === CLIPS && likedClips++
-        post?.type === BLOGS && likedBlogs++
+        const descriptionAsTokens = await filterTokens(post.description)
+
+        if (post?.type === CLIPS) {
+            likedClips++
+
+            const videoURL = post.fileURL
+            // do stuff here
+
+            const videoLengthTranslatedToWordCount = videoLengthInSeconds * AVERAGE_WORDS_READ_PER_MINUTE
+            const weightedClipDescriptionLength = Math.ceil(descriptionAsTokens.length * CLIP_DESCRIPTION_WEIGHT)
+
+            totalLikedContentLength += videoLengthTranslatedToWordCount + weightedClipDescriptionLength
+        }
+        else if (post?.type === BLOGS) {
+            likedBlogs++
+            totalLikedContentLength += descriptionAsTokens.length
+        }
     }
 
     if (likedClips + likedBlogs !== likedPostsCount) {
         console.error("findPortionOfLikedPostsThatAreClips: Liked post type distinctions don't add up to total number of liked posts")
     }
 
-    return likedClips / likedPostsCount
+    const portionOfLikedPostsThatAreClips = likedClips / likedPostsCount
+    const avgLengthOfLikedPosts = totalLikedContentLength / likedPostsCount
+
+    return {portionOfLikedPostsThatAreClips, avgLengthOfLikedPosts}
 }
 
 // Filter out stop words and non-alphanumeric characters from the content of a post
