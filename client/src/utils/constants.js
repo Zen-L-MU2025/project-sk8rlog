@@ -43,3 +43,8 @@ export const ORIGINS = {
 
 export const LIKE = "like"
 export const UNLIKE = "unlike"
+
+export const NON_ALPHANUMERIC_REGEX = /[^a-zA-Z0-9]/
+
+export const MILLISECONDS_IN_DAY = 86400000
+export const AGE_CUTOFF_IN_DAYS = 7

@@ -1,22 +1,27 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext, act } from 'react'
 import { Link } from 'react-router';
 
 import PostCard from '/src/main/PostCard'
 
-import { HOME_PAGE_POST_COUNT } from '/src/utils/constants'
+import UserContext from '/src/utils/UserContext'
+import { HOME_PAGE_POST_COUNT, HOME_ORIGIN } from '/src/utils/constants'
 import  { getAllPostsByType } from '/src/utils/postUtils'
-import { HOME_ORIGIN } from '/src/utils/constants'
+import { scorePosts } from '/src/utils/recUtils'
 
 import '/src/css/home.css'
 
 const HomePostsView = ({ postType }) => {
-    const postType_lowercase = postType.toLowerCase()
+    const { activeUser } = useContext(UserContext)
 
-    const [posts, setPosts] = useState([])
+    const postType_lowercase = postType.toLowerCase()
+    const [posts, setPosts] = useState(null)
 
     useEffect( () => {
         getAllPostsByType(postType, setPosts)
     }, [])
+    useEffect( () => {
+        scorePosts(posts, activeUser)
+    }, [posts])
 
     return(<>
         <div id={`home_${postType_lowercase}`} className="column" >
@@ -27,7 +32,7 @@ const HomePostsView = ({ postType }) => {
 
             <div id={`${postType_lowercase}ColumnContent`} className="columnContent" >
                 {
-                    posts.slice(0, HOME_PAGE_POST_COUNT).map(post => {
+                    posts?.slice(0, HOME_PAGE_POST_COUNT).map(post => {
                         return (
                             <PostCard key={post.postID} post={post} postType={postType} origin={HOME_ORIGIN} />
                         )

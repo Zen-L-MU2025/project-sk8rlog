@@ -1,7 +1,7 @@
 const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
-import { tokenize } from './tokenization.js'
+import { tokenize } from './recUtils.js'
 import { LIKE, UNLIKE } from './constants.js'
 
 // Uploads a post, starting with the file attachment to GCS and then the full post data to server

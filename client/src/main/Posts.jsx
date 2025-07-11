@@ -25,7 +25,7 @@ const Posts = ({ postType }) => {
     }, [hasAccess])
 
     const [isReadyToDisplayContent, setIsReadyToDisplayContent] = useState(false)
-    const [posts, setPosts] = useState([])
+    const [posts, setPosts] = useState(null)
 
     useEffect( () => {
         setIsReadyToDisplayContent(false)
@@ -55,7 +55,7 @@ const Posts = ({ postType }) => {
 
                 <div className="posts">
                 {
-                    posts.map(post => {
+                    posts?.map(post => {
                         return (
                             <PostCard key={post.postID} post={post} postType={postType} origin={POSTS[postType]} />
                         )
