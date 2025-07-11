@@ -13,7 +13,7 @@ export const tokenize = async (post, activeUser, action) => {
     const frequencyFactor = action === LIKE ? 1 : -1
 
     const content = post.description
-    const filteredContent = await filter(content)
+    const filteredContent = await filterTokens(content)
 
     const tokensUsedInThisInstance = []
 
@@ -54,7 +54,6 @@ export const scorePosts = async (posts, activeUser, setPosts) => {
     // Find the user's post type bias
     const portionOfLikedPostsThatAreClips = await findPortionOfLikedPostsThatAreClips(activeUser)
     const portionOfLikedPostsThatAreBlogs = 1 - portionOfLikedPostsThatAreClips
-    console.log(portionOfLikedPostsThatAreClips, portionOfLikedPostsThatAreBlogs)
 
     posts?.forEach(async post => {
         let rawPostScore = 0
