@@ -56,11 +56,17 @@ export const getAllPostsByType = async ( postType, setPosts, scoringPayload = { 
         })
 }
 
-// Provided a postID, gets the post data and sets the single post state
-export const getPostByID = async ( postID, setPost ) => {
+// Provided a postID, gets the post data
+// Sets the single post state if a setter is provided, otherwise just returns the post
+export const getPostByID = async ( postID, setPost = null ) => {
     await axios.get(`${baseUrl}/posts/single/${postID}`)
         .then(res => {
-            setPost(res.data.post)
+            if (setPost !== null) {
+                setPost(res.data.post)
+            } else {
+                console.log("getPostByID: ", res.data.post)
+                return res.data.post
+            }
         })
         .catch(error => {
             console.error("getPostByID error: ", error)

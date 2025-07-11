@@ -48,3 +48,6 @@ export const NON_ALPHANUMERIC_REGEX = /[^a-zA-Z0-9]/
 
 export const MILLISECONDS_IN_DAY = 86400000
 export const AGE_CUTOFF_IN_DAYS = 7
+
+export const LIKE_WEIGHT = 0.1
+export const COMMENT_WEIGHT = 0.33

@@ -2,7 +2,8 @@ const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
 import { removeStopwords, eng } from 'stopword'
-import { LIKE, NON_ALPHANUMERIC_REGEX, MILLISECONDS_IN_DAY, AGE_CUTOFF_IN_DAYS } from './constants.js'
+import { getPostByID } from './PostUtils.js'
+import { LIKE, NON_ALPHANUMERIC_REGEX, MILLISECONDS_IN_DAY, AGE_CUTOFF_IN_DAYS, LIKE_WEIGHT, COMMENT_WEIGHT, CLIPS, BLOGS } from './constants.js'
 
 // Tokenize the content of a post, remove stop words
 // If the user has liked the post, increment the frequency of the tokens in the post; decrement if user is unliking
@@ -41,22 +42,25 @@ export const tokenize = async (post, activeUser, action) => {
 export const scorePosts = async (posts, activeUser, setPosts) => {
     const userFrequency = activeUser.user_Frequency
 
-    // If the user has no liked posts, return
+    // If the user has never liked a post, return
+    // NOTE: Wouldn't a better way to check this just be to query likedPosts array?
     if (!userFrequency) {
         return
     }
 
-    posts = posts?.filter(post => {
-        const postAgeInMS = new Date() - new Date(post.creationDate)
-        const postAgeInDays = Math.floor(postAgeInMS / MILLISECONDS_IN_DAY)
-        post["ageInDays"] = postAgeInDays
-        return postAgeInDays < AGE_CUTOFF_IN_DAYS
-    })
+    // Currently disabled to allow for testing
+    //posts = filterPostsByCutoff(posts)
+
+    // Find the user's post type bias
+    const portionOfLikedPostsThatAreClips = await findPortionOfLikedPostsThatAreClips(activeUser)
+    const portionOfLikedPostsThatAreBlogs = 1 - portionOfLikedPostsThatAreClips
 
     posts?.forEach(async post => {
         let rawPostScore = 0
 
-        const filteredPostContent = await filter(post.description)
+        const popularityScore = post.likeCount * LIKE_WEIGHT + post.comments?.length * COMMENT_WEIGHT
+
+        const filteredPostContent = await filterTokens(post.description)
         let overlap = {}
 
         // For each unique token in the post, check if it is in the user's frequency map and add to overlap
@@ -107,7 +111,36 @@ export const scorePosts = async (posts, activeUser, setPosts) => {
     await setPosts(posts)
 }
 
-const filter = async (content) => {
+// Filters out posts that are older than AGE_CUTOFF_IN_DAYS (7) days
+const filterPostsByCutoff = (posts) => {
+    return posts?.filter(post => {
+        const postAgeInMS = new Date() - new Date(post.creationDate)
+        const postAgeInDays = Math.floor(postAgeInMS / MILLISECONDS_IN_DAY)
+        post["ageInDays"] = postAgeInDays
+        return postAgeInDays < AGE_CUTOFF_IN_DAYS
+    })
+}
+
+const findPortionOfLikedPostsThatAreClips = async (activeUser) => {
+    let likedClips = 0
+    let likedBlogs = 0
+    const likedPostsCount = activeUser.likedPosts?.length
+
+    for(const postID of activeUser.likedPosts) {
+        const post = await getPostByID(postID)
+        post?.type === CLIPS && likedClips++
+        post?.type === BLOGS && likedBlogs++
+    }
+
+    if (likedClips + likedBlogs !== likedPostsCount) {
+        console.error("findPortionOfLikedPostsThatAreClips: Liked post type distinctions don't add up to total number of liked posts")
+    }
+
+    return likedClips / likedPostsCount
+}
+
+// Filter out stop words and non-alphanumeric characters from the content of a post
+const filterTokens = async (content) => {
     // Convert to lowercase, remove non-alphanumeric characters
     const contentToArray = await new String(content).toLowerCase().split(NON_ALPHANUMERIC_REGEX)
     // remove stop words and further filter resulting tokens < 3 characters long
