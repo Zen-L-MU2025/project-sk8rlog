@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { useParams, Link } from 'react-router'
+import { useParams, Link, useNavigate } from 'react-router'
 
 import Header from './Header'
 import Footer from './Footer'
@@ -23,6 +23,7 @@ const SinglePost = () => {
     const [postAuthor, setPostAuthor] = useState(null)
     const [comments, setComments] = useState([])
     const [commentBoxContent, setCommentBoxContent] = useState('')
+    const navigate = useNavigate()
 
     const loadUser = async () => { await loadUserSession(setActiveUser) }
 
