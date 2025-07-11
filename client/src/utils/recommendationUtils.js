@@ -142,7 +142,7 @@ const calculateBiasFactors = async (activeUser) => {
             likedClips++
 
             const videoURL = post.fileURL
-            // do stuff here
+            const videoLengthInSeconds = 1738 // do stuff here this number means nothing
 
             const videoLengthTranslatedToWordCount = videoLengthInSeconds * AVERAGE_WORDS_READ_PER_MINUTE
             const weightedClipDescriptionLength = Math.ceil(descriptionAsTokens.length * CLIP_DESCRIPTION_WEIGHT)
