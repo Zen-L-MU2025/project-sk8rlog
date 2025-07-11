@@ -3,6 +3,7 @@ const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 import axios from 'axios'
 import { tokenize } from './recUtils.js'
 import { LIKE, UNLIKE } from './constants.js'
+import { scorePosts } from './recUtils.js'
 
 // Uploads a post, starting with the file attachment to GCS and then the full post data to server
 // Updates user's posts array state when complete
@@ -40,10 +41,15 @@ export const getUserPostsByType = async ( activeUser, postType, setUserPosts ) =
 }
 
 // Gets all posts by specified postType and sets the posts array state
-export const getAllPostsByType = async ( postType, setPosts ) => {
+// If scoringPayload is provided, will score the posts for the provided user and set the posts array state
+export const getAllPostsByType = async ( postType, setPosts, scoringPayload = { isScoring: false, activeUser: null } ) => {
     await axios.get(`${baseUrl}/posts/all/${postType}`)
         .then(res => {
-            setPosts(res.data.posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate)))
+            if (scoringPayload.isScoring) {
+                scorePosts(res.data.posts, scoringPayload.activeUser, setPosts)
+            } else {
+                setPosts(res.data.posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate)))
+            }
         })
         .catch(error => {
             console.error("getUserPostsByType error: ", error)

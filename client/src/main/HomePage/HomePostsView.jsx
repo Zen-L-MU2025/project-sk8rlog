@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, act } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router';
 
 import PostCard from '/src/main/PostCard'
@@ -6,7 +6,6 @@ import PostCard from '/src/main/PostCard'
 import UserContext from '/src/utils/UserContext'
 import { HOME_PAGE_POST_COUNT, HOME_ORIGIN } from '/src/utils/constants'
 import  { getAllPostsByType } from '/src/utils/postUtils'
-import { scorePosts } from '/src/utils/recUtils'
 
 import '/src/css/home.css'
 
@@ -15,13 +14,14 @@ const HomePostsView = ({ postType }) => {
 
     const postType_lowercase = postType.toLowerCase()
     const [posts, setPosts] = useState(null)
+    const [isInitialized, setIsInitialized] = useState(false)
 
     useEffect( () => {
-        getAllPostsByType(postType, setPosts)
+        getAllPostsByType(postType, setPosts, { isScoring: true, activeUser })
+        setIsInitialized(true)
     }, [])
-    useEffect( () => {
-        scorePosts(posts, activeUser)
-    }, [posts])
+
+    if (!isInitialized) return (<p>Loading...</p>)
 
     return(<>
         <div id={`home_${postType_lowercase}`} className="column" >

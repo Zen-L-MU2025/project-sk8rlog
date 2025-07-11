@@ -103,7 +103,6 @@ export const scorePosts = async (posts, activeUser, setPosts) => {
         return b.score - a.score
     })
 
-    console.log(posts)
     await setPosts(posts)
 }
 
