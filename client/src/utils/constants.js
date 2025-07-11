@@ -51,3 +51,6 @@ export const AGE_CUTOFF_IN_DAYS = 7
 
 export const LIKE_WEIGHT = 0.1
 export const COMMENT_WEIGHT = 0.33
+export const CLIP_DESCRIPTION_WEIGHT = 0.33
+export const AVERAGE_WORDS_READ_PER_MINUTE = 230
+export const SECONDS_IN_MINUTE = 60
