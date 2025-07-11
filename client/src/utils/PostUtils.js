@@ -1,9 +1,9 @@
 const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
-import { tokenize } from './recUtils.js'
+import { tokenize } from './recommendationUtils.js'
 import { LIKE, UNLIKE } from './constants.js'
-import { scorePosts } from './recUtils.js'
+import { scorePosts } from './recommendationUtils.js'
 
 // Uploads a post, starting with the file attachment to GCS and then the full post data to server
 // Updates user's posts array state when complete
@@ -59,18 +59,17 @@ export const getAllPostsByType = async ( postType, setPosts, scoringPayload = { 
 // Provided a postID, gets the post data
 // Sets the single post state if a setter is provided, otherwise just returns the post
 export const getPostByID = async ( postID, setPost = null ) => {
-    await axios.get(`${baseUrl}/posts/single/${postID}`)
-        .then(res => {
+    const res = await axios.get(`${baseUrl}/posts/single/${postID}`)
+       try {
             if (setPost !== null) {
                 setPost(res.data.post)
             } else {
-                console.log("getPostByID: ", res.data.post)
                 return res.data.post
             }
-        })
-        .catch(error => {
+
+        } catch (error) {
             console.error("getPostByID error: ", error)
-        })
+        }
 }
 
 // Provided a postID, deletes the post and updates the user's posts array state
