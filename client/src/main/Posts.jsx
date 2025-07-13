@@ -45,8 +45,11 @@ const Posts = ({ postType }) => {
     useEffect( () => {
         switch (filterState) {
             case RECOMMENDED :
+                getAllPostsByType(postType, setPosts, { isScoring: true, byPopularity: false, activeUser })
+                break
+
             case POPULAR:
-                getAllPostsByType(postType, setPosts, { isScoring: true, activeUser })
+                getAllPostsByType(postType, setPosts, { isScoring: true, byPopularity: true, activeUser })
                 break
 
             // TODO Implement locations

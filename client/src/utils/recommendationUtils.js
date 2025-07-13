@@ -38,8 +38,8 @@ export const tokenize = async (post, activeUser, action) => {
     return user_Frequency
 }
 
-// Score every post based on the user's frequency map
-export const scorePosts = async (posts, activeUser, setPosts) => {
+// Score every post based on the user's frequency map and set client posts state to results
+export const scorePosts = async (posts, activeUser, setPosts, isByPopularity) => {
     const userFrequency = activeUser.user_Frequency
 
     // If the user has never liked a post, return
@@ -113,13 +113,9 @@ export const scorePosts = async (posts, activeUser, setPosts) => {
         post["popularity"] = popularityScore
     }
 
-    // Sort posts by score; if two posts share the same score, sort by creation date
-    posts = posts.toSorted((a, b) => {
-        if (a.score === b.score) {
-            return (new Date(b.creationDate) - new Date(a.creationDate))
-        }
-        return b.score - a.score
-    })
+    // Sort posts by either recommendation score or popularity
+    // Let tie breakers be handled by other option and finally by creation date
+    posts = sortByMetric(posts, isByPopularity)
 
     await setPosts(posts)
 }
@@ -173,4 +169,32 @@ const filterTokens = async (content) => {
     // remove stop words and further filter resulting tokens < 3 characters long
     const filteredContent = await removeStopwords(contentToArray).filter(token => token.length > 2)
     return filteredContent
+}
+
+// Sort posts by either recommendation score or popularity
+// Let tie breakers be handled by opposite option and finally by creation date
+const sortByMetric = (posts, isByPopularity) => {
+    return posts.toSorted((a, b) => {
+        if (a.score === b.score && a.popularity === b.popularity) {
+            return (new Date(b.creationDate) - new Date(a.creationDate))
+        }
+
+        if (!isByPopularity) {
+            if (a.score !== b.score) {
+                return b.score - a.score
+            }
+            else {
+                return b.popularity - a.popularity
+            }
+        }
+
+        else {
+            if (b.popularity !== a.popularity) {
+                return b.popularity - a.popularity
+            }
+            else {
+                return b.score - a.score
+            }
+        }
+    })
 }
