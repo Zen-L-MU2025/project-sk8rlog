@@ -37,6 +37,7 @@ model Post {
   location          String
   type              String
   fileURL           String
+  clipLength        Float?
   likeCount         Int     @default(0)
   comments          String[]  @default([])
 }
