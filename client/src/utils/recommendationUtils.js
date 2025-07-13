@@ -1,8 +1,11 @@
+const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+
+import axios from 'axios'
 import { removeStopwords, eng } from 'stopword'
 import { getPostByID } from './PostUtils.js'
 import {
     LIKE, NON_ALPHANUMERIC_REGEX, MILLISECONDS_IN_DAY, AGE_CUTOFF_IN_DAYS,
-    LIKE_WEIGHT, COMMENT_WEIGHT, CLIPS, BLOGS
+    LIKE_WEIGHT, COMMENT_WEIGHT, CLIPS, BLOGS, AVERAGE_WORDS_READ_PER_SECOND
 } from './constants.js'
 
 // Tokenize the content of a post, remove stop words
@@ -97,8 +100,17 @@ export const scorePosts = async (posts, activeUser, setPosts, isByPopularity) =>
             rawPostScore += tokenScore
         }
 
+        // Split the description into tokens representing full words as a post's length
+        // Standardize video length as "additional reading" in a post
+        let postLength = new String(post.description).split(NON_ALPHANUMERIC_REGEX).length
+        if (post.type === CLIPS) {
+            const res = await axios.post(`${baseUrl}/posts/clipLength`, { fileURL : post.fileURL})
+            const clipLength = res.data.clipLength
+            const clipLengthAsWordCount = Math.ceil(clipLength * AVERAGE_WORDS_READ_PER_SECOND)
+            postLength += clipLengthAsWordCount
+        }
+
         // Calculate post length bias as percentage difference from average length of liked posts
-        const postLength = new String(post.description).split(NON_ALPHANUMERIC_REGEX).length
         const postLengthBias = Math.abs(1 - postLength / avgLengthOfLikedPosts)
 
         // Select appropriate post type bias
