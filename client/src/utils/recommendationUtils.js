@@ -110,6 +110,8 @@ export const scorePosts = async (posts, activeUser, setPosts, isByPopularity) =>
             postLength += clipLengthAsWordCount
         }
 
+        post["postLength"] = postLength
+
         // Calculate post length bias as percentage difference from average length of liked posts
         const postLengthBias = Math.abs(1 - postLength / avgLengthOfLikedPosts)
 
