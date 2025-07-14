@@ -92,7 +92,10 @@ const SinglePost = () => {
                         comments?.map(comment => {
                             return (
                                 <article className='comment' key={comment.commentID}>
-                                        <p className='commentDate'>{new Date(comment.creationDate).toLocaleDateString()}</p>
+                                        <p className='commentDate'>
+                                            {new Date(comment.creationDate).toLocaleDateString()}&nbsp;
+                                            {new Date(comment.creationDate).toLocaleTimeString()}
+                                        </p>
                                         <p className='commentContent'><em>@{comment.author.username}</em>: {comment.content}</p>
                                 </article>
                             )
