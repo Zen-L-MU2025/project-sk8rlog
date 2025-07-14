@@ -219,6 +219,7 @@ const calculateClipVideoLengthAsWordCount = async (fileURL) => {
     return clipLengthAsWordCount
 }
 
+// Calculate's a token's score based on frequency across liked posts, repretition across liked posts, and time since its post was made
 const calculateTokenScore = async (post, token, tokenName, userFrequency) => {
     const base = token.frequency * userFrequency[tokenName].likedPostsPresentIn
 
