@@ -60,3 +60,5 @@ export const RECOMMENDED = "recommended"
 export const LATEST = 'latest'
 export const POPULAR = 'popular'
 export const NEAR_YOU = 'near_you'
+
+export const NOT_APPLICABLE = -1
