@@ -1,7 +1,7 @@
-import { useRef, useContext } from 'react'
+import { useRef, useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router'
 
-import { deletePost, handleLikeOrUnlikePost } from '/src/utils/postUtils'
+import { deletePost, handleLikeOrUnlikePost, waitForGCSToFinish } from '/src/utils/postUtils'
 
 import UserContext from '/src/utils/UserContext'
 import { CLIPS, BLOGS, LIKE, UNLIKE } from '/src/utils/constants'
@@ -16,6 +16,12 @@ const PostCard = ({ post, postType, origin, setUserPosts }) => {
     const { activeUser, setActiveUser } = useContext(UserContext)
 
     const embedRef = useRef(null)
+
+    const [fileIsLoaded, setFileIsLoaded] = useState(false)
+
+    const wait = async () => {
+        await waitForGCSToFinish(post.fileURL, setFileIsLoaded)
+    }
 
     const onEnter = () => {
         embedRef.current.play()
@@ -34,9 +40,23 @@ const PostCard = ({ post, postType, origin, setUserPosts }) => {
         handleLikeOrUnlikePost(event, post, action, activeUser, setActiveUser)
     }
 
+    useEffect(() => {
+        if (!fileIsLoaded) {
+            wait()
+        }
+    }, [])
+
     if (!post) {
         console.error('Post failed to load')
         return
+    }
+
+    if (!fileIsLoaded) {
+        return (
+            <article className={`${postType}PostCard`}>
+                <p>Uploading...</p>
+            </article>
+        )
     }
 
     return (
