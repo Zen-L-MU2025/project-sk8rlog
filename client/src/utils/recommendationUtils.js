@@ -45,10 +45,9 @@ export const tokenize = async (post, activeUser, action) => {
 export const scorePosts = async (posts, activeUser, setPosts, isByPopularity) => {
     const userFrequency = activeUser.user_Frequency
 
-    // If the user has never liked a post, return
-    // NOTE: Wouldn't a better way to check this just be to query likedPosts array?
-    if (!userFrequency) {
-        return
+    // If the user has never liked a post, manually override the isByPopularity flag to true
+    if (activeUser.likedPosts.length === 0) {
+        isByPopularity = true
     }
 
     // Currently disabled to allow for testing
