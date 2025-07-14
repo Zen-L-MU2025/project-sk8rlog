@@ -54,3 +54,8 @@ export const COMMENT_WEIGHT = 0.33
 export const CLIP_DESCRIPTION_WEIGHT = 0.33
 export const AVERAGE_WORDS_READ_PER_MINUTE = 230
 export const SECONDS_IN_MINUTE = 60
+
+export const RECOMMENDED = "recommended"
+export const LATEST = 'latest'
+export const POPULAR = 'popular'
+export const NEAR_YOU = 'near_you'

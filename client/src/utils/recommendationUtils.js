@@ -1,12 +1,8 @@
-const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
-
-import axios from 'axios'
 import { removeStopwords, eng } from 'stopword'
 import { getPostByID } from './PostUtils.js'
 import {
     LIKE, NON_ALPHANUMERIC_REGEX, MILLISECONDS_IN_DAY, AGE_CUTOFF_IN_DAYS,
-    LIKE_WEIGHT, COMMENT_WEIGHT, CLIPS, BLOGS, CLIP_DESCRIPTION_WEIGHT,
-    SECONDS_IN_MINUTE, AVERAGE_WORDS_READ_PER_MINUTE
+    LIKE_WEIGHT, COMMENT_WEIGHT, CLIPS, BLOGS
 } from './constants.js'
 
 // Tokenize the content of a post, remove stop words
@@ -42,8 +38,8 @@ export const tokenize = async (post, activeUser, action) => {
     return user_Frequency
 }
 
-// Score every post based on the user's frequency map
-export const scorePosts = async (posts, activeUser, setPosts) => {
+// Score every post based on the user's frequency map and set client posts state to results
+export const scorePosts = async (posts, activeUser, setPosts, isByPopularity) => {
     const userFrequency = activeUser.user_Frequency
 
     // If the user has never liked a post, return
@@ -59,10 +55,7 @@ export const scorePosts = async (posts, activeUser, setPosts) => {
     const { portionOfLikedPostsThatAreClips, avgLengthOfLikedPosts } = await calculateBiasFactors(activeUser)
     const portionOfLikedPostsThatAreBlogs = 1 - portionOfLikedPostsThatAreClips
 
-    // Uncomment in testing
-    //console.log(portionOfLikedPostsThatAreClips, portionOfLikedPostsThatAreBlogs, avgLengthOfLikedPosts)
-
-    posts?.forEach(async post => {
+    for ( const post of posts ) {
         let rawPostScore = 0
 
         const popularityScore = post.likeCount * LIKE_WEIGHT + post.comments?.length * COMMENT_WEIGHT
@@ -81,8 +74,8 @@ export const scorePosts = async (posts, activeUser, setPosts) => {
             }
         })
 
-        // Calculate the interest factor of the post based on overlap size
-        const interestFactor = Object.keys(overlap).length / filteredPostContent.length
+        // Calculate the relative interest factor of the post based on overlap size
+        const relativeInterestFactor = Object.keys(overlap).length / filteredPostContent.length
 
         // For each token in the overlap, calculate its score and add it to the raw post score
         for (const [tokenName, token] of Object.entries(overlap)) {
@@ -96,24 +89,33 @@ export const scorePosts = async (posts, activeUser, setPosts) => {
             // Account for repetition factor and time factor
             const repetitionRatio = userFrequency[tokenName].totalFrequencyAcrossLikedPosts / userFrequency[tokenName].likedPostsPresentIn
             const repetitionFactor = 1 / ( !isNaN(repetitionRatio) ? repetitionRatio : 1 )
+
             // Default the time factor to 1 if the post is less than a day old
             const timeFactor = 1 / Math.sqrt( post.ageInDays > 0 ? post.ageInDays : 1 )
+
             const tokenScore = base * repetitionFactor * timeFactor
             rawPostScore += tokenScore
         }
 
-        // Apply interest factor to raw post score to get the final score
-        const finalScore = rawPostScore * interestFactor
-        post["score"] = finalScore
-    })
+        // Calculate post length bias as percentage difference from average length of liked posts
+        const postLength = new String(post.description).split(NON_ALPHANUMERIC_REGEX).length
+        const postLengthBias = Math.abs(1 - postLength / avgLengthOfLikedPosts)
 
-    // Sort posts by score; if two posts share the same score, sort by creation date
-    posts = posts.toSorted((a, b) => {
-        if (a.score === b.score) {
-            return (new Date(b.creationDate) - new Date(a.creationDate))
-        }
-        return b.score - a.score
-    })
+        // Select appropriate post type bias
+        const typeBias = post.type === CLIPS ? portionOfLikedPostsThatAreClips : portionOfLikedPostsThatAreBlogs
+
+        // Calculate bias factor as popularity amplified by type bias and inhibited by disparity from average post length
+        const biasFactor = popularityScore * (1 + typeBias) * postLengthBias
+
+        // Apply relative interest factor and bias factor to raw post score to get the final score
+        const finalScore = rawPostScore * relativeInterestFactor * biasFactor
+        post["score"] = finalScore
+        post["popularity"] = popularityScore
+    }
+
+    // Sort posts by either recommendation score or popularity
+    // Let tie breakers be handled by other option and finally by creation date
+    posts = sortByMetric(posts, isByPopularity)
 
     await setPosts(posts)
 }
@@ -136,22 +138,17 @@ const calculateBiasFactors = async (activeUser) => {
 
     for(const postID of activeUser.likedPosts) {
         const post = await getPostByID(postID)
-        const descriptionAsTokens = await filterTokens(post.description)
+
+        // Split the description into tokens representing full words and add to total length
+        const descriptionAsTokens = new String(post.description).split(NON_ALPHANUMERIC_REGEX)
+        totalLikedContentLength += descriptionAsTokens.length
 
         if (post?.type === CLIPS) {
             likedClips++
-
-            const videoURL = post.fileURL
-            const videoLengthInSeconds = 1738 // do stuff here this number means nothing
-
-            const videoLengthTranslatedToWordCount = videoLengthInSeconds * AVERAGE_WORDS_READ_PER_MINUTE
-            const weightedClipDescriptionLength = Math.ceil(descriptionAsTokens.length * CLIP_DESCRIPTION_WEIGHT)
-
-            totalLikedContentLength += videoLengthTranslatedToWordCount + weightedClipDescriptionLength
+            // TODO Implement advanced video length logic
         }
         else if (post?.type === BLOGS) {
             likedBlogs++
-            totalLikedContentLength += descriptionAsTokens.length
         }
     }
 
@@ -172,4 +169,32 @@ const filterTokens = async (content) => {
     // remove stop words and further filter resulting tokens < 3 characters long
     const filteredContent = await removeStopwords(contentToArray).filter(token => token.length > 2)
     return filteredContent
+}
+
+// Sort posts by either recommendation score or popularity
+// Let tie breakers be handled by opposite option and finally by creation date
+const sortByMetric = (posts, isByPopularity) => {
+    return posts.toSorted((a, b) => {
+        if (a.score === b.score && a.popularity === b.popularity) {
+            return (new Date(b.creationDate) - new Date(a.creationDate))
+        }
+
+        if (!isByPopularity) {
+            if (a.score !== b.score) {
+                return b.score - a.score
+            }
+            else {
+                return b.popularity - a.popularity
+            }
+        }
+
+        else {
+            if (b.popularity !== a.popularity) {
+                return b.popularity - a.popularity
+            }
+            else {
+                return b.score - a.score
+            }
+        }
+    })
 }

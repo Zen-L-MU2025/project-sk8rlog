@@ -42,12 +42,21 @@ export const getUserPostsByType = async ( activeUser, postType, setUserPosts ) =
 
 // Gets all posts by specified postType and sets the posts array state
 // If scoringPayload is provided, will score the posts for the provided user and set the posts array state
-export const getAllPostsByType = async ( postType, setPosts, scoringPayload = { isScoring: false, activeUser: null } ) => {
+export const getAllPostsByType = async (
+    postType, setPosts,
+    scoringPayload = { isScoring: false, isByPopularity: false, activeUser: null }
+) => {
     await axios.get(`${baseUrl}/posts/all/${postType}`)
         .then(res => {
-            if (scoringPayload.isScoring) {
-                scorePosts(res.data.posts, scoringPayload.activeUser, setPosts)
-            } else {
+            if (scoringPayload.isScoring && !scoringPayload.isByPopularity) {
+                scorePosts(res.data.posts, scoringPayload.activeUser, setPosts, scoringPayload.isByPopularity)
+            }
+
+            else if (scoringPayload.isScoring && scoringPayload.isByPopularity) {
+                scorePosts(res.data.posts, scoringPayload.activeUser, setPosts, scoringPayload.isByPopularity)
+            }
+
+            else {
                 setPosts(res.data.posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate)))
             }
         })
