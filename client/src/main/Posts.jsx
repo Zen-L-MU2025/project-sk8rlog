@@ -87,15 +87,8 @@ const Posts = ({ postType }) => {
                 </form>
 
                 <div className="posts">
-                { filterState !== POPULAR &&
+                {
                     posts?.map(post => {
-                        return (
-                            <PostCard key={post.postID} post={post} postType={postType} origin={POSTS[postType]} />
-                        )
-                    })
-                }
-                { filterState === POPULAR &&
-                    posts?.toSorted((a,b) => b.popularity - a.popularity).map(post => {
                         return (
                             <PostCard key={post.postID} post={post} postType={postType} origin={POSTS[postType]} />
                         )
