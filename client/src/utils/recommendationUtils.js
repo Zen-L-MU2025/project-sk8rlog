@@ -144,6 +144,13 @@ const filterPostsByCutoff = (posts) => {
     })
 }
 
+/*
+Calculates:
+    - the portion of the user's liked posts that are clips
+    - the average length of the user's liked posts
+
+Returns an object containing both statistics
+*/
 const calculateBiasFactors = async (activeUser) => {
     let likedClips = 0
     let likedBlogs = 0
