@@ -157,7 +157,11 @@ const calculateBiasFactors = async (activeUser) => {
 
         if (post?.type === CLIPS) {
             likedClips++
-            // TODO Implement advanced video length logic
+            const res = await axios.post(`${baseUrl}/posts/clipLength`, { fileURL : post.fileURL})
+                .catch(error => console.error(error))
+            const clipLength = res.data.clipLength
+            const clipLengthAsWordCount = Math.ceil(clipLength * AVERAGE_WORDS_READ_PER_SECOND)
+            totalLikedContentLength += clipLengthAsWordCount
         }
         else if (post?.type === BLOGS) {
             likedBlogs++
