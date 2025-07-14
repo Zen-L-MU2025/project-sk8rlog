@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
 
 // POST /users/login
 // Takes username and password and returns the user object, confirmation boolean, and a token
-router.post('/login', async (req, res, next) => {
+router.post('/login', async (req, res, _next) => {
     const { username, password: plaintextPassword } = req.body.formObject
 
     try {
@@ -62,7 +62,7 @@ router.post('/login', async (req, res, next) => {
 
 // GET /users/:userID
 // Returns the user object for the given userID
-router.get('/:userID', async (req, res, next) => {
+router.get('/:userID', async (req, res, _next) => {
     try {
         const { userID } = req.params
         const user = await prisma.user.findUnique({ where: { userID } })
@@ -79,7 +79,7 @@ router.get('/:userID', async (req, res, next) => {
 
 // PUT /users/:userID/likedPosts/:action
 // Given a postID and an action (like or unlike), action is performed on user's likedPosts array
-router.put('/:userID/likedPosts/:action', async (req, res, next) => {
+router.put('/:userID/likedPosts/:action', async (req, res, _next) => {
     try {
         const LIKE = 'like'
 
