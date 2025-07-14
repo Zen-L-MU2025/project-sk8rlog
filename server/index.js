@@ -6,6 +6,8 @@ const usersRouter = require('./routes/users')
 const authRouter = require('./routes/auth')
 const postsRouter = require('./routes/posts')
 
+const { enableCORSinBucket } = require('./utils/GCS')
+
 const app = express()
 app.use(express.json())
 app.use(cors({
@@ -35,6 +37,8 @@ app.use('/auth', authRouter)
 app.use('/posts', postsRouter)
 
 const PORT = 3000
+
+enableCORSinBucket()
 
 app.listen(PORT, () => {
     console.log(`Server listening on port http://localhost:${PORT}`)
