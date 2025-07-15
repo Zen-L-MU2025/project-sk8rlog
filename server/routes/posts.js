@@ -1,7 +1,8 @@
 const { PrismaClient } = require('../generated/prisma');
 const router = require('express').Router()
 const STATUS_CODES = require('../statusCodes')
-const { QUICKTIME, MOV, recalculateInteractionAverages, COMMENT, CREATE } = require('../constants')
+const { QUICKTIME, MOV, COMMENT, CREATE } = require('../constants')
+const { recalculateInteractionAverages } = require('../sessionUtils')
 const GCS = require('../utils/GCS')
 const { getVideoDurationInSeconds } = require('get-video-duration')
 
