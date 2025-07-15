@@ -36,6 +36,7 @@ export const recalculateSessionAverages = (userSessionData) => {
     return { newSessionCount, newAverageSessionTime, newAverageSessionStartTime, newAverageSessionEndTime }
 }
 
+// Recalculates the metrics of the specified interaction type based on provided user interaction data
 export const recalculateInteractionAverages = (userInteractionData, interactionType) => {
     const now = new Date()
     const todayAtMidnightAsSecondsSinceEpoch = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / MS_IN_SECOND
