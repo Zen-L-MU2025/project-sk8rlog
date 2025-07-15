@@ -55,6 +55,20 @@ export const register = async (formObject, setIsSuccessful) => {
     await setCookies(token, userID, setIsSuccessful)
 }
 
+export const logout = async () => {
+    const userID = locateCookie("userid")
+
+    sessionStorage.clear()
+    const cookies = document.cookie.split(';')
+    cookies.forEach(cookie => {
+        // Arbitrarily older date that will force the cookie to instantenously expire
+        document.cookie = cookie.split('=')[0] + '=;expires=Thu, 01 Jan 1984; path=/'
+    })
+
+    await axios.post(`${baseUrl}/users/logout`, {userID, withCredentials: true})
+        .catch((error) => {console.error("logout error: ", error)})
+}
+
 // Finds a user by provided ID and sets corresponding user in state
 export const getUserByID = async (userID, setUser) => {
     await axios.get(`${baseUrl}/users/${userID}`, {withCredentials: true})

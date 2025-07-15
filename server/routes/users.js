@@ -4,6 +4,7 @@ const router = require('express').Router()
 const webtoken = require('jsonwebtoken')
 const TOKEN_SECRET = process.env.TOKEN_SECRET
 const STATUS_CODES = require('../statusCodes')
+const { recalculateAverages } = require('../constants')
 
 const prisma = new PrismaClient()
 
@@ -54,7 +55,7 @@ router.post('/login', async (req, res, _next) => {
         const token = webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
 
         // Update user's last session start time
-        await prisma.sesssionData.update({
+        await prisma.sessionData.update({
             where: { userID: user.userID },
             data: {
                 lastSessionStartTime: new Date(),
@@ -65,6 +66,33 @@ router.post('/login', async (req, res, _next) => {
 
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false })
+    }
+})
+
+// POST /users/logout
+// Takes userID and updates user's session data to reflect logout
+router.post('/logout', async (req, res, _next) => {
+    try {
+        const { userID } = req.body
+
+        const userSessionData = await prisma.sessionData.findUnique({
+            where: { userID },
+        })
+
+        const { newSessionCount, newAverageSessionTime, newAverageSessionStartTime, newAverageSessionEndTime } = await recalculateAverages(userSessionData)
+
+        await prisma.sessionData.update({
+            where: { userID },
+            data: {
+                sessionCount: newSessionCount,
+                averageSessionTime: newAverageSessionTime,
+                averageSessionStartTime: newAverageSessionStartTime,
+                averageSessionEndTime: newAverageSessionEndTime,
+            }
+        })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message })
     }
 })
 
