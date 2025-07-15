@@ -49,12 +49,13 @@ model Comment {
   content           String
 }
 
-model SesssionData {
-  userID                  String @unique
-  sessionCount            Int   @default(0)
-  averageSessionTime      Float @default(0)
-  lastSessionStartTime    DateTime?
-  lastSessionEndTime      DateTime?
+model SessionData {
+  userID                    String @unique
+  sessionCount              Int   @default(0)
+  averageSessionTime        Float @default(0)
+  lastSessionStartTime      DateTime?
+  averageSessionStartTime   Float?
+  averageSessionEndTime     Float?
 }
 
 model InteractionData {
