@@ -2,7 +2,7 @@ const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
 import { tokenize } from './recommendationUtils.js'
-import { DEFAULT, LIKE, NEAR_YOU, RECOMMENDED, UNLIKE, LATEST, POPULAR  } from './constants.js'
+import { LIKE, RECOMMENDED, UNLIKE, RANKING_MODES } from './constants.js'
 import { scorePosts } from './recommendationUtils.js'
 
 // Uploads a post, starting with the file attachment to GCS and then the full post data to server
@@ -43,7 +43,7 @@ export const getUserPostsByType = async ( activeUser, postType, setUserPosts ) =
 // Gets all posts by specified postType and sets the posts array state
 // If scoringPayload is provided, will score the posts for the provided user and set the posts array state
 export const getAllPostsByType = async (
-    postType, setPosts, scoringPayload = { scoringMode: DEFAULT, activeUser: null }
+    postType, setPosts, scoringPayload = { scoringMode: RANKING_MODES.DEFAULT, activeUser: null }
 ) => {
     const {scoringMode, activeUser } = scoringPayload
 
@@ -51,9 +51,9 @@ export const getAllPostsByType = async (
         .then(res => {
             switch (scoringMode) {
                 // Score posts by provided mode
-                case DEFAULT:
-                case RECOMMENDED:
-                case POPULAR:
+                case RANKING_MODES.DEFAULT:
+                case RANKING_MODES.RECOMMENDED:
+                case RANKING_MODES.POPULAR:
                     scorePosts(res.data.posts, activeUser, setPosts, scoringMode)
                     break
 

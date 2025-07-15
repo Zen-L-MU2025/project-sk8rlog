@@ -9,7 +9,7 @@ import PostCard from './PostCard'
 import UserContext from '/src/utils/UserContext'
 import { verifyAccess, loadUserSession } from '/src/utils/UserUtils'
 import  { getAllPostsByType } from '/src/utils/postUtils'
-import { POSTS, RECOMMENDED, LATEST, POPULAR, NEAR_YOU } from '/src/utils/constants'
+import { POSTS, RANKING_MODES } from '/src/utils/constants'
 
 import '/src/css/hasSidebar.css'
 import '/src/css/posts.css'
@@ -21,7 +21,7 @@ const Posts = ({ postType }) => {
     const [hasAccess, setHasAccess] = useState(null)
     const [isReadyToDisplayContent, setIsReadyToDisplayContent] = useState(false)
     const [posts, setPosts] = useState(null)
-    const [filterState, setFilterState] = useState(RECOMMENDED)
+    const [filterState, setFilterState] = useState(RANKING_MODES.RECOMMENDED)
 
     const navigate = useNavigate()
 
@@ -38,7 +38,7 @@ const Posts = ({ postType }) => {
 
     useEffect( () => {
         setIsReadyToDisplayContent(false)
-        getAllPostsByType(postType, setPosts, { scoringMode: RECOMMENDED, activeUser })
+        getAllPostsByType(postType, setPosts, { scoringMode: RANKING_MODES.RECOMMENDED, activeUser })
         setIsReadyToDisplayContent(true)
     }, [postType, activeUser])
 
@@ -60,11 +60,11 @@ const Posts = ({ postType }) => {
             <Sidebar />
             <section className='postsContent'>
                 <form className='postsHeader'>
-                    <select name='filter' defaultValue={RECOMMENDED} onChange={handleFilterChange}>
-                        <option value={RECOMMENDED}>Recommended</option>
-                        <option value={LATEST}>Latest Content</option>
-                        <option value={POPULAR}>Popular</option>
-                        <option value={NEAR_YOU}>Near You</option>
+                    <select name='filter' defaultValue={RANKING_MODES.RECOMMENDED} onChange={handleFilterChange}>
+                        <option value={RANKING_MODES.RECOMMENDED}>Recommended</option>
+                        <option value={RANKING_MODES.LATEST}>Latest Content</option>
+                        <option value={RANKING_MODES.POPULAR}>Popular</option>
+                        <option value={RANKING_MODES.NEAR_YOU}>Near You</option>
                     </select>
                 </form>
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import PostCard from '/src/main/PostCard'
 
 import UserContext from '/src/utils/UserContext'
-import { HOME_PAGE_POST_COUNT, HOME_ORIGIN, DEFAULT } from '/src/utils/constants'
+import { HOME_PAGE_POST_COUNT, HOME_ORIGIN, RANKING_MODES } from '/src/utils/constants'
 import  { getAllPostsByType } from '/src/utils/postUtils'
 
 import '/src/css/home.css'
@@ -17,7 +17,7 @@ const HomePostsView = ({ postType }) => {
     const [isInitialized, setIsInitialized] = useState(false)
 
     useEffect( () => {
-        getAllPostsByType(postType, setPosts, { scoringMode: DEFAULT, activeUser })
+        getAllPostsByType(postType, setPosts, { scoringMode: RANKING_MODES.DEFAULT, activeUser })
         setIsInitialized(true)
     }, [])
 

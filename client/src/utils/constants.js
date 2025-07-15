@@ -62,3 +62,11 @@ export const POPULAR = 'popular'
 export const NEAR_YOU = 'near_you'
 
 export const NOT_APPLICABLE = -1
+
+export const RANKING_MODES = {
+    RECOMMENDED: "reccommended",
+    LATEST: "latest",
+    POPULAR: "popular",
+    NEAR_YOU: "near_you",
+    DEFAULT: "default"
+}

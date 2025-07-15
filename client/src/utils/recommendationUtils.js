@@ -6,7 +6,7 @@ import { getPostByID } from './PostUtils.js'
 import {
     LIKE, NON_ALPHANUMERIC_REGEX, MILLISECONDS_IN_DAY, AGE_CUTOFF_IN_DAYS,
     LIKE_WEIGHT, COMMENT_WEIGHT, CLIPS, AVERAGE_WORDS_READ_PER_SECOND,
-    NOT_APPLICABLE, RECOMMENDED, POPULAR
+    NOT_APPLICABLE, RANKING_MODES
 } from './constants.js'
 
 // Tokenize the content of a post, remove stop words
@@ -48,7 +48,7 @@ export const scorePosts = async (posts, activeUser, setPosts, scoringMode) => {
 
     // If the user has no liked posts, manually override the scoring mode to popularity
     if (!activeUser.likedPosts) {
-        scoringMode = POPULAR
+        scoringMode = RANKING_MODES.POPULAR
     }
 
     // Currently disabled to allow for testing
@@ -180,12 +180,12 @@ const sortByMetric = (posts, scoringMode) => {
         const dateDiff = new Date(b.creationDate) - new Date(a.creationDate)
 
         switch(scoringMode) {
-            case RECOMMENDED:
+            case RANKING_MODES.RECOMMENDED:
                 if (scoreDiff !== 0) return scoreDiff
                 if (popularityDiff !== 0) return popularityDiff
                 return dateDiff
 
-            case POPULAR:
+            case RANKING_MODES.POPULAR:
                 if (popularityDiff !== 0) return popularityDiff
                 if (scoreDiff !== 0) return scoreDiff
                 return dateDiff
