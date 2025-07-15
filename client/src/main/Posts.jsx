@@ -38,30 +38,12 @@ const Posts = ({ postType }) => {
 
     useEffect( () => {
         setIsReadyToDisplayContent(false)
-        getAllPostsByType(postType, setPosts, { isScoring: true, activeUser })
+        getAllPostsByType(postType, setPosts, { scoringMode: RECOMMENDED, activeUser })
         setIsReadyToDisplayContent(true)
     }, [postType, activeUser])
 
     useEffect( () => {
-        switch (filterState) {
-            case RECOMMENDED :
-                getAllPostsByType(postType, setPosts, { isScoring: true, byPopularity: false, activeUser })
-                break
-
-            case POPULAR:
-                getAllPostsByType(postType, setPosts, { isScoring: true, byPopularity: true, activeUser })
-                break
-
-            // TODO Implement locations
-            case NEAR_YOU :
-            case LATEST :
-                getAllPostsByType(postType, setPosts)
-                break
-
-            default :
-                console.error("Posts: invalid filer provided")
-                getAllPostsByType(postType, setPosts)
-        }
+        getAllPostsByType(postType, setPosts, { scoringMode: filterState, activeUser })
     }, [filterState])
 
     const handleFilterChange = (event) => {
