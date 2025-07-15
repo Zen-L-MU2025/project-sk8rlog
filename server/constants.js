@@ -26,8 +26,8 @@ export const recalculateSessionAverages = (userSessionData) => {
     const lastSessionEndAsSecondOfDay = toSecondOfDay(logoutTime)
     const newAverageSessionEndTimeAsSecondOfDay = ((avgEndAsSecondOfDay * sessionCount) + lastSessionEndAsSecondOfDay) / (sessionCount + 1)
 
-    const today = new Date()
-    const todayAtMidnightAsSecondsSinceEpoch = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime() / MS_IN_SECOND
+    const now = new Date()
+    const todayAtMidnightAsSecondsSinceEpoch = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / MS_IN_SECOND
 
     const newSessionCount = sessionCount + 1
     const newAverageSessionTime = Math.ceil(((averageSessionTime * sessionCount) + sessionDurationInSeconds) / (sessionCount + 1))
@@ -35,4 +35,48 @@ export const recalculateSessionAverages = (userSessionData) => {
     const newAverageSessionEndTime = Math.ceil(todayAtMidnightAsSecondsSinceEpoch + newAverageSessionEndTimeAsSecondOfDay)
 
     return { newSessionCount, newAverageSessionTime, newAverageSessionStartTime, newAverageSessionEndTime }
+}
+
+export const LIKE = 'like'
+export const COMMENT = 'comment'
+export const CREATE = 'create'
+
+export const recalculateInteractionAverages = (userInteractionData, interactionType) => {
+    const now = new Date()
+    const todayAtMidnightAsSecondsSinceEpoch = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / MS_IN_SECOND
+
+    const interactionTimeAsSecondOfDay = todayAtMidnightAsSecondsSinceEpoch + toSecondOfDay(now)
+
+    let {
+        likeInteractionCount, averageLikeInteractionTime,
+        commentInteractionCount, averageCommentInteractionTime,
+        createInteractionCount, averageCreateInteractionTime,
+    } = userInteractionData
+
+    let avgInteractionTime, interactionCount
+
+    switch (interactionType) {
+        case LIKE:
+            avgInteractionTime = averageLikeInteractionTime || 0
+            interactionCount = likeInteractionCount
+            break
+
+        case COMMENT:
+            avgInteractionTime = averageCommentInteractionTime || 0
+            interactionCount = commentInteractionCount
+            break
+
+        case CREATE:
+            avgInteractionTime = averageCreateInteractionTime || 0
+            interactionCount = createInteractionCount
+            break
+
+        default: throw new Error(`Invalid interaction type: ${interactionType}`)
+    }
+
+    const newAverage = Math.ceil(((avgInteractionTime * interactionCount) + interactionTimeAsSecondOfDay) / (interactionCount + 1))
+    const newInteractionCount = interactionCount + 1
+
+    return { newAverage, newInteractionCount }
+
 }

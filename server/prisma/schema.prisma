@@ -59,9 +59,11 @@ model SessionData {
 }
 
 model InteractionData {
-  userID                         String @unique
-  likeInteractionCount           Int   @default(0)
-  averageLikeInteractionTime     Float @default(0)
-  commentInteractionCount        Int   @default(0)
-  averageCommentInteractionTime  Float @default(0)
+  userID                          String @unique
+  likeInteractionCount            Int   @default(0)
+  averageLikeInteractionTime      Float @default(0)
+  commentInteractionCount         Int   @default(0)
+  averageCommentInteractionTime   Float @default(0)
+  createInteractionCount          Int   @default(0)
+  averageCreateInteractionTime    Float @default(0)
 }
