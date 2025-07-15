@@ -4,7 +4,7 @@ const router = require('express').Router()
 const webtoken = require('jsonwebtoken')
 const TOKEN_SECRET = process.env.TOKEN_SECRET
 const STATUS_CODES = require('../statusCodes')
-const { recalculateSessionAverages } = require('../constants')
+const { recalculateSessionAverages, recalculateInteractionAverages, LIKE} = require('../constants')
 
 const prisma = new PrismaClient()
 
@@ -117,13 +117,12 @@ router.get('/:userID', async (req, res, _next) => {
 // Given a postID and an action (like or unlike), action is performed on user's likedPosts array
 router.put('/:userID/likedPosts/:action', async (req, res, _next) => {
     try {
-        const LIKE = 'like'
 
         const { userID, action } = req.params
         const { postID, updatedUserFrequency } = req.body
 
         const user = await prisma.user.findUnique({
-            where: { userID : userID }
+            where: { userID }
         })
 
         if (!user) {
@@ -131,11 +130,22 @@ router.put('/:userID/likedPosts/:action', async (req, res, _next) => {
         }
 
         await prisma.user.update({
-            where: { userID : userID },
+            where: { userID },
             data: {
                 likedPosts: action === LIKE ? [...user.likedPosts, postID] : [...user.likedPosts.filter(pID => pID !== postID)],
                 user_Frequency: updatedUserFrequency
             }
+        })
+
+        const userInteractionData = await prisma.interactionData.findUnique({
+            where: { userID }
+        })
+
+        // Update the user's interaction data
+        const { newAverage, newInteractionCount } = recalculateInteractionAverages(userInteractionData, LIKE)
+        await prisma.interactionData.update({
+            where: { userID },
+            data: { likeInteractionCount: newInteractionCount, averageLikeInteractionTime: newAverage }
         })
 
         return res.status(STATUS_CODES.OK).json({ message: 'Liked posts updated' })

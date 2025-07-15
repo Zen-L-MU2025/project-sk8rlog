@@ -1,7 +1,7 @@
 const { PrismaClient } = require('../generated/prisma');
 const router = require('express').Router()
 const STATUS_CODES = require('../statusCodes')
-const { QUICKTIME, MOV } = require('../constants')
+const { QUICKTIME, MOV, recalculateInteractionAverages, COMMENT, CREATE } = require('../constants')
 const GCS = require('../utils/GCS')
 const { getVideoDurationInSeconds } = require('get-video-duration')
 
@@ -62,6 +62,17 @@ router.post('/create/:userID', async (req, res, _next) => {
             data: {
                 authorID: userID, description: textContent, location, type: postType, fileURL
             }
+        })
+
+        const userInteractionData = await prisma.interactionData.findUnique({
+            where: { userID }
+        })
+
+        // Update the user's interaction data
+        const { newAverage, newInteractionCount } = recalculateInteractionAverages(userInteractionData, CREATE)
+        await prisma.interactionData.update({
+            where: { userID },
+            data: { createInteractionCount: newInteractionCount, averageCreateInteractionTime: newAverage }
         })
 
         return res.status(STATUS_CODES.CREATED).json({ post, message: 'Post created' })
@@ -251,6 +262,18 @@ router.post('/comments/:postID', async (req, res, _next) => {
             where : { userID }
         })
         comment["author"] = author
+
+
+        const userInteractionData = await prisma.interactionData.findUnique({
+            where: { userID }
+        })
+
+        // Update the user's interaction data
+        const { newAverage, newInteractionCount } = recalculateInteractionAverages(userInteractionData, COMMENT)
+        await prisma.interactionData.update({
+            where: { userID },
+            data: { commentInteractionCount: newInteractionCount, averageCommentInteractionTime: newAverage }
+        })
 
         return res.status(STATUS_CODES.CREATED).json({ comment, message: 'Comment created' })
 
