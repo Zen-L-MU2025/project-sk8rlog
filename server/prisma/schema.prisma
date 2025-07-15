@@ -48,3 +48,12 @@ model Comment {
   creationDate      DateTime @default(now())
   content           String
 }
+
+model SesssionData {
+  userID                  String @unique
+  sessionCount            Int   @default(0)
+  averageSessionTime      Float @default(0)
+  lastSessionStartTime    DateTime?
+  lastSessionEndTime      DateTime?
+
+}
