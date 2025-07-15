@@ -79,7 +79,7 @@ router.post('/logout', async (req, res, _next) => {
             where: { userID },
         })
 
-        const { newSessionCount, newAverageSessionTime, newAverageSessionStartTime, newAverageSessionEndTime } = await recalculateAverages(userSessionData)
+        const { newSessionCount, newAverageSessionTime, newAverageSessionStartTime, newAverageSessionEndTime } = recalculateAverages(userSessionData)
 
         await prisma.sessionData.update({
             where: { userID },

@@ -30,7 +30,7 @@ export const recalculateAverages = (userSessionData) => {
     const todayAtMidnightAsSecondsSinceEpoch = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime() / MS_IN_SECOND
 
     const newSessionCount = sessionCount + 1
-    const newAverageSessionTime = Math.round(((averageSessionTime * sessionCount) + sessionDurationInSeconds) / (sessionCount + 1))
+    const newAverageSessionTime = Math.ceil(((averageSessionTime * sessionCount) + sessionDurationInSeconds) / (sessionCount + 1))
     const newAverageSessionStartTime = Math.floor(todayAtMidnightAsSecondsSinceEpoch + newAverageSessionStartTimeAsSecondOfDay)
     const newAverageSessionEndTime = Math.ceil(todayAtMidnightAsSecondsSinceEpoch + newAverageSessionEndTimeAsSecondOfDay)
 
