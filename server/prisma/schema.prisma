@@ -55,5 +55,12 @@ model SesssionData {
   averageSessionTime      Float @default(0)
   lastSessionStartTime    DateTime?
   lastSessionEndTime      DateTime?
+}
 
+model InteractionData {
+  userID                         String @unique
+  likeInteractionCount           Int   @default(0)
+  averageLikeInteractionTime     Float @default(0)
+  commentInteractionCount        Int   @default(0)
+  averageCommentInteractionTime  Float @default(0)
 }
