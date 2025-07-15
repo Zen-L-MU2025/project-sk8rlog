@@ -17,21 +17,21 @@ export const recalculateSessionAverages = (userSessionData) => {
 
     const sessionDurationInSeconds = (logoutTime.getTime() - lastSessionStartTime.getTime()) / MS_IN_SECOND
 
+    // Recalculate the user's average session start time as the nth second of the day
     const avgStartAsSecondOfDay = averageSessionStartTime || 0
     const lastSessionStartAsSecondOfDay = toSecondOfDay(lastSessionStartTime)
     const newAverageSessionStartTimeAsSecondOfDay = ((avgStartAsSecondOfDay * sessionCount) + lastSessionStartAsSecondOfDay) / (sessionCount + 1)
 
+    // Recalculate the user's average session end time as the nth second of the day
     const avgEndAsSecondOfDay = averageSessionEndTime || 0
     const lastSessionEndAsSecondOfDay = toSecondOfDay(logoutTime)
     const newAverageSessionEndTimeAsSecondOfDay = ((avgEndAsSecondOfDay * sessionCount) + lastSessionEndAsSecondOfDay) / (sessionCount + 1)
 
-    const now = new Date()
-    const todayAtMidnightAsSecondsSinceEpoch = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / MS_IN_SECOND
-
+    // Round new averages to finalize
     const newSessionCount = sessionCount + 1
     const newAverageSessionTime = Math.ceil(((averageSessionTime * sessionCount) + sessionDurationInSeconds) / (sessionCount + 1))
-    const newAverageSessionStartTime = Math.floor(todayAtMidnightAsSecondsSinceEpoch + newAverageSessionStartTimeAsSecondOfDay)
-    const newAverageSessionEndTime = Math.ceil(todayAtMidnightAsSecondsSinceEpoch + newAverageSessionEndTimeAsSecondOfDay)
+    const newAverageSessionStartTime = Math.floor(newAverageSessionStartTimeAsSecondOfDay)
+    const newAverageSessionEndTime = Math.ceil(newAverageSessionEndTimeAsSecondOfDay)
 
     return { newSessionCount, newAverageSessionTime, newAverageSessionStartTime, newAverageSessionEndTime }
 }
@@ -39,9 +39,7 @@ export const recalculateSessionAverages = (userSessionData) => {
 // Recalculates the metrics of the specified interaction type based on provided user interaction data
 export const recalculateInteractionAverages = (userInteractionData, interactionType) => {
     const now = new Date()
-    const todayAtMidnightAsSecondsSinceEpoch = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / MS_IN_SECOND
-
-    const interactionTimeAsSecondOfDay = todayAtMidnightAsSecondsSinceEpoch + toSecondOfDay(now)
+    const interactionTimeAsSecondOfDay =  toSecondOfDay(now)
 
     let {
         likeInteractionCount, averageLikeInteractionTime,
