@@ -27,7 +27,7 @@ router.post('/register', async (req, res) => {
         })
 
         const tokenPayload = { userID: newUser.userID, username: newUser.username}
-        const token = await webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
+        const token = webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
 
         await res.cookie('webtoken', token, { Domain: "localhost", Path: "/", maxAge: 3600000, })
         return res.status(STATUS_CODES.CREATED).json({ newUser, isSuccessful: true, token })
@@ -51,7 +51,7 @@ router.post('/login', async (req, res, _next) => {
         }
 
         const tokenPayload = { userID: user.userID, username: user.username}
-        const token = await webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
+        const token = webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
 
         // Update user's last session start time
         await prisma.sesssionData.update({
