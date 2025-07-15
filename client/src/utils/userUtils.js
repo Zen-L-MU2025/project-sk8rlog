@@ -51,15 +51,8 @@ export const register = async (formObject, setIsSuccessful) => {
             setIsSuccessful(false)
         })
 
-    await axios.get(`${baseUrl}/auth/setCookie`, {headers : { 'Authorization' : `Bearer ${token}:${newUserID}` }, withCredentials: true})
-        .then(res => {
-            setIsSuccessful(res.data.isSuccessful)
-        })
-        .catch(error => {
-            console.error("setCookie error: ", error)
-            setIsSuccessful(false)
-            return
-        })
+    // Set session cookies
+    await setCookies(token, userID, setIsSuccessful)
 }
 
 // Finds a user by provided ID and sets corresponding user in state
@@ -97,15 +90,8 @@ export const login = async (formObject, setIsSuccessful) => {
             return
         })
 
-    await axios.get(`${baseUrl}/auth/setCookie`, {headers : { 'Authorization' : `Bearer ${token}:${userID}` }, withCredentials: true})
-        .then(res => {
-            setIsSuccessful(res.data.isSuccessful)
-        })
-        .catch(error => {
-            console.error("setCookie error: ", error)
-            setIsSuccessful(false)
-            return
-        })
+    // Set session cookies
+    setCookies(token, userID, setIsSuccessful)
 }
 
 // Verify user access to protected resource
@@ -134,29 +120,31 @@ export const verifyAccess = (setHasAccess) => {
 // Fetch user data to load into session storage
 // Sets activeUser to user data if successful, logs error to console otherwise
 // This function is only called from protected routes under the assumption that user is already logged in
-export const loadUserSession = (setActiveUser) => {
+export const loadUserSession = async (setActiveUser) => {
+    const token = locateCookie("webtoken")
+    const userID = locateCookie("userid")
+
+    if (!userID || !token ) {
+        console.error("No user session found")
+        return
+    }
+
+    // Refresh cookies
+    await setCookies(token, userID)
+
     const user = JSON.parse(sessionStorage.getItem('user'))
     if (user) {
         setActiveUser(user)
         return
     }
 
-    const userID = locateCookie("userid")
-    if (!userID) {
-        console.error("No user ID cookie found")
-        return
-    }
+    const res = await axios.get(`${baseUrl}/users/${userID}`, {withCredentials: true})
+        .catch(error => {console.error("verifyAccess error: ", error)})
 
-    axios.get(`${baseUrl}/users/${userID}`, {withCredentials: true})
-        .then(res => {
-            // No need to store password in session
-            delete res.data.user.password
-            sessionStorage.setItem("user", JSON.stringify(res.data.user))
-            setActiveUser(res.data.user)
-        })
-        .catch(error => {
-            console.error("verifyAccess error: ", error)
-        })
+    // No need to store password in session
+    delete res.data.user.password
+    sessionStorage.setItem("user", JSON.stringify(res.data.user))
+    setActiveUser(res.data.user)
 }
 
 // Helper function that returns the content of a specified cookie
@@ -171,4 +159,17 @@ const locateCookie = (cookieName) => {
     }
 
     return locatedCookie.split('=')[1].trim()
+}
+
+// Refreshes cookies
+const setCookies = async (token, userID, setIsSuccessful = null) => {
+    await axios.get(`${baseUrl}/auth/setCookie`, {headers : { 'Authorization' : `Bearer ${token}:${userID}` }, withCredentials: true})
+        .then(res => {
+            if (setIsSuccessful) setIsSuccessful(res.data.isSuccessful)
+        })
+        .catch(error => {
+            console.error("setCookie error: ", error)
+            if (setIsSuccessful) setIsSuccessful(false)
+            return
+        })
 }
