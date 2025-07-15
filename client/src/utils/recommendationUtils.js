@@ -5,8 +5,8 @@ import { removeStopwords, eng } from 'stopword'
 import { getPostByID } from './PostUtils.js'
 import {
     LIKE, NON_ALPHANUMERIC_REGEX, MILLISECONDS_IN_DAY, AGE_CUTOFF_IN_DAYS,
-    LIKE_WEIGHT, COMMENT_WEIGHT, CLIPS, BLOGS, AVERAGE_WORDS_READ_PER_SECOND,
-    NOT_APPLICABLE
+    LIKE_WEIGHT, COMMENT_WEIGHT, CLIPS, AVERAGE_WORDS_READ_PER_SECOND,
+    NOT_APPLICABLE, RECOMMENDED, POPULAR
 } from './constants.js'
 
 // Tokenize the content of a post, remove stop words
@@ -43,12 +43,12 @@ export const tokenize = async (post, activeUser, action) => {
 }
 
 // Score every post based on the user's frequency map and set client posts state to results
-export const scorePosts = async (posts, activeUser, setPosts, isByPopularity) => {
+export const scorePosts = async (posts, activeUser, setPosts, scoringMode) => {
     const userFrequency = activeUser.user_Frequency
 
-    // If the user has no liked posts, manually override the isByPopularity flag to true
+    // If the user has no liked posts, manually override the scoring mode to popularity
     if (!activeUser.likedPosts) {
-        isByPopularity = true
+        scoringMode = POPULAR
     }
 
     // Currently disabled to allow for testing
@@ -113,7 +113,7 @@ export const scorePosts = async (posts, activeUser, setPosts, isByPopularity) =>
 
     // Sort posts by either recommendation score or popularity
     // Let tie breakers be handled by other option and finally by creation date
-    posts = sortByMetric(posts, isByPopularity)
+    posts = sortByMetric(posts, scoringMode)
 
     await setPosts(posts)
 }
@@ -173,29 +173,23 @@ const filterTokens = async (content) => {
 }
 
 // Sort posts by either recommendation score or popularity
-// Let tie breakers be handled by opposite option and finally by creation date
-const sortByMetric = (posts, isByPopularity) => {
+const sortByMetric = (posts, scoringMode) => {
     return posts.toSorted((a, b) => {
-        if (a.score === b.score && a.popularity === b.popularity) {
-            return (new Date(b.creationDate) - new Date(a.creationDate))
-        }
+        const scoreDiff = b.score - a.score
+        const popularityDiff = b.popularity - a.popularity
+        const dateDiff = new Date(b.creationDate) - new Date(a.creationDate)
 
-        if (!isByPopularity) {
-            if (a.score !== b.score) {
-                return b.score - a.score
-            }
-            else {
-                return b.popularity - a.popularity
-            }
-        }
+        switch(scoringMode) {
+            case RECOMMENDED:
+                if (scoreDiff !== 0) return scoreDiff
+                if (popularityDiff !== 0) return popularityDiff
+                return dateDiff
 
-        else {
-            if (b.popularity !== a.popularity) {
-                return b.popularity - a.popularity
-            }
-            else {
-                return b.score - a.score
-            }
+            case POPULAR:
+                if (popularityDiff !== 0) return popularityDiff
+                if (scoreDiff !== 0) return scoreDiff
+                return dateDiff
+
         }
     })
 }
