@@ -53,6 +53,14 @@ router.post('/login', async (req, res, _next) => {
         const tokenPayload = { userID: user.userID, username: user.username}
         const token = await webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: '1h' })
 
+        // Update user's last session start time
+        await prisma.sesssionData.update({
+            where: { userID: user.userID },
+            data: {
+                lastSessionStartTime: new Date(),
+            }
+        })
+
         return res.status(STATUS_CODES.OK).json({ user, isSuccessful: true, token })
 
     } catch (error) {

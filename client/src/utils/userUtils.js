@@ -91,7 +91,7 @@ export const login = async (formObject, setIsSuccessful) => {
         })
 
     // Set session cookies
-    setCookies(token, userID, setIsSuccessful)
+    await setCookies(token, userID, setIsSuccessful)
 }
 
 // Verify user access to protected resource
