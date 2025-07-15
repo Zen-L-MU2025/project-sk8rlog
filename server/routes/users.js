@@ -4,7 +4,7 @@ const router = require('express').Router()
 const webtoken = require('jsonwebtoken')
 const TOKEN_SECRET = process.env.TOKEN_SECRET
 const STATUS_CODES = require('../statusCodes')
-const { recalculateAverages } = require('../constants')
+const { recalculateSessionAverages } = require('../constants')
 
 const prisma = new PrismaClient()
 
@@ -79,7 +79,7 @@ router.post('/logout', async (req, res, _next) => {
             where: { userID },
         })
 
-        const { newSessionCount, newAverageSessionTime, newAverageSessionStartTime, newAverageSessionEndTime } = recalculateAverages(userSessionData)
+        const { newSessionCount, newAverageSessionTime, newAverageSessionStartTime, newAverageSessionEndTime } = recalculateSessionAverages(userSessionData)
 
         await prisma.sessionData.update({
             where: { userID },

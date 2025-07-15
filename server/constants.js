@@ -12,7 +12,7 @@ const toSecondOfDay = (date) => {
 }
 
 // Recalculates the average session time, start time, and end time based on provided user session data
-export const recalculateAverages = (userSessionData) => {
+export const recalculateSessionAverages = (userSessionData) => {
     const logoutTime = new Date()
     let { sessionCount, averageSessionTime, lastSessionStartTime, averageSessionStartTime, averageSessionEndTime } = userSessionData
 
