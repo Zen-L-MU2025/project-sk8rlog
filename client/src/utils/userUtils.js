@@ -120,7 +120,7 @@ export const verifyAccess = (setHasAccess) => {
 // Fetch user data to load into session storage
 // Sets activeUser to user data if successful, logs error to console otherwise
 // This function is only called from protected routes under the assumption that user is already logged in
-export const loadUserSession = async (setActiveUser) => {
+export const refreshUserSession = async (setActiveUser) => {
     const token = locateCookie("webtoken")
     const userID = locateCookie("userid")
 

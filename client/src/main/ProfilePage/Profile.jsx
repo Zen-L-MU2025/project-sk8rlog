@@ -10,7 +10,7 @@ import Footer from '/src/main/Footer'
 
 import UserContext from '/src/utils/UserContext'
 import { CLIPS } from '/src/utils/constants'
-import { verifyAccess, loadUserSession } from '/src/utils/UserUtils'
+import { verifyAccess, refreshUserSession } from '/src/utils/UserUtils'
 
 import '/src/css/hasSidebar.css'
 import '/src/css/profile.css'
@@ -26,7 +26,7 @@ const Profile = () => {
 
     const[ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
     useEffect( () => {
-        const loadUser = async () => { await loadUserSession(setActiveUser) }
+        const loadUser = async () => { await refreshUserSession(setActiveUser) }
         loadUser()
         setIsReadyToDisplayContent(true)
     }, [])
