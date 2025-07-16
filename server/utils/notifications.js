@@ -15,6 +15,7 @@ export const rollForNotification = (socket) => {
         socket.emit(DELIVER_NOTIFICATION, now)
     }
     else {
-        // "No new notifications"
+        // "No new notifications" | Track firing in testing
+        // console.log(`Fired at ${now}, ignored`)
     }
 }
