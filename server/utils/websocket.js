@@ -1,12 +1,12 @@
 import { Server } from 'socket.io'
 import { rollForNotification } from './notifications.js'
-import { CONNECTION, DISCONNECT, REQUEST_NOTIFICATION } from '../constants.js'
+import { CONNECTION, DISCONNECT, REQUEST_NOTIFICATION, PING_INTERVAL } from '../constants.js'
 
+// Creates a websocket server and listens for dummy notification requests
 export const createWebSocket = (server, corsConfig) => {
-    const identifier = new Date().getMilliseconds()
-    const io = new Server(server, { cors: corsConfig })
+    const socketServer = new Server(server, { cors: corsConfig })
 
-    io.on(CONNECTION, (socket) => {
+    socketServer.on(CONNECTION, (socket) => {
         console.log('connected established')
 
         socket.on(DISCONNECT, () => {
@@ -14,9 +14,18 @@ export const createWebSocket = (server, corsConfig) => {
         })
 
         socket.on(REQUEST_NOTIFICATION, () => {
-            rollForNotification(socket, identifier)
+            console.log('request notification received from client')
+            rollForNotification(socket)
         })
-    })
 
-    return io
+        // Dummy system: periodically ping for a "new notification"
+        periodicPing(socket)
+    })
+}
+
+// Dummy system: Rolls for a notification delivery every PING_INTERVAL ms
+const periodicPing = (socket) => {
+    setInterval(() => {
+        rollForNotification(socket)
+    }, PING_INTERVAL)
 }

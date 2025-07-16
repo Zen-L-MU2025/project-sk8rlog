@@ -9,3 +9,4 @@ export const CONNECTION = 'connection'
 export const DISCONNECT = 'disconnect'
 export const REQUEST_NOTIFICATION = 'request notification'
 export const DELIVER_NOTIFICATION = 'deliver notification'
+export const PING_INTERVAL = 5000

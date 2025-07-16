@@ -45,11 +45,11 @@ const PORT = 3000
 
 enableCORSinBucket()
 
-// Creat HTTP server
+// Create HTTP server
 const server = createServer(app)
 
-// Init socket.io instance
-const io = createWebSocket(server, corsConfig)
+// Init socket instance
+createWebSocket(server, corsConfig)
 
 server.listen(PORT, () => {
     console.log(`Server listening on port http://localhost:${PORT}`)

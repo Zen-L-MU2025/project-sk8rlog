@@ -1,8 +1,9 @@
 import { DELIVER_NOTIFICATION } from "../constants.js"
 
-export const rollForNotification = (socket, identifier) => {
+// Dummy system: randomly decide whether to send a notification to the client or not
+export const rollForNotification = (socket) => {
     if (!socket) {
-        console.log('roll noti was called with no socket')
+        console.error('rollForNotification was called with an invalid socket')
         return
     }
 
@@ -11,9 +12,9 @@ export const rollForNotification = (socket, identifier) => {
     const now = new Date().toLocaleTimeString()
 
     if (number > 0.7) {
-        socket.emit(DELIVER_NOTIFICATION, `${now}`)
+        socket.emit(DELIVER_NOTIFICATION, now)
     }
     else {
-        console.log(`Socket ${identifier}: no hit at ${now}`)
+        // "No new notifications"
     }
 }

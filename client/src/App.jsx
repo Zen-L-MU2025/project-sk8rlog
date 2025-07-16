@@ -15,11 +15,12 @@ import { CLIPS, BLOGS } from '/src/utils/constants'
 import './App.css'
 
 function App() {
-  useEffect(() => {
-    establishWebSocketConnection()
-  }, [])
-
+  const [dummyNotifications, setDummyNotifications] = useState([])
   const [activeUser, setActiveUser] = useState({})
+
+  useEffect(() => {
+    establishWebSocketConnection(setDummyNotifications)
+  }, [])
 
   return (<>
     <UserContext.Provider value={{ activeUser, setActiveUser }}>
