@@ -9,9 +9,11 @@ export const establishWebSocketConnection = (setDummyNotifications) => {
 
     const socket = io(VITE_SERVER_URL)
     socket.on(CONNECT, () => {
+        console.log(`connected at ${new Date().toLocaleTimeString()}`)
     })
 
     socket.on(DISCONNECT, () => {
+        console.log(`disconnected at ${new Date().toLocaleTimeString()}`)
     })
 
     socket.on(DELIVER_NOTIFICATION, (content) => {
