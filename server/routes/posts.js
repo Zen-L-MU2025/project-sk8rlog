@@ -3,6 +3,7 @@ const router = require('express').Router()
 const STATUS_CODES = require('../statusCodes')
 const { QUICKTIME, MOV } = require('../constants')
 const GCS = require('../utils/GCS')
+const { getVideoDurationInSeconds } = require('get-video-duration')
 
 const Multer = require('multer')
 const multer = Multer({
@@ -252,6 +253,20 @@ router.post('/comments/:postID', async (req, res, next) => {
         comment["author"] = author
 
         return res.status(STATUS_CODES.CREATED).json({ comment, message: 'Comment created' })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
+    }
+})
+
+// POST /posts/clipLength
+// Provided a post's file URL, returns the video length in seconds
+router.post('/clipLength', async (req, res, next) => {
+    try {
+        const { fileURL } = req.body
+        const clipLength = await getVideoDurationInSeconds(fileURL).catch((error) => {console.error(error)})
+
+        res.status(STATUS_CODES.OK).json({ clipLength, message: 'Video length retrieved' })
 
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
