@@ -9,14 +9,14 @@ import Posts from './main/Posts'
 import SinglePost from './main/SinglePost'
 
 import UserContext from '/src/utils/UserContext.js'
-import { socket } from '/src/utils/websocket.js'
+import { establishWebSocketConnection } from '/src/utils/websocket.js'
 import { CLIPS, BLOGS } from '/src/utils/constants'
 
 import './App.css'
 
 function App() {
   useEffect(() => {
-    socket()
+    establishWebSocketConnection()
   }, [])
 
   const [activeUser, setActiveUser] = useState({})
