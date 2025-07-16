@@ -13,10 +13,10 @@ import '/src/css/home.css'
 
 const Home = () => {
     const { activeUser, setActiveUser } = useContext(UserContext)
+    const loadUser = async () => { await loadUserSession(setActiveUser) }
 
     const[ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
     useEffect( () => {
-        const loadUser = async () => { await loadUserSession(setActiveUser) }
         loadUser()
         setIsReadyToDisplayContent(true)
     }, [])
@@ -27,7 +27,7 @@ const Home = () => {
 
     useEffect( () => {
         verifyAccess(setHasAccess)
-    }, [])
+    }, [activeUser])
 
     useEffect( () => {
         hasAccess === false && navigate('/unauthorized')

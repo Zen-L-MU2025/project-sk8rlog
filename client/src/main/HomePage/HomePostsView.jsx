@@ -12,7 +12,7 @@ import '/src/css/home.css'
 const HomePostsView = ({ postType }) => {
     const { activeUser } = useContext(UserContext)
 
-    const postType_lowercase = postType.toLowerCase()
+    const postTypeLowerCase = postType.toLowerCase()
     const [posts, setPosts] = useState(null)
     const [isInitialized, setIsInitialized] = useState(false)
 
@@ -24,13 +24,13 @@ const HomePostsView = ({ postType }) => {
     if (!isInitialized) return (<p>Loading...</p>)
 
     return(<>
-        <div id={`home_${postType_lowercase}`} className="column" >
+        <div id={`home_${postTypeLowerCase}`} className="column" >
 
-            <Link to={`/${postType_lowercase}`}>
+            <Link to={`/${postTypeLowerCase}`}>
                 <h3 className="columnHeader">{postType}</h3>
             </Link>
 
-            <div id={`${postType_lowercase}ColumnContent`} className="columnContent" >
+            <div id={`${postTypeLowerCase}ColumnContent`} className="columnContent" >
                 {
                     posts?.slice(0, HOME_PAGE_POST_COUNT).map(post => {
                         return (

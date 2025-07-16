@@ -186,4 +186,77 @@ router.put('/:postID/likes/:action', async (req, res, next) => {
     }
 })
 
+// POST /posts/comments
+// Retrieves all comments corresponding to the comment IDs provided
+router.post('/comments', async (req, res, next) => {
+    try {
+        const { commentIDs } = req.body
+
+        if (commentIDs?.length < 1) {
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: 'No comment IDs provided' })
+        }
+
+        let comments = []
+
+        for ( const commentID of commentIDs ) {
+            const comment = await prisma.comment.findUnique({
+                where : { commentID }
+            })
+
+            // Retrieve the author of the comment and attach it to the comment object
+            const author = await prisma.user.findUnique({
+                where : { userID : comment.authorID }
+            })
+            comment["author"] = author
+
+            comments.push(comment)
+        }
+
+        // Sort the comments in descending order by creation date
+        comments.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate))
+
+        return res.status(STATUS_CODES.OK).json({ comments, message: 'Comments retrieved' })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
+    }
+})
+
+// POST /posts/comments/:postID
+// Creates a comment for a post, saves it to the database and links it to its corresponding post
+router.post('/comments/:postID', async (req, res, next) => {
+    try {
+        const { postID } = req.params
+        const { commentBoxContent, userID } = req.body
+
+        // Create the comment
+        const comment = await prisma.comment.create({
+            data: {
+                authorID: userID, content: commentBoxContent
+            }
+        })
+
+        // Link the comment to the post through its ID
+        const post = await prisma.post.findUnique({
+            where: { postID }
+        })
+        await prisma.post.update({
+            where: { postID },
+            data: { comments: [...post.comments, comment.commentID] }
+        })
+
+        // Retrieve the author of the comment and attach it to the comment object
+        const author = await prisma.user.findUnique({
+            where : { userID }
+        })
+        comment["author"] = author
+
+        return res.status(STATUS_CODES.CREATED).json({ comment, message: 'Comment created' })
+
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error })
+    }
+})
+
+
 module.exports = router
