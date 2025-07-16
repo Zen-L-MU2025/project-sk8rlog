@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Routes, Route, BrowserRouter, Link } from "react-router"
+import { io } from 'socket.io-client'
 
 import LoginModal from './auth/LoginModal'
 import RegisterModal from './auth/RegisterModal'
@@ -14,6 +15,16 @@ import { CLIPS, BLOGS } from '/src/utils/constants'
 import './App.css'
 
 function App() {
+  useEffect(() => {
+    const socket = io(process.env.SERVER_URL)
+    socket.on('connect', () => {
+      console.log('user connected')
+    })
+    socket.on('disconnect', () => {
+      console.log('user disconnected')
+    })
+    return () => { socket.disconnect() }
+  }, [])
 
   const [activeUser, setActiveUser] = useState({})
 
