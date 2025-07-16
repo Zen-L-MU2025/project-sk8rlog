@@ -48,9 +48,9 @@ const server = createServer(app)
 
 const io = new Server(server, { cors: corsConfig })
 io.on('connection', (socket) => {
-  console.log('a user connected')
+  console.log('connected established')
   socket.on('disconnect', () => {
-    console.log('user disconnected')
+    console.log('connection terminated')
   })
 })
 
