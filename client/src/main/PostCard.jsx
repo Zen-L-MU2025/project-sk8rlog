@@ -54,7 +54,7 @@ const PostCard = ({ post, postType, origin, setUserPosts }) => {
     if (!fileIsLoaded) {
         return (
             <article className={`${postType}PostCard`}>
-                <p>Uploading...</p>
+                <p>Loading...</p>
             </article>
         )
     }
