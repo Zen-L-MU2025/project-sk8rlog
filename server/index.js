@@ -10,12 +10,14 @@ const postsRouter = require('./routes/posts')
 
 const { enableCORSinBucket } = require('./utils/GCS')
 
-const app = express()
-app.use(express.json())
-app.use(cors({
+const corsConfig = {
     origin: 'http://localhost:5173',
     credentials: true,
-}))
+}
+
+const app = express()
+app.use(express.json())
+app.use(cors(corsConfig))
 
 const sessionConfig = {
     name: 'sessionID',
@@ -44,7 +46,7 @@ enableCORSinBucket()
 
 const server = createServer(app)
 
-const io = new Server(server)
+const io = new Server(server, { cors: corsConfig })
 io.on('connection', (socket) => {
   console.log('a user connected')
   socket.on('disconnect', () => {
