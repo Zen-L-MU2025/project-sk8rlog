@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const session = require('express-session')
 const { createServer } = require('node:http')
+const { Server } = require('socket.io')
 
 const usersRouter = require('./routes/users')
 const authRouter = require('./routes/auth')
@@ -40,7 +41,17 @@ app.use('/posts', postsRouter)
 const PORT = 3000
 
 enableCORSinBucket()
+
 const server = createServer(app)
+
+const io = new Server(server)
+io.on('connection', (socket) => {
+  console.log('a user connected')
+  socket.on('disconnect', () => {
+    console.log('user disconnected')
+  })
+})
+
 server.listen(PORT, () => {
     console.log(`Server listening on port http://localhost:${PORT}`)
 })
