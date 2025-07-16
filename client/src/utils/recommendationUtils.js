@@ -76,7 +76,6 @@ export const scorePosts = async (posts, activeUser, setPosts, scoringMode) => {
                 }
             }
         })
-
         // For each token in the overlap, calculate its score and add it to the raw post score
         for (const [tokenName, token] of Object.entries(overlap)) {
             const tokenScore = await calculateTokenScore(post, token, tokenName, userFrequency)
@@ -113,7 +112,7 @@ export const scorePosts = async (posts, activeUser, setPosts, scoringMode) => {
 
     // Sort posts by either recommendation score or popularity
     // Let tie breakers be handled by other option and finally by creation date
-    posts = sortByMetric(posts, scoringMode)
+    posts = await sortByMetric(posts, scoringMode)
 
     await setPosts(posts)
 }
@@ -230,6 +229,5 @@ const calculateTokenScore = async (post, token, tokenName, userFrequency) => {
     const timeFactor = 1 / Math.sqrt( post.ageInDays > 0 ? post.ageInDays : 1 )
 
     const tokenScore = base * repetitionFactor * timeFactor
-
     return tokenScore
 }
