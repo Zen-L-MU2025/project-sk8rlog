@@ -1,16 +1,17 @@
 import { io } from 'socket.io-client'
 const { VITE_SERVER_URL } = import.meta.env
+import { CONNECT, DISCONNECT, REQUEST_NOTIFICATION, DELIVER_NOTIFICATION } from '/src/utils/constants.js'
 
 export const establishWebSocketConnection = () => {
     const identifier = new Date().getMilliseconds()
     const socket = io(VITE_SERVER_URL)
-    socket.on('connect', () => {
+    socket.on(CONNECT, () => {
     })
 
-    socket.on('disconnect', () => {
+    socket.on(DISCONNECT, () => {
     })
 
-    socket.on('deliver notification', (content) => {
+    socket.on(DELIVER_NOTIFICATION, (content) => {
         console.log(`Socket ${identifier}: ${content}`)
     })
 
@@ -18,8 +19,8 @@ export const establishWebSocketConnection = () => {
 }
 
 const periodicPing = (socket) => {
-    const pingInterval = 10000
+    const pingInterval = 5000
     setInterval(() => {
-        socket.emit('request notification')
+        socket.emit(REQUEST_NOTIFICATION)
     }, pingInterval)
 }
