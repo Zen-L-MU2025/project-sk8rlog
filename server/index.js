@@ -9,6 +9,7 @@ const authRouter = require('./routes/auth')
 const postsRouter = require('./routes/posts')
 
 const { enableCORSinBucket } = require('./utils/GCS')
+const { createWebSocket } = require('./utils/websocket')
 
 const corsConfig = {
     origin: 'http://localhost:5173',
@@ -44,15 +45,11 @@ const PORT = 3000
 
 enableCORSinBucket()
 
+// Creat HTTP server
 const server = createServer(app)
 
-const io = new Server(server, { cors: corsConfig })
-io.on('connection', (socket) => {
-  console.log('connected established')
-  socket.on('disconnect', () => {
-    console.log('connection terminated')
-  })
-})
+// Init socket.io instance
+const io = createWebSocket(server, corsConfig)
 
 server.listen(PORT, () => {
     console.log(`Server listening on port http://localhost:${PORT}`)
