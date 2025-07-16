@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, BrowserRouter, Link } from "react-router"
-import { io } from 'socket.io-client'
-const { SERVER_URL } = import.meta.env
 
 import LoginModal from './auth/LoginModal'
 import RegisterModal from './auth/RegisterModal'
@@ -11,20 +9,14 @@ import Posts from './main/Posts'
 import SinglePost from './main/SinglePost'
 
 import UserContext from '/src/utils/UserContext.js'
+import { socket } from '/src/utils/websocket.js'
 import { CLIPS, BLOGS } from '/src/utils/constants'
 
 import './App.css'
 
 function App() {
   useEffect(() => {
-    const socket = io(SERVER_URL)
-    socket.on('connect', () => {
-      console.log('user connected')
-    })
-    socket.on('disconnect', () => {
-      console.log('user disconnected')
-    })
-    return () => { socket.disconnect() }
+    socket()
   }, [])
 
   const [activeUser, setActiveUser] = useState({})
