@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, BrowserRouter, Link } from "react-router"
 import { io } from 'socket.io-client'
+const { SERVER_URL } = import.meta.env
 
 import LoginModal from './auth/LoginModal'
 import RegisterModal from './auth/RegisterModal'
@@ -16,7 +17,7 @@ import './App.css'
 
 function App() {
   useEffect(() => {
-    const socket = io(process.env.SERVER_URL)
+    const socket = io(SERVER_URL)
     socket.on('connect', () => {
       console.log('user connected')
     })
