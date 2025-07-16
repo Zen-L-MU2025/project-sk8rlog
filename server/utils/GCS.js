@@ -2,6 +2,35 @@
 
 import { Storage } from '@google-cloud/storage'
 
+// Enable CORS
+export const enableCORSinBucket = async () => {
+    const MAX_AGE = 3600, METHOD = ['GET', 'HEAD'], { ORIGIN } = process.env, RESPONSE_HEADER = ['Content-Type', 'Range']
+
+    try {
+        // Init bucket
+        const { BUCKET_NAME, PROJECT_ID, KEYFILE_NAME : keyFilename } = process.env
+        const storage = new Storage({PROJECT_ID, keyFilename})
+        const bucket = storage.bucket(BUCKET_NAME)
+
+        // Enable CORS
+        await bucket.setCorsConfiguration([
+            {
+                MAX_AGE,
+                method: [METHOD],
+                origin: [ORIGIN],
+                responseHeader: [RESPONSE_HEADER],
+            },
+        ])
+
+        // Uncomment if needed to get bucket metadata to check CORS config
+        // const [metadata] = await bucket.getMetadata();
+        // console.log(JSON.stringify(metadata, null, 2));
+
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 // Upload file to GCS bucket
 export const uploadFile = async (file, DESTINATION) => {
     try {
