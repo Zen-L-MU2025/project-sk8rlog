@@ -16,7 +16,7 @@ import '/src/css/hasSidebar.css'
 import '/src/css/profile.css'
 
 const Profile = () => {
-    const { username } = useParams()
+    const { userID } = useParams()
 
     const { activeUser, setActiveUser } = useContext(UserContext)
     const loadUser = async () => { await refreshUserSession(setActiveUser) }

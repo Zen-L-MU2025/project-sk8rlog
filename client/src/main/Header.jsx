@@ -23,7 +23,7 @@ const Header = ({ HEADER_TEXT, activeUser }) => {
         <header className="mainHeader">
             <Link to='/home'> <img className='logo' src={skateboard} alt="skateboard" /> </Link>
             <h1>{HEADER_TEXT}</h1>
-            <Link to={`/profile/${activeUser.username}`}> <button className='toProfile' id={`iconOverlayOpen_${isIconOverlayOpen}`}>My Sk8rlog</button> </Link>
+            <Link to={`/profile/${activeUser.userID}`}> <button className='toProfile' id={`iconOverlayOpen_${isIconOverlayOpen}`}>My Sk8rlog</button> </Link>
 
             {/* Switch the div nesting of the gear icon so that it's aligned with the buttons when they're visible*/}
             { !isIconOverlayOpen &&
