@@ -38,9 +38,12 @@ const Profile = () => {
 
     useEffect( () => {
         loadUser()
-        getUserByID(userProfileID, setUserToDisplay)
         setIsReadyToDisplayContent(true)
     }, [])
+
+    useEffect( () => {
+        getUserByID(userProfileID, setUserToDisplay)
+    }, [userProfileID])
 
     useEffect( () => {
         verifyAccess(setHasAccess)

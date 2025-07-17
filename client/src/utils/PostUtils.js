@@ -33,6 +33,7 @@ export const uploadPost = async ( postType, formData, userID, location ) => {
 export const getUserPostsByType = async ( activeUser, postType, setUserPosts ) => {
     await axios.get(`${baseUrl}/posts/by/${activeUser.userID}/${postType}`)
         .then(res => {
+            if (!res.data.posts) return
             setUserPosts(res.data.posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate)))
         })
         .catch(error => {
