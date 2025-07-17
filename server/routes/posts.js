@@ -20,7 +20,7 @@ router.get('/', async (req, res, _next) => {
         const posts = await prisma.post.findMany()
 
         if (posts.length < 1) {
-            return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'No posts found' })
+            return res.status(STATUS_CODES.NO_CONTENT).json({ message: 'No posts found' })
         }
 
         return res.status(STATUS_CODES.OK).json({ posts, message: 'Posts retrieved' })
@@ -86,7 +86,7 @@ router.get('/by/:userID/:type', async (req, res, _next) => {
         })
 
         if (posts.length < 1) {
-            return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'No posts found' })
+            return res.status(STATUS_CODES.NO_CONTENT).json({ message: 'No posts found' })
         }
 
         return res.status(STATUS_CODES.OK).json({ posts, message: 'Posts retrieved' })
@@ -107,7 +107,7 @@ router.get('/all/:type', async (req, res, _next) => {
         })
 
         if (posts.length < 1) {
-            return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'No posts found' })
+            return res.status(STATUS_CODES.NO_CONTENT).json({ message: 'No posts found' })
         }
 
         return res.status(STATUS_CODES.OK).json({ posts, message: 'Posts retrieved' })
