@@ -12,6 +12,7 @@ const ProfilePostView = ({ userToDisplay, activeUser, profileContentView, userPo
 
     useEffect(() => {
         if (!userToDisplay?.userID) return
+        setUserPosts([])
         getUserPostsByType(userToDisplay, profileContentView, setUserPosts)
         setIsReadyToDisplayContent(true)
     }, [profileContentView, userToDisplay])

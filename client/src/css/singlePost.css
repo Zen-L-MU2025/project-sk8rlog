@@ -14,6 +14,13 @@
     justify-content: center;
     column-gap: 50px;
 }
+.postedBy {
+    color: #422449;
+}
+.postedBy:hover {
+    color: rgb(40, 154, 195);
+    cursor: pointer;
+}
 .location {
     margin-bottom: -20px;
 }

@@ -27,6 +27,10 @@ const SinglePost = () => {
 
     const loadUser = async () => { await refreshUserSession(setActiveUser) }
 
+    const handleGoToProfile = () => {
+        navigate(`/profile/${postAuthor?.userID}`)
+    }
+
     const HEADER_TEXT = 'Sk8rlog'
     const postDate = new Date(post?.creationDate)
     const postDateFormatted = postDate.toLocaleDateString()
@@ -68,7 +72,11 @@ const SinglePost = () => {
 
         <section className='singlePost'>
             <div className='singlePostContent'>
-                <h3>{ toSingular(post?.type) } posted by <em>@{ postAuthor?.username }</em> on {postDateFormatted}</h3>
+                <h3>
+                    { toSingular(post?.type) }
+                    &nbsp;posted by <em className='postedBy' onClick={handleGoToProfile}>@{ postAuthor?.username }</em>
+                    &nbsp;on {postDateFormatted}
+                </h3>
                 <p className='location'>📍 {post?.location}</p>
                 { post?.type === CLIPS && <video src={post?.fileURL} controls={true} className='singlePostMedia'/>}
                 { post?.type === BLOGS && <img src={post?.fileURL} className='singlePostMedia' /> }
