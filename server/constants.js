@@ -10,3 +10,4 @@ export const DISCONNECT = 'disconnect'
 export const REQUEST_NOTIFICATION = 'request notification'
 export const DELIVER_NOTIFICATION = 'deliver notification'
 export const PING_INTERVAL = 5000
+export const ROLL_THRESHOLD = 0.7
