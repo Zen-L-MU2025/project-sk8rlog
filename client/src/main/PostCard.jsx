@@ -12,7 +12,7 @@ import trash from '/src/assets/trash.png';
 import emptyheart from '/src/assets/heart.png';
 import fullheart from '/src/assets/heartFull.png';
 
-const PostCard = ({ post, postType, origin, setUserPosts }) => {
+const PostCard = ({ post, postType, origin, setUserPosts, isSelfProfile = false }) => {
     const { activeUser, setActiveUser } = useContext(UserContext)
 
     const embedRef = useRef(null)
@@ -78,7 +78,7 @@ const PostCard = ({ post, postType, origin, setUserPosts }) => {
                 <img className='likeButton' src={emptyheart} onClick={(event) => handleHeartClick(event, LIKE)} />
             }
 
-            { origin === PROFILE_ORIGIN &&
+            { origin === PROFILE_ORIGIN && isSelfProfile &&
                 <img className='deletePostButton' src={trash} onClick={handleDeletePost} alt='trash icon' />
             }
 

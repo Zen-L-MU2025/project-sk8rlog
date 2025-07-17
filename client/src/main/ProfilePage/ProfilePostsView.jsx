@@ -7,24 +7,25 @@ import { PROFILE_ORIGIN } from '/src/utils/constants'
 
 import '/src/css/profile.css'
 
-const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPosts, isOutdated, setIsOutdated }) => {
-
+const ProfilePostView = ({ userToDisplay, activeUser, profileContentView, userPosts, setUserPosts, isOutdated, setIsOutdated }) => {
     const [ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
 
     useEffect(() => {
-        if (!activeUser.userID) return
-        getUserPostsByType(activeUser, profileContentView, setUserPosts)
+        if (!userToDisplay?.userID) return
+        getUserPostsByType(userToDisplay, profileContentView, setUserPosts)
         setIsReadyToDisplayContent(true)
-    }, [profileContentView, activeUser])
+    }, [profileContentView, userToDisplay])
 
     useEffect(() => {
         if (isOutdated) {
             setIsReadyToDisplayContent(false)
-            getUserPostsByType(activeUser, profileContentView, setUserPosts)
+            getUserPostsByType(userToDisplay, profileContentView, setUserPosts)
             setIsReadyToDisplayContent(true)
             setIsOutdated(false)
         }
     }, [isOutdated])
+
+    const isSelfProfile = userToDisplay?.userID === activeUser.userID
 
     if (!isReadyToDisplayContent) {
         return (<p>Loading posts...</p>)
@@ -33,14 +34,14 @@ const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPos
     return (<>
         <section className="profilePostsView">
                 { userPosts.length === 0 &&
-                    <p>You haven't posted any {profileContentView} yet!</p>
+                    <p>No {profileContentView}, yet!</p>
                 }
 
                 { userPosts.length > 0 &&
                     userPosts.map(post => {
                         return (
                             <PostCard key={post.postID} post={post} postType={profileContentView} origin={PROFILE_ORIGIN}
-                                setUserPosts={setUserPosts}
+                                setUserPosts={setUserPosts} isSelfProfile={isSelfProfile}
                             />
                         )
                     })

@@ -33,7 +33,7 @@ const Profile = () => {
     const toggleCreatePostModal = () => setShowCreatePostModal(!showCreatePostModal)
     const navigate = useNavigate()
 
-    const userTitle = activeUser.name || `@${activeUser.username}`
+    const userTitle = userToDisplay?.name || `@${userToDisplay?.username}`
     const HEADER_TEXT = `${userTitle}'s Profile`
 
     useEffect( () => {

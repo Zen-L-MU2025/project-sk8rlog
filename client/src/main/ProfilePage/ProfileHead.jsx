@@ -17,7 +17,9 @@ const ProfileHead = ({ userToDisplay, activeUser, setProfileContentView, toggleC
             <div className="contentButtons">
                 <p className="contentButton" onClick={() => setProfileContentView(CLIPS)}>{isSelfProfile ? 'my' : ''} Clips</p>
                 <p className="contentButton" onClick={() => setProfileContentView(BLOGS)}>{isSelfProfile ? 'my' : ''} Blogs</p>
-                <p className="contentButton" onClick={toggleCreatePostModal}>+ Create Post</p>
+                { isSelfProfile &&
+                    <p className="contentButton" onClick={toggleCreatePostModal}>+ Create Post</p>
+                }
             </div>
         </section>
     )
