@@ -10,7 +10,7 @@ import Footer from '/src/main/Footer'
 
 import UserContext from '/src/utils/UserContext'
 import { CLIPS } from '/src/utils/constants'
-import { verifyAccess, refreshUserSession } from '/src/utils/UserUtils'
+import { verifyAccess, refreshUserSession, getUserByID } from '/src/utils/UserUtils'
 
 import '/src/css/hasSidebar.css'
 import '/src/css/profile.css'
@@ -28,6 +28,8 @@ const Profile = () => {
     const [profileContentView, setProfileContentView] = useState(CLIPS)
     const[ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
 
+    const [userToDisplay, setUserToDisplay] = useState(null)
+
     const toggleCreatePostModal = () => setShowCreatePostModal(!showCreatePostModal)
     const navigate = useNavigate()
 
@@ -36,6 +38,7 @@ const Profile = () => {
 
     useEffect( () => {
         loadUser()
+        getUserByID(userID, setUserToDisplay)
         setIsReadyToDisplayContent(true)
     }, [])
 
@@ -55,11 +58,13 @@ const Profile = () => {
             <Sidebar />
             <div className='profileContent'>
                 <ProfileHead
+                    userToDisplay={userToDisplay}
                     activeUser={activeUser}
                     setProfileContentView={setProfileContentView}
                     toggleCreatePostModal={toggleCreatePostModal}
                 />
                 <ProfilePostsView
+                    userToDisplay={userToDisplay}
                     activeUser={activeUser}
                     profileContentView={profileContentView}
                     userPosts={userPosts} setUserPosts={setUserPosts}
