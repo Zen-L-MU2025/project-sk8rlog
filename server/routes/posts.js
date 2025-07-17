@@ -65,16 +65,8 @@ router.post('/create/:userID', async (req, res, _next) => {
             }
         })
 
-        const userInteractionData = await prisma.interactionData.findUnique({
-            where: { userID }
-        })
-
         // Update the user's interaction data
-        const { newAverage, newInteractionCount } = recalculateInteractionAverages(userInteractionData, CREATE)
-        await prisma.interactionData.update({
-            where: { userID },
-            data: { createInteractionCount: newInteractionCount, averageCreateInteractionTime: newAverage }
-        })
+        await recalculateInteractionAverages(userID, prisma, CREATE)
 
         return res.status(STATUS_CODES.CREATED).json({ post, message: 'Post created' })
 
@@ -264,17 +256,8 @@ router.post('/comments/:postID', async (req, res, _next) => {
         })
         comment["author"] = author
 
-
-        const userInteractionData = await prisma.interactionData.findUnique({
-            where: { userID }
-        })
-
         // Update the user's interaction data
-        const { newAverage, newInteractionCount } = recalculateInteractionAverages(userInteractionData, COMMENT)
-        await prisma.interactionData.update({
-            where: { userID },
-            data: { commentInteractionCount: newInteractionCount, averageCommentInteractionTime: newAverage }
-        })
+        await recalculateInteractionAverages(userID, prisma, COMMENT)
 
         return res.status(STATUS_CODES.CREATED).json({ comment, message: 'Comment created' })
 

@@ -76,21 +76,9 @@ router.post('/logout', async (req, res, _next) => {
     try {
         const { userID } = req.body
 
-        const userSessionData = await prisma.sessionData.findUnique({
-            where: { userID },
-        })
+        await recalculateSessionAverages(userID, prisma)
 
-        const { newSessionCount, newAverageSessionTime, newAverageSessionStartTime, newAverageSessionEndTime } = recalculateSessionAverages(userSessionData)
-
-        await prisma.sessionData.update({
-            where: { userID },
-            data: {
-                sessionCount: newSessionCount,
-                averageSessionTime: newAverageSessionTime,
-                averageSessionStartTime: newAverageSessionStartTime,
-                averageSessionEndTime: newAverageSessionEndTime,
-            }
-        })
+        return res.status(STATUS_CODES.OK).json({ message: 'User logged out' })
 
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message })
@@ -138,16 +126,8 @@ router.put('/:userID/likedPosts/:action', async (req, res, _next) => {
             }
         })
 
-        const userInteractionData = await prisma.interactionData.findUnique({
-            where: { userID }
-        })
-
         // Update the user's interaction data
-        const { newAverage, newInteractionCount } = recalculateInteractionAverages(userInteractionData, LIKE)
-        await prisma.interactionData.update({
-            where: { userID },
-            data: { likeInteractionCount: newInteractionCount, averageLikeInteractionTime: newAverage }
-        })
+        await recalculateInteractionAverages(userID, prisma, LIKE)
 
         return res.status(STATUS_CODES.OK).json({ message: 'Liked posts updated' })
 
