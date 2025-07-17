@@ -3,10 +3,10 @@ import { Link } from 'react-router'
 
 import UserContext from '/src/utils/UserContext.js'
 import { logout } from '/src/utils/userUtils.js'
+import { handleNotificationStatuses } from '/src/utils/notificationsUtils.js'
 
 import skateboard from '/src/assets/skateboard.png'
 import notificationbell from '/src/assets/notificationbell.png'
-import pendingnotificationbell from '/src/assets/pendingnotificationbell.svg'
 import gear from '/src/assets/gear.svg'
 
 import '/src/css/header.css'
@@ -31,16 +31,7 @@ const Header = ({ HEADER_TEXT, activeUser }) => {
     }
 
     useEffect(() => {
-        if (!hasNewNotifications) return
-
-        if (!isShowingNotifications) {
-            setNotificationBell(pendingnotificationbell)
-        }
-
-        if (isShowingNotifications) {
-            setNotificationBell(notificationbell)
-            setHasNewNotifications(false)
-        }
+        handleNotificationStatuses(hasNewNotifications, setHasNewNotifications, isShowingNotifications, setNotificationBell)
     }, [hasNewNotifications, isShowingNotifications])
 
     return (
