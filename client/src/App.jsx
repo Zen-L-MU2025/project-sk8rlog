@@ -9,7 +9,7 @@ import Posts from './main/Posts'
 import SinglePost from './main/SinglePost'
 
 import UserContext from '/src/utils/UserContext.js'
-import { establishWebSocketConnection } from '/src/utils/websocket.js'
+import { establishWebSocketConnection } from '/src/utils/clientWebSocketUtils.js'
 import { CLIPS, BLOGS } from '/src/utils/constants'
 
 import './App.css'

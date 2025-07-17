@@ -1,5 +1,5 @@
 import { Server } from 'socket.io'
-import { rollForNotification } from './notifications.js'
+import { rollForNotification } from './notificationsUtils.js'
 import { CONNECTION, DISCONNECT, REQUEST_NOTIFICATION, PING_INTERVAL } from '../constants.js'
 
 // Creates a websocket server and listens for dummy notification requests

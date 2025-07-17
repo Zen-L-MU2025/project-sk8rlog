@@ -9,7 +9,7 @@ const authRouter = require('./routes/auth')
 const postsRouter = require('./routes/posts')
 
 const { enableCORSinBucket } = require('./utils/GCS')
-const { createWebSocket } = require('./utils/websocket')
+const { createWebSocket } = require('./utils/serverWebSocketUtils')
 
 const corsConfig = {
     origin: 'http://localhost:5173',
