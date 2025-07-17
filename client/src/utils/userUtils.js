@@ -73,7 +73,7 @@ export const logout = async () => {
 export const getUserByID = async (userID, setUser) => {
     await axios.get(`${baseUrl}/users/${userID}`, {withCredentials: true})
         .then(res => {
-            // No need to store password in session storage
+            // No need to store password in user state
             delete res.data.user.password
 
             setUser(res.data.user)
