@@ -39,7 +39,7 @@ const Home = () => {
     if (!isReadyToDisplayContent) return (<p>Loading home page...</p>)
 
     return (<>
-        <Header HEADER_TEXT={HEADER_TEXT} />
+        <Header HEADER_TEXT={HEADER_TEXT} activeUser={activeUser} />
 
         <h2 className='subHeading'>Today in Sk8rlog</h2>
         <p className='scrollNote'><em>Scroll down to see Blogs!</em></p>

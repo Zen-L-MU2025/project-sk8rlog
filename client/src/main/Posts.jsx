@@ -54,7 +54,7 @@ const Posts = ({ postType }) => {
     if (!isReadyToDisplayContent) return (<p>Loading posts...</p>)
 
     return (<>
-        <Header HEADER_TEXT={HEADER_TEXT}/>
+        <Header HEADER_TEXT={HEADER_TEXT} activeUser={activeUser} />
 
         <section className='pageMain'>
             <Sidebar />

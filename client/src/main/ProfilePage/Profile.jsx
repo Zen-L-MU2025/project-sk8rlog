@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 
 import CreatePostModal from '/src/main/Modals/CreatePostModal'
 import Header from '/src/main/Header'
@@ -16,6 +16,8 @@ import '/src/css/hasSidebar.css'
 import '/src/css/profile.css'
 
 const Profile = () => {
+    const { username } = useParams()
+
     const { activeUser, setActiveUser } = useContext(UserContext)
     const loadUser = async () => { await refreshUserSession(setActiveUser) }
 
@@ -23,11 +25,15 @@ const Profile = () => {
     const [showCreatePostModal, setShowCreatePostModal] = useState(false)
     const [userPosts, setUserPosts] = useState([])
     const [isOutdated, setIsOutdated] = useState(false)
+    const [profileContentView, setProfileContentView] = useState(CLIPS)
+    const[ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
 
     const toggleCreatePostModal = () => setShowCreatePostModal(!showCreatePostModal)
     const navigate = useNavigate()
 
-    const[ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
+    const userTitle = activeUser.name || `@${activeUser.username}`
+    const HEADER_TEXT = `${userTitle}'s Profile`
+
     useEffect( () => {
         loadUser()
         setIsReadyToDisplayContent(true)
@@ -41,15 +47,10 @@ const Profile = () => {
         hasAccess === false && navigate('/unauthorized')
     }, [hasAccess])
 
-    const userTitle = activeUser.name || `@${activeUser.username}`
-    const HEADER_TEXT = `${userTitle}'s Profile`
-
-    const [profileContentView, setProfileContentView] = useState(CLIPS)
-
     if (!isReadyToDisplayContent) return (<p>Loading profile...</p>)
 
     return (<>
-        <Header HEADER_TEXT={HEADER_TEXT} />
+        <Header HEADER_TEXT={HEADER_TEXT} activeUser={activeUser} />
         <section className='pageMain'>
             <Sidebar />
             <div className='profileContent'>

@@ -8,7 +8,7 @@ import gear from '/src/assets/gear.svg'
 
 import '/src/css/header.css'
 
-const Header = ({ HEADER_TEXT }) => {
+const Header = ({ HEADER_TEXT, activeUser }) => {
 
     const [isIconOverlayOpen, setIsIconOverlayOpen] = useState(false)
     const toggleIconOverlay = () => {
@@ -23,7 +23,7 @@ const Header = ({ HEADER_TEXT }) => {
         <header className="mainHeader">
             <Link to='/home'> <img className='logo' src={skateboard} alt="skateboard" /> </Link>
             <h1>{HEADER_TEXT}</h1>
-            <Link to='/profile'> <button className='toProfile' id={`iconOverlayOpen_${isIconOverlayOpen}`}>My Sk8rlog</button> </Link>
+            <Link to={`/profile/${activeUser.username}`}> <button className='toProfile' id={`iconOverlayOpen_${isIconOverlayOpen}`}>My Sk8rlog</button> </Link>
 
             {/* Switch the div nesting of the gear icon so that it's aligned with the buttons when they're visible*/}
             { !isIconOverlayOpen &&

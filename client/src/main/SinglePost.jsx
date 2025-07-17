@@ -63,7 +63,7 @@ const SinglePost = () => {
     }
 
     return (<>
-        <Header HEADER_TEXT={HEADER_TEXT}/>
+        <Header HEADER_TEXT={HEADER_TEXT} activeUser={activeUser} />
         <div className='page'>
 
         <section className='singlePost'>
