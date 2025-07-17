@@ -16,24 +16,22 @@ import '/src/css/hasSidebar.css'
 import '/src/css/profile.css'
 
 const Profile = () => {
-    const [showCreatePostModal, setShowCreatePostModal] = useState(false)
-    const toggleCreatePostModal = () => setShowCreatePostModal(!showCreatePostModal)
-
     const { activeUser, setActiveUser } = useContext(UserContext)
+    const loadUser = async () => { await refreshUserSession(setActiveUser) }
 
+    const [hasAccess, setHasAccess] = useState(null)
+    const [showCreatePostModal, setShowCreatePostModal] = useState(false)
     const [userPosts, setUserPosts] = useState([])
     const [isOutdated, setIsOutdated] = useState(false)
 
+    const toggleCreatePostModal = () => setShowCreatePostModal(!showCreatePostModal)
+    const navigate = useNavigate()
+
     const[ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
     useEffect( () => {
-        const loadUser = async () => { await refreshUserSession(setActiveUser) }
         loadUser()
         setIsReadyToDisplayContent(true)
     }, [])
-
-    const navigate = useNavigate()
-
-    const [hasAccess, setHasAccess] = useState(null)
 
     useEffect( () => {
         verifyAccess(setHasAccess)

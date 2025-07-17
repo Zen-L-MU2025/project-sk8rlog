@@ -10,10 +10,12 @@ import '/src/css/profile.css'
 const ProfilePostView = ({ activeUser, profileContentView, userPosts, setUserPosts, isOutdated, setIsOutdated }) => {
 
     const [ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
+
     useEffect(() => {
+        if (!activeUser.userID) return
         getUserPostsByType(activeUser, profileContentView, setUserPosts)
         setIsReadyToDisplayContent(true)
-    }, [profileContentView])
+    }, [profileContentView, activeUser])
 
     useEffect(() => {
         if (isOutdated) {
