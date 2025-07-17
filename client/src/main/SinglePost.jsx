@@ -5,7 +5,7 @@ import Header from './Header'
 import Footer from './Footer'
 
 import UserContext from '/src/utils/UserContext'
-import { getUserByID, verifyAccess, loadUserSession } from '/src/utils/userUtils'
+import { getUserByID, verifyAccess, refreshUserSession } from '/src/utils/userUtils'
 import { getPostByID, handleLikeOrUnlikePost, getComments, createComment } from '/src/utils/postUtils'
 import { CLIPS, BLOGS, toSingular, ORIGINS, LIKE, UNLIKE } from '/src/utils/constants'
 
@@ -25,7 +25,7 @@ const SinglePost = () => {
     const [commentBoxContent, setCommentBoxContent] = useState('')
     const navigate = useNavigate()
 
-    const loadUser = async () => { await loadUserSession(setActiveUser) }
+    const loadUser = async () => { await refreshUserSession(setActiveUser) }
 
     const HEADER_TEXT = 'Sk8rlog'
     const postDate = new Date(post?.creationDate)

@@ -48,3 +48,22 @@ model Comment {
   creationDate      DateTime @default(now())
   content           String
 }
+
+model SessionData {
+  userID                    String @unique
+  sessionCount              Int   @default(0)
+  averageSessionTime        Float @default(0)
+  lastSessionStartTime      DateTime?
+  averageSessionStartTime   Float?
+  averageSessionEndTime     Float?
+}
+
+model InteractionData {
+  userID                          String @unique
+  likeInteractionCount            Int   @default(0)
+  averageLikeInteractionTime      Float @default(0)
+  commentInteractionCount         Int   @default(0)
+  averageCommentInteractionTime   Float @default(0)
+  createInteractionCount          Int   @default(0)
+  averageCreateInteractionTime    Float @default(0)
+}

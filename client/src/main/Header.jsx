@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 
+import { logout } from '/src/utils/userUtils.js'
+
 import skateboard from '/src/assets/skateboard.png'
 import gear from '/src/assets/gear.svg'
 
@@ -13,13 +15,8 @@ const Header = ({ HEADER_TEXT }) => {
         setIsIconOverlayOpen(!isIconOverlayOpen)
     }
 
-    const handleLogout = () => {
-        sessionStorage.clear()
-        const cookies = document.cookie.split(';')
-        cookies.forEach(cookie => {
-            // Arbitrarily older date that will force the cookie to instantenously expire
-            document.cookie = cookie.split('=')[0] + '=;expires=Thu, 01 Jan 1984; path=/'
-        })
+    const handleLogout = async () => {
+        await logout()
     }
 
     return (

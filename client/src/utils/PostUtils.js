@@ -2,7 +2,7 @@ const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 import axios from 'axios'
 import { tokenize } from './recommendationUtils.js'
-import { LIKE, RECOMMENDED, UNLIKE, RANKING_MODES } from './constants.js'
+import { LIKE, UNLIKE, RANKING_MODES } from './constants.js'
 import { scorePosts } from './recommendationUtils.js'
 
 // Uploads a post, starting with the file attachment to GCS and then the full post data to server

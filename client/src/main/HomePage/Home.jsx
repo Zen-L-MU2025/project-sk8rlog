@@ -7,13 +7,13 @@ import Footer from '/src/main/Footer'
 
 import UserContext from '/src/utils/UserContext'
 import { WEEKDAYS, CLIPS, BLOGS } from '/src/utils/constants'
-import { verifyAccess, loadUserSession } from '/src/utils/UserUtils'
+import { verifyAccess, refreshUserSession } from '/src/utils/UserUtils'
 
 import '/src/css/home.css'
 
 const Home = () => {
     const { activeUser, setActiveUser } = useContext(UserContext)
-    const loadUser = async () => { await loadUserSession(setActiveUser) }
+    const loadUser = async () => { await refreshUserSession(setActiveUser) }
 
     const[ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
     useEffect( () => {
