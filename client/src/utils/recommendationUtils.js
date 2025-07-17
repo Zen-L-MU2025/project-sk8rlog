@@ -99,12 +99,14 @@ export const scorePosts = async (posts, activeUser, setPosts, scoringMode) => {
         }
 
         // Calculate the relative interest factor of the post based on overlap size
-        const relativeInterestFactor = Object.keys(overlap).length / filteredPostContent.length
+        const overlapSize = Object.keys(overlap).length
+        const relativeInterestFactor = overlapSize ? overlapSize / filteredPostContent.length : 1
 
         // Calculate bias factor as popularity amplified by type bias and inhibited by disparity from average post length
         const biasFactor = popularityScore * (1 + typeBias) * postLengthBias
 
         // Apply relative interest factor and bias factor to raw post score to get the final score
+        console.log(rawPostScore, relativeInterestFactor, biasFactor)
         const finalScore = rawPostScore * relativeInterestFactor * biasFactor
         post["score"] = finalScore
         post["popularity"] = popularityScore
@@ -135,7 +137,7 @@ Calculates:
 Returns an object containing both statistics
 */
 const calculateBiasFactors = async (activeUser) => {
-    if (!activeUser.likedPosts) {
+    if (!activeUser.likedPosts?.length) {
         return {portionOfLikedPostsThatAreClips: NOT_APPLICABLE, avgLengthOfLikedPosts: NOT_APPLICABLE}
     }
 
