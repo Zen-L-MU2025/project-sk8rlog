@@ -15,11 +15,11 @@ import { CLIPS, BLOGS } from '/src/utils/constants'
 import './App.css'
 
 function App() {
-  const [dummyNotifications, setDummyNotifications] = useState([])
+  const [notifications, setNotifications] = useState([])
   const [activeUser, setActiveUser] = useState({})
 
   useEffect(() => {
-    establishWebSocketConnection(setDummyNotifications)
+    establishWebSocketConnection(setNotifications)
   }, [])
 
   return (<>
