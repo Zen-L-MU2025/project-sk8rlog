@@ -16,7 +16,7 @@ import '/src/css/hasSidebar.css'
 import '/src/css/profile.css'
 
 const Profile = () => {
-    const { userID } = useParams()
+    const { userProfileID } = useParams()
 
     const { activeUser, setActiveUser } = useContext(UserContext)
     const loadUser = async () => { await refreshUserSession(setActiveUser) }
@@ -38,7 +38,7 @@ const Profile = () => {
 
     useEffect( () => {
         loadUser()
-        getUserByID(userID, setUserToDisplay)
+        getUserByID(userProfileID, setUserToDisplay)
         setIsReadyToDisplayContent(true)
     }, [])
 
