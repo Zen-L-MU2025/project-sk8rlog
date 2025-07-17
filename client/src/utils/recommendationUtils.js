@@ -106,7 +106,6 @@ export const scorePosts = async (posts, activeUser, setPosts, scoringMode) => {
         const biasFactor = popularityScore * (1 + typeBias) * postLengthBias
 
         // Apply relative interest factor and bias factor to raw post score to get the final score
-        console.log(rawPostScore, relativeInterestFactor, biasFactor)
         const finalScore = rawPostScore * relativeInterestFactor * biasFactor
         post["score"] = finalScore
         post["popularity"] = popularityScore
