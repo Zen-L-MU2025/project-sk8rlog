@@ -112,7 +112,7 @@ export const scorePosts = async (posts, activeUser, setPosts, scoringMode) => {
 
     // Sort posts by either recommendation score or popularity
     // Let tie breakers be handled by other option and finally by creation date
-    posts = await sortByMetric(posts, scoringMode)
+    posts = sortByMetric(posts, scoringMode)
 
     await setPosts(posts)
 }
