@@ -10,10 +10,15 @@ const toSecondOfDay = (date) => {
     return date.getHours() * SECONDS_IN_HOUR + date.getMinutes() * SECONDS_IN_MINUTE + date.getSeconds()
 }
 
-// Recalculates the average session time, start time, and end time based on provided user session data
-export const recalculateSessionAverages = (userSessionData) => {
-    const logoutTime = new Date()
+// Recalculates the average session time, start time, and end time based on provided user's session data
+export const recalculateSessionAverages = async (userID, prisma) => {
+    const userSessionData = await prisma.sessionData.findUnique({
+        where: { userID },
+    })
+
     let { sessionCount, averageSessionTime, lastSessionStartTime, averageSessionStartTime, averageSessionEndTime } = userSessionData
+
+    const logoutTime = new Date()
 
     const sessionDurationInSeconds = (logoutTime.getTime() - lastSessionStartTime.getTime()) / MS_IN_SECOND
 
@@ -33,19 +38,32 @@ export const recalculateSessionAverages = (userSessionData) => {
     const newAverageSessionStartTime = Math.floor(newAverageSessionStartTimeAsSecondOfDay)
     const newAverageSessionEndTime = Math.ceil(newAverageSessionEndTimeAsSecondOfDay)
 
-    return { newSessionCount, newAverageSessionTime, newAverageSessionStartTime, newAverageSessionEndTime }
+    await prisma.sessionData.update({
+        where: { userID },
+        data: {
+            sessionCount: newSessionCount,
+            averageSessionTime: newAverageSessionTime,
+            averageSessionStartTime: newAverageSessionStartTime,
+            averageSessionEndTime: newAverageSessionEndTime,
+        }
+    })
 }
 
-// Recalculates the metrics of the specified interaction type based on provided user interaction data
-export const recalculateInteractionAverages = (userInteractionData, interactionType) => {
-    const now = new Date()
-    const interactionTimeAsSecondOfDay =  toSecondOfDay(now)
+// Recalculates the metrics of the specified interaction type based on provided user's interaction data
+export const recalculateInteractionAverages = async (userID, prisma, interactionType) => {
+    const userInteractionData = await prisma.interactionData.findUnique({
+        where: { userID }
+    })
 
     let {
         likeInteractionCount, averageLikeInteractionTime,
         commentInteractionCount, averageCommentInteractionTime,
         createInteractionCount, averageCreateInteractionTime,
     } = userInteractionData
+
+    const now = new Date()
+    const interactionTimeAsSecondOfDay =  toSecondOfDay(now)
+
 
     let avgInteractionTime, interactionCount
 
@@ -71,6 +89,26 @@ export const recalculateInteractionAverages = (userInteractionData, interactionT
     const newAverage = Math.ceil(((avgInteractionTime * interactionCount) + interactionTimeAsSecondOfDay) / (interactionCount + 1))
     const newInteractionCount = interactionCount + 1
 
-    return { newAverage, newInteractionCount }
+    let data = {}
+
+    switch (interactionType) {
+        case LIKE:
+            data = { likeInteractionCount: newInteractionCount, averageLikeInteractionTime: newAverage }
+            break
+
+        case COMMENT:
+            data = { commentInteractionCount: newInteractionCount, averageCommentInteractionTime: newAverage }
+            break
+
+        case CREATE:
+            data = { createInteractionCount: newInteractionCount, averageCreateInteractionTime: newAverage }
+            break
+
+        default: throw new Error(`Invalid interaction type: ${interactionType}`)
+    }
+
+    await prisma.interactionData.update({
+        where: { userID }, data : data
+    })
 
 }

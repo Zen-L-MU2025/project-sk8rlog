@@ -70,3 +70,8 @@ export const RANKING_MODES = {
     NEAR_YOU: "near_you",
     DEFAULT: "default"
 }
+
+export const CONNECT = 'connect'
+export const DISCONNECT = 'disconnect'
+export const REQUEST_NOTIFICATION = 'request notification'
+export const DELIVER_NOTIFICATION = 'deliver notification'

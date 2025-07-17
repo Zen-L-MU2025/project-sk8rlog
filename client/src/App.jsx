@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Routes, Route, BrowserRouter, Link } from "react-router"
 
 import LoginModal from './auth/LoginModal'
@@ -9,13 +9,18 @@ import Posts from './main/Posts'
 import SinglePost from './main/SinglePost'
 
 import UserContext from '/src/utils/UserContext.js'
+import { establishWebSocketConnection } from '/src/utils/clientWebSocketUtils.js'
 import { CLIPS, BLOGS } from '/src/utils/constants'
 
 import './App.css'
 
 function App() {
-
+  const [notifications, setNotifications] = useState([])
   const [activeUser, setActiveUser] = useState({})
+
+  useEffect(() => {
+    establishWebSocketConnection(setNotifications)
+  }, [])
 
   return (<>
     <UserContext.Provider value={{ activeUser, setActiveUser }}>

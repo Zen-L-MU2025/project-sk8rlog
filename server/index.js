@@ -1,19 +1,24 @@
 const express = require('express')
 const cors = require('cors')
 const session = require('express-session')
+const { createServer } = require('node:http')
+const { Server } = require('socket.io')
 
 const usersRouter = require('./routes/users')
 const authRouter = require('./routes/auth')
 const postsRouter = require('./routes/posts')
 
 const { enableCORSinBucket } = require('./utils/GCS')
+const { createWebSocket } = require('./utils/serverWebSocketUtils')
+
+const corsConfig = {
+    origin: 'http://localhost:5173',
+    credentials: true,
+}
 
 const app = express()
 app.use(express.json())
-app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-}))
+app.use(cors(corsConfig))
 
 const sessionConfig = {
     name: 'sessionID',
@@ -40,6 +45,12 @@ const PORT = 3000
 
 enableCORSinBucket()
 
-app.listen(PORT, () => {
+// Create HTTP server
+const server = createServer(app)
+
+// Init socket instance
+createWebSocket(server, corsConfig)
+
+server.listen(PORT, () => {
     console.log(`Server listening on port http://localhost:${PORT}`)
 })

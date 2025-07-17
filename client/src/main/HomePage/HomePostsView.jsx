@@ -17,9 +17,9 @@ const HomePostsView = ({ postType }) => {
     const [isInitialized, setIsInitialized] = useState(false)
 
     useEffect( () => {
-        getAllPostsByType(postType, setPosts, { scoringMode: RANKING_MODES.DEFAULT, activeUser })
+        getAllPostsByType(postType, setPosts, { scoringMode: RANKING_MODES.RECOMMENDED, activeUser })
         setIsInitialized(true)
-    }, [])
+    }, [activeUser])
 
     if (!isInitialized) return (<p>Loading...</p>)
 
