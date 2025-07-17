@@ -16,14 +16,15 @@ import './App.css'
 
 function App() {
   const [notifications, setNotifications] = useState([])
+  const [hasNewNotifications, setHasNewNotifications] = useState(false)
   const [activeUser, setActiveUser] = useState({})
 
   useEffect(() => {
-    establishWebSocketConnection(setNotifications)
+    establishWebSocketConnection(setNotifications, setHasNewNotifications)
   }, [])
 
   return (<>
-    <UserContext.Provider value={{ activeUser, setActiveUser }}>
+    <UserContext.Provider value={{ activeUser, setActiveUser, notifications, hasNewNotifications, setHasNewNotifications }}>
 
     <BrowserRouter>
       <Routes>
