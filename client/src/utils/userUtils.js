@@ -32,7 +32,7 @@ export const register = async (formObject, setIsSuccessful) => {
 
     await axios
         .post(`${baseUrl}/users/register`, { formObject, withCredentials: true })
-        .then((res) => {
+        .then(async (res) => {
             setIsSuccessful(res.data.isSuccessful);
 
             const newUserData = res.data.newUser;
@@ -44,14 +44,14 @@ export const register = async (formObject, setIsSuccessful) => {
 
             token = res.data.token;
             newUserID = newUserData.userID;
+
+            // Set session cookies
+            await setCookies(token, userID, setIsSuccessful);
         })
         .catch((error) => {
             console.error("register error: ", error);
             setIsSuccessful(false);
         });
-
-    // Set session cookies
-    await setCookies(token, userID, setIsSuccessful);
 };
 
 export const logout = async () => {
@@ -90,7 +90,7 @@ export const login = async (formObject, setIsSuccessful) => {
 
     await axios
         .post(`${baseUrl}/users/login`, { formObject, withCredentials: true })
-        .then((res) => {
+        .then(async (res) => {
             setIsSuccessful(res.data.isSuccessful);
 
             const userData = res.data.user;
@@ -102,15 +102,15 @@ export const login = async (formObject, setIsSuccessful) => {
 
             token = res.data.token;
             userID = userData.userID;
+
+            // Set session cookies
+            await setCookies(token, userID, setIsSuccessful);
         })
         .catch((error) => {
             console.error("login error: ", error);
             setIsSuccessful(false);
             return;
         });
-
-    // Set session cookies
-    await setCookies(token, userID, setIsSuccessful);
 };
 
 // Verify user access to protected resource
