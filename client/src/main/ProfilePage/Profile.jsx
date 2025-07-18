@@ -1,85 +1,93 @@
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router'
+import { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from "react-router";
 
-import CreatePostModal from '/src/main/Modals/CreatePostModal'
-import Header from '/src/main/Header'
-import Sidebar from '/src/main/Sidebar'
-import ProfileHead from './ProfileHead'
-import ProfilePostsView from './ProfilePostsView'
-import Footer from '/src/main/Footer'
+import CreatePostModal from "/src/main/Modals/CreatePostModal";
+import Header from "/src/main/Header";
+import Sidebar from "/src/main/Sidebar";
+import ProfileHead from "./ProfileHead";
+import ProfilePostsView from "./ProfilePostsView";
+import Footer from "/src/main/Footer";
 
-import UserContext from '/src/utils/UserContext'
-import { CLIPS } from '/src/utils/constants'
-import { verifyAccess, refreshUserSession } from '/src/utils/UserUtils'
+import UserContext from "/src/utils/UserContext";
+import { CLIPS } from "/src/utils/constants";
+import { verifyAccess, refreshUserSession, getUserByID } from "/src/utils/UserUtils";
 
-import '/src/css/hasSidebar.css'
-import '/src/css/profile.css'
+import "/src/css/hasSidebar.css";
+import "/src/css/profile.css";
 
 const Profile = () => {
-    const [showCreatePostModal, setShowCreatePostModal] = useState(false)
-    const toggleCreatePostModal = () => setShowCreatePostModal(!showCreatePostModal)
+    const { userProfileID } = useParams();
 
-    const { activeUser, setActiveUser } = useContext(UserContext)
+    const { activeUser, setActiveUser } = useContext(UserContext);
+    const loadUser = async () => {
+        await refreshUserSession(setActiveUser);
+    };
 
-    const [userPosts, setUserPosts] = useState([])
-    const [isOutdated, setIsOutdated] = useState(false)
+    const [hasAccess, setHasAccess] = useState(null);
+    const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+    const [userPosts, setUserPosts] = useState([]);
+    const [isOutdated, setIsOutdated] = useState(false);
+    const [profileContentView, setProfileContentView] = useState(CLIPS);
+    const [isReadyToDisplayContent, setIsReadyToDisplayContent] = useState(false);
 
-    const[ isReadyToDisplayContent, setIsReadyToDisplayContent ] = useState(false)
-    useEffect( () => {
-        const loadUser = async () => { await refreshUserSession(setActiveUser) }
-        loadUser()
-        setIsReadyToDisplayContent(true)
-    }, [])
+    const [userToDisplay, setUserToDisplay] = useState(null);
 
-    const navigate = useNavigate()
+    const toggleCreatePostModal = () => setShowCreatePostModal(!showCreatePostModal);
+    const navigate = useNavigate();
 
-    const [hasAccess, setHasAccess] = useState(null)
+    const userTitle = userToDisplay?.name || `@${userToDisplay?.username}`;
+    const HEADER_TEXT = `${userTitle}'s Profile`;
 
-    useEffect( () => {
-        verifyAccess(setHasAccess)
-    }, [])
+    useEffect(() => {
+        loadUser();
+        setIsReadyToDisplayContent(true);
+    }, []);
 
-    useEffect( () => {
-        hasAccess === false && navigate('/unauthorized')
-    }, [hasAccess])
+    useEffect(() => {
+        getUserByID(userProfileID, setUserToDisplay);
+    }, [userProfileID]);
 
-    const userTitle = activeUser.name || `@${activeUser.username}`
-    const HEADER_TEXT = `${userTitle}'s Profile`
+    useEffect(() => {
+        verifyAccess(setHasAccess);
+    }, []);
 
-    const [profileContentView, setProfileContentView] = useState(CLIPS)
+    useEffect(() => {
+        hasAccess === false && navigate("/unauthorized");
+    }, [hasAccess]);
 
-    if (!isReadyToDisplayContent) return (<p>Loading profile...</p>)
+    if (!isReadyToDisplayContent) return <p>Loading profile...</p>;
 
-    return (<>
-        <Header HEADER_TEXT={HEADER_TEXT} />
-        <section className='pageMain'>
-            <Sidebar />
-            <div className='profileContent'>
-                <ProfileHead
-                    activeUser={activeUser}
-                    setProfileContentView={setProfileContentView}
-                    toggleCreatePostModal={toggleCreatePostModal}
-                />
-                <ProfilePostsView
-                    activeUser={activeUser}
-                    profileContentView={profileContentView}
-                    userPosts={userPosts} setUserPosts={setUserPosts}
-                    isOutdated={isOutdated} setIsOutdated={setIsOutdated}
-                />
-            </div>
-        </section>
+    return (
+        <>
+            <Header HEADER_TEXT={HEADER_TEXT} activeUser={activeUser} />
+            <section className="pageMain">
+                <Sidebar />
+                <div className="profileContent">
+                    <ProfileHead
+                        userToDisplay={userToDisplay}
+                        activeUser={activeUser}
+                        setProfileContentView={setProfileContentView}
+                        toggleCreatePostModal={toggleCreatePostModal}
+                    />
+                    <ProfilePostsView
+                        userToDisplay={userToDisplay}
+                        activeUser={activeUser}
+                        profileContentView={profileContentView}
+                        userPosts={userPosts}
+                        setUserPosts={setUserPosts}
+                        isOutdated={isOutdated}
+                        setIsOutdated={setIsOutdated}
+                    />
+                </div>
+            </section>
 
-        { showCreatePostModal &&
-            <CreatePostModal
-                activeUser={activeUser}
-                toggleCreatePostModal={toggleCreatePostModal}
-                setIsOutdated={setIsOutdated}
-            />
-        }
+            {showCreatePostModal && (
+                <CreatePostModal activeUser={activeUser} toggleCreatePostModal={toggleCreatePostModal} setIsOutdated={setIsOutdated} />
+            )}
 
-        <Footer />
+            <Footer />
+        </>
+    );
+};
 
-    </>)
-}
-
-export default Profile
+export default Profile;

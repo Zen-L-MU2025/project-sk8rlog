@@ -1,221 +1,226 @@
-const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-import axios from 'axios'
-import { tokenize } from './recommendationUtils.js'
-import { LIKE, UNLIKE, RANKING_MODES } from './constants.js'
-import { scorePosts } from './recommendationUtils.js'
+import axios from "axios";
+import { tokenize } from "./recommendationUtils.js";
+import { LIKE, UNLIKE, RANKING_MODES } from "./constants.js";
+import { scorePosts } from "./recommendationUtils.js";
 
 // Uploads a post, starting with the file attachment to GCS and then the full post data to server
 // Updates user's posts array state when complete
-export const uploadPost = async ( postType, formData, userID, location ) => {
-    const textContent = await formData.get('textContent')
-    const file = await formData.get('postFile')
+export const uploadPost = async (postType, formData, userID, location) => {
+    const textContent = await formData.get("textContent");
+    const file = await formData.get("postFile");
 
-    let fileFormData = await new FormData()
-    await fileFormData.append('postFile', file)
+    let fileFormData = await new FormData();
+    await fileFormData.append("postFile", file);
 
-    let fileURL = ''
+    let fileURL = "";
 
-    await axios.post(`${baseUrl}/posts/uploadFile`, fileFormData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-    })
-        .then(res => {
-            fileURL = res.data.fileURL
+    await axios
+        .post(`${baseUrl}/posts/uploadFile`, fileFormData, {
+            headers: { "Content-Type": "multipart/form-data" },
         })
-        .catch(error => {
-            console.error("uploadFile error: ", error)
+        .then((res) => {
+            fileURL = res.data.fileURL;
         })
+        .catch((error) => {
+            console.error("uploadFile error: ", error);
+        });
 
-    await axios.post(`${baseUrl}/posts/create/${userID}`, { textContent, location, postType, fileURL })
-}
+    await axios.post(`${baseUrl}/posts/create/${userID}`, { textContent, location, postType, fileURL });
+};
 
 // Provided a userID, gets all posts for that user by specified postType and sets the userPosts array state
-export const getUserPostsByType = async ( activeUser, postType, setUserPosts ) => {
-    await axios.get(`${baseUrl}/posts/by/${activeUser.userID}/${postType}`)
-        .then(res => {
-            setUserPosts(res.data.posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate)))
+export const getUserPostsByType = async (activeUser, postType, setUserPosts) => {
+    await axios
+        .get(`${baseUrl}/posts/by/${activeUser.userID}/${postType}`)
+        .then((res) => {
+            if (!res.data.posts) return;
+            setUserPosts(res.data.posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate)));
         })
-        .catch(error => {
-            console.error("getUserPostsByType error: ", error)
-        })
-}
+        .catch((error) => {
+            console.error("getUserPostsByType error: ", error);
+        });
+};
 
 // Gets all posts by specified postType and sets the posts array state
 // If scoringPayload is provided, will score the posts for the provided user and set the posts array state
-export const getAllPostsByType = async (
-    postType, setPosts, scoringPayload = { scoringMode: RANKING_MODES.DEFAULT, activeUser: null }
-) => {
-    const {scoringMode, activeUser } = scoringPayload
+export const getAllPostsByType = async (postType, setPosts, scoringPayload = { scoringMode: RANKING_MODES.DEFAULT, activeUser: null }) => {
+    const { scoringMode, activeUser } = scoringPayload;
 
-    await axios.get(`${baseUrl}/posts/all/${postType}`)
-        .then(res => {
+    await axios
+        .get(`${baseUrl}/posts/all/${postType}`)
+        .then((res) => {
             switch (scoringMode) {
                 // Score posts by provided mode
                 case RANKING_MODES.DEFAULT:
                 case RANKING_MODES.RECOMMENDED:
                 case RANKING_MODES.POPULAR:
-                    scorePosts(res.data.posts, activeUser, setPosts, scoringMode)
-                    break
+                    scorePosts(res.data.posts, activeUser, setPosts, scoringMode);
+                    break;
 
                 // Or just sort by date if set to latest (NEAR_YOU isn't implemented yet)
                 case NEAR_YOU:
                 case LATEST:
-                    setPosts(res.data.posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate)))
-                    break
+                    setPosts(res.data.posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate)));
+                    break;
 
                 default:
-                    console.error("Invalid sorting mode provided")
+                    console.error("Invalid sorting mode provided");
             }
         })
-        .catch(error => {
-            console.error("getUserPostsByType error: ", error)
-        })
-}
+        .catch((error) => {
+            console.error("getUserPostsByType error: ", error);
+        });
+};
 
 // Provided a postID, gets the post data
 // Sets the single post state if a setter is provided, otherwise just returns the post
-export const getPostByID = async ( postID, setPost = null ) => {
-    const res = await axios.get(`${baseUrl}/posts/single/${postID}`)
-       try {
-            if (setPost !== null) {
-                setPost(res.data.post)
-            } else {
-                return res.data.post
-            }
-
-        } catch (error) {
-            console.error("getPostByID error: ", error)
+export const getPostByID = async (postID, setPost = null) => {
+    const res = await axios.get(`${baseUrl}/posts/single/${postID}`);
+    try {
+        if (setPost !== null) {
+            setPost(res.data.post);
+        } else {
+            return res.data.post;
         }
-}
+    } catch (error) {
+        console.error("getPostByID error: ", error);
+    }
+};
 
 // Provided a postID, deletes the post and updates the user's posts array state
-export const deletePost = async ( post, setUserPosts ) => {
-    const postIDtoDelete = post.postID
-    const fileURL = post.fileURL
+export const deletePost = async (post, setUserPosts) => {
+    const postIDtoDelete = post.postID;
+    const fileURL = post.fileURL;
 
-    await axios.delete(`${baseUrl}/posts/delete/${postIDtoDelete}`)
+    await axios
+        .delete(`${baseUrl}/posts/delete/${postIDtoDelete}`)
         .then(() => {
-            setUserPosts(userPosts => userPosts.filter(post => post.postID !== postIDtoDelete))
+            setUserPosts((userPosts) => userPosts.filter((post) => post.postID !== postIDtoDelete));
         })
-        .catch(error => {
-            console.error("deletePost/DB error: ", error)
-        })
+        .catch((error) => {
+            console.error("deletePost/DB error: ", error);
+        });
 
-    await axios.delete(`${baseUrl}/posts/deleteFile`, { data : { fileURL } })
-        .catch(error => {
-            console.error("deletePost/File: ", error)
-        })
-}
+    await axios.delete(`${baseUrl}/posts/deleteFile`, { data: { fileURL } }).catch((error) => {
+        console.error("deletePost/File: ", error);
+    });
+};
 
 // Handles data related to liking/unliking a post
 export const handleLikeOrUnlikePost = async (event, post, action, activeUser, setActiveUser) => {
-    event.preventDefault()
+    event.preventDefault();
 
     switch (action) {
         case LIKE:
-            likePost( post, activeUser, setActiveUser )
-            break
+            likePost(post, activeUser, setActiveUser);
+            break;
 
         case UNLIKE:
-            unlikePost( post, activeUser, setActiveUser )
-            break
+            unlikePost(post, activeUser, setActiveUser);
+            break;
 
         default:
-            console.error('Invalid handleLikeOrUnlike action')
+            console.error("Invalid handleLikeOrUnlike action");
     }
-}
+};
 
 // add postID to user's likedPosts array, update user's frequency object, increment post's like count
-const likePost = async ( post, activeUser, setActiveUser ) => {
-    const postID = post.postID
-    const updatedUserFrequency = await tokenize(post, activeUser, LIKE)
+const likePost = async (post, activeUser, setActiveUser) => {
+    const postID = post.postID;
+    const updatedUserFrequency = await tokenize(post, activeUser, LIKE);
 
     const updatedUser = {
         ...activeUser,
         likedPosts: activeUser.likedPosts ? [...activeUser.likedPosts, postID] : [postID],
-        user_Frequency : updatedUserFrequency
-    }
+        user_Frequency: updatedUserFrequency,
+    };
 
-    setActiveUser(updatedUser)
-    sessionStorage.setItem("user", JSON.stringify(updatedUser))
+    setActiveUser(updatedUser);
+    sessionStorage.setItem("user", JSON.stringify(updatedUser));
 
-    await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/like`, { postID, updatedUserFrequency })
-        .catch(error => {
-            console.error("likePost error: ", error)
-        })
+    await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/like`, { postID, updatedUserFrequency }).catch((error) => {
+        console.error("likePost error: ", error);
+    });
 
-    await axios.put(`${baseUrl}/posts/${postID}/likes/increment`)
-        .catch(error => {
-            console.error("likePost error: ", error)
-        })
-}
+    await axios.put(`${baseUrl}/posts/${postID}/likes/increment`).catch((error) => {
+        console.error("likePost error: ", error);
+    });
+};
 
 // remove postID from user's likedPosts array, update user's frequency object, decrement post's like count
-const unlikePost = async ( post, activeUser, setActiveUser ) => {
-    const postID = post.postID
-    const updatedUserFrequency = await tokenize(post, activeUser, UNLIKE)
+const unlikePost = async (post, activeUser, setActiveUser) => {
+    const postID = post.postID;
+    const updatedUserFrequency = await tokenize(post, activeUser, UNLIKE);
 
     const updatedUser = {
         ...activeUser,
-        likedPosts: activeUser?.likedPosts?.filter(pID => pID !== postID),
-        user_Frequency : updatedUserFrequency
-    }
+        likedPosts: activeUser?.likedPosts?.filter((pID) => pID !== postID),
+        user_Frequency: updatedUserFrequency,
+    };
 
-    setActiveUser(updatedUser)
-    sessionStorage.setItem("user", JSON.stringify(updatedUser))
+    setActiveUser(updatedUser);
+    sessionStorage.setItem("user", JSON.stringify(updatedUser));
 
-    await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/unlike`, { postID, updatedUserFrequency })
-        .catch(error => {
-            console.error("unlikePost error: ", error)
-        })
+    await axios.put(`${baseUrl}/users/${activeUser.userID}/likedPosts/unlike`, { postID, updatedUserFrequency }).catch((error) => {
+        console.error("unlikePost error: ", error);
+    });
 
-    await axios.put(`${baseUrl}/posts/${postID}/likes/decrement`)
-        .catch(error => {
-            console.error("unlikePost error: ", error)
-        })
-}
+    await axios.put(`${baseUrl}/posts/${postID}/likes/decrement`).catch((error) => {
+        console.error("unlikePost error: ", error);
+    });
+};
 
 // Provided any number of commentIDs, gets the comments' data and sets the comments array state
-export const getComments = async ( commentIDs, setComments ) => {
+export const getComments = async (commentIDs, setComments) => {
     // Why have I not done this before
-    if (!commentIDs?.length) return
+    if (!commentIDs?.length) return;
 
-    await axios.post(`${baseUrl}/posts/comments`, { commentIDs })
-        .then(res => {
-            setComments(res.data.comments)
+    await axios
+        .post(`${baseUrl}/posts/comments`, { commentIDs })
+        .then((res) => {
+            setComments(res.data.comments);
         })
-        .catch(error => {
-            console.error("getComments error: ", error)
-        })
-}
+        .catch((error) => {
+            console.error("getComments error: ", error);
+        });
+};
 
 // Creates a comment in DB and adds it to the comments array state
 export const createComment = async (commentBoxContent, activeUser, postID, setComments) => {
-    const userID = activeUser.userID
-    await axios.post(`${baseUrl}/posts/comments/${postID}`, { commentBoxContent, userID })
-        .then(res => {
-            setComments(comments => [res.data.comment, ...comments])
+    const userID = activeUser.userID;
+    await axios
+        .post(`${baseUrl}/posts/comments/${postID}`, { commentBoxContent, userID })
+        .then((res) => {
+            setComments((comments) => [res.data.comment, ...comments]);
         })
-        .catch(error => {
-            console.error("createComment error: ", error)
-        })
-}
+        .catch((error) => {
+            console.error("createComment error: ", error);
+        });
+};
 
 export const waitForGCSToFinish = async (fileURL, setFileIsLoaded) => {
-    const fetchInterval = 500
+    const fetchInterval = 500;
 
     const checkForFile = async () => {
         try {
             // Use HEAD to prevent download
-            const res = await fetch(fileURL, {method: 'HEAD'}).catch((error) => {/* Do nothing, keep trying */})
+            const res = await fetch(fileURL, { method: "HEAD" }).catch((error) => {
+                /* Do nothing, keep trying */
+            });
             if (res.ok) {
-                setFileIsLoaded(true)
-                return
+                setFileIsLoaded(true);
+                return;
             }
-        } catch (error) {/* Do nothing, keep trying */}
+        } catch (error) {
+            /* Do nothing, keep trying */
+        }
 
-        setTimeout(() => {return checkForFile()}, fetchInterval)
-    }
+        setTimeout(() => {
+            return checkForFile();
+        }, fetchInterval);
+    };
 
-    return await checkForFile()
-}
+    return await checkForFile();
+};
