@@ -2,11 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
 const { createServer } = require("node:http");
-const { Server } = require("socket.io");
 
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
 const postsRouter = require("./routes/posts");
+const recommendationsRouter = require("./routes/recommendations");
 
 const { enableCORSinBucket } = require("./utils/GCS");
 const { createWebSocket } = require("./utils/serverWebSocketUtils");
@@ -40,6 +40,7 @@ app.use(express.json());
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
 app.use("/posts", postsRouter);
+app.use("/recommendations", recommendationsRouter);
 
 const PORT = 3000;
 

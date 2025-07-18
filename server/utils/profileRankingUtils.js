@@ -1,12 +1,17 @@
-const { PrismaClient } = require("../generated/prisma");
-const RECOMMENDED = "recommended";
+import { PrismaClient } from "../generated/prisma/index.js";
+import { RANKING_MODES } from "./constants.js";
+import { scorePosts } from "./serverPostRecommendationUtils.js";
 
 const prisma = new PrismaClient();
 
 // Rank suggestion candidates for some user and return candidates in descending order of score
-export const rankCandidates = async (user) => {
+export const rankCandidates = async (hostUserID) => {
+    const user = await prisma.user.findUnique({ where: { userID: hostUserID } });
+
     let candidates = await prisma.user.findMany({
-        where: { userID: { in: user.followedUsers } },
+        // for when we have a following list
+        //where: { userID: { notIn: user.followedUsers } },
+        where: { userID: { not: hostUserID } },
     });
 
     for (const candidate in candidates) {
@@ -19,37 +24,38 @@ export const rankCandidates = async (user) => {
 };
 
 // Evaluate a suggestion candidate for a user based on their posts score, interests similarity, and mutual following
-export const evaluateCandidate = async (user, candidate, scorePosts) => {
+const evaluateCandidate = async (user, candidate, scorePosts) => {
     if (!user || !candidate) {
         console.log("evaluateCandidate: user or candidate is null");
         return NaN;
     }
 
-    // update prisma db + statement
-    if (user.suggestedCandidates.includes(candidate.userID) || user.followedUsers.includes(candidate.userID)) {
-        return -Infinity;
-    }
+    // for when we have suggested markers
+    // if (user.suggestedCandidates.includes(candidate.userID)) {
+    //     return -Infinity;
+    // }
 
     // Rank posts using created recommendation algorithm
     const candidatePosts = await prisma.post.findMany({ where: { authorID: candidate.userID } });
-    const setCandidatePosts = (updatedPosts) => {
-        candidatePosts = updatedPosts;
-    };
-
-    // Average post scores an overall posts score
-    scorePosts(candidatePosts, user, setCandidatePosts, RECOMMENDED);
-    let totalScore = 0;
-    for (const post of candidatePosts) {
-        totalScore += post.score;
+    let postOvr = 0;
+    if (candidatePosts.length > 0) {
+        // Average post scores an overall posts score
+        let rankedCandidatePosts = await scorePosts(candidatePosts, user, RANKING_MODES.RECOMMENDED);
+        let totalScore = 0;
+        for (const post of rankedCandidatePosts) {
+            totalScore += post.score;
+        }
+        postOvr = totalScore / candidatePosts.length;
     }
-    const postOvr = totalScore / candidatePosts.length;
+
+    return postOvr; // for now
 
     // Vectorize the users' frequency objects and perform a cosine similarity comparison
     const userFreq = user.userFrequency;
     const candidateFreq = candidate.userFrequency;
     // then vectorize
     // then pass insto cosine similarity function
-    const similarityScore = 1738; // placeholder
+    const similarityScore = 0.1738; // placeholder
 
     // Convert the similarity score to a scalar factor
     const similarityFactor = similarityScore < 0 ? -1 + similarityScore : 1 + similarityScore;
