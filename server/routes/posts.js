@@ -3,7 +3,7 @@ const router = require("express").Router();
 const STATUS_CODES = require("../statusCodes");
 const { QUICKTIME, MOV, COMMENT, CREATE } = require("../utils/constants");
 const { recalculateInteractionAverages } = require("../utils/sessionUtils");
-const { scorePosts } = require("../utils/postRecommendationUtils");
+const { scorePosts } = require("../utils/serverPostRecommendationUtils");
 const GCS = require("../utils/GCS");
 const { getVideoDurationInSeconds } = require("get-video-duration");
 
