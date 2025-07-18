@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { deletePost, handleLikeOrUnlikePost, waitForGCSToFinish } from "/src/utils/postUtils";
 
 import UserContext from "/src/utils/UserContext";
-import { CLIPS, BLOGS, LIKE, UNLIKE } from "/src/utils/constants";
+import { CLIPS, BLOGS, LIKE, UNLIKE, PROFILE_NOT_APPLICABLE } from "/src/utils/constants";
 import { PROFILE_ORIGIN } from "/src/utils/constants";
 
 import "/src/css/postCard.css";
@@ -12,7 +12,7 @@ import trash from "/src/assets/trash.png";
 import emptyheart from "/src/assets/heart.png";
 import fullheart from "/src/assets/heartFull.png";
 
-const PostCard = ({ post, postType, origin, setUserPosts, isSelfProfile = false }) => {
+const PostCard = ({ post, postType, origin, profileID = PROFILE_NOT_APPLICABLE, setUserPosts, isSelfProfile = false }) => {
     const { activeUser, setActiveUser } = useContext(UserContext);
 
     const embedRef = useRef(null);
@@ -60,7 +60,7 @@ const PostCard = ({ post, postType, origin, setUserPosts, isSelfProfile = false 
     }
 
     return (
-        <Link to={`/${origin}/post/${post.postID}`} className="postRedirect">
+        <Link to={`/${origin}/${profileID}/post/${post.postID}`} className="postRedirect">
             <article className={`${postType}PostCard`}>
                 {postType === CLIPS && (
                     <video

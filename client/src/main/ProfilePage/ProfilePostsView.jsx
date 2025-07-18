@@ -45,6 +45,7 @@ const ProfilePostView = ({ userToDisplay, activeUser, profileContentView, userPo
                                 post={post}
                                 postType={profileContentView}
                                 origin={PROFILE_ORIGIN}
+                                profileID={userToDisplay?.userID}
                                 setUserPosts={setUserPosts}
                                 isSelfProfile={isSelfProfile}
                             />
