@@ -51,11 +51,6 @@ export const tokenize = async (post, activeUser, action) => {
 
 // Score every post based on the user's frequency map and set client posts state to results
 export const scorePosts = async (posts, activeUser, scoringMode) => {
-    // Scoring by creation date (and proximity until stretch feature is implemented) is a default
-    if (scoringMode === RANKING_MODES.LATEST || scoringMode === RANKING_MODES.NEAR_YOU) {
-        return await posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
-    }
-
     const userFrequency = activeUser.user_Frequency;
 
     // If the user has no liked posts, manually override the scoring mode to popularity
@@ -126,7 +121,6 @@ export const scorePosts = async (posts, activeUser, scoringMode) => {
     // Sort posts by either recommendation score or popularity
     // Let tie breakers be handled by other option and finally by creation date
     posts = sortByMetric(posts, scoringMode);
-
     return posts;
 };
 
@@ -158,7 +152,7 @@ const calculateBiasFactors = async (activeUser) => {
     const likedPostsCount = activeUser.likedPosts.length;
 
     for (const postID of activeUser.likedPosts) {
-        const post = await prisma.post.findUnique({ where: { id: postID } });
+        const post = await prisma.post.findUnique({ where: { postID } });
 
         totalLikedContentLength += await getPostLength(post);
 
@@ -176,11 +170,11 @@ const calculateBiasFactors = async (activeUser) => {
 };
 
 // Filter out stop words and non-alphanumeric characters from the content of a post
-const filterTokens = async (content) => {
+const filterTokens = (content) => {
     // Convert to lowercase, remove non-alphanumeric characters
-    const contentToArray = await new String(content).toLowerCase().split(NON_ALPHANUMERIC_REGEX);
+    const contentToArray = new String(content).toLowerCase().split(NON_ALPHANUMERIC_REGEX);
     // remove stop words and further filter resulting tokens < 3 characters long
-    const filteredContent = await removeStopwords(contentToArray).filter((token) => token.length > 2);
+    const filteredContent = removeStopwords(contentToArray).filter((token) => token.length > 2);
     return filteredContent;
 };
 
@@ -202,6 +196,14 @@ const sortByMetric = (posts, scoringMode) => {
                 if (popularityDiff !== 0) return popularityDiff;
                 if (scoreDiff !== 0) return scoreDiff;
                 return dateDiff;
+
+            case RANKING_MODES.NEAR_YOU:
+            case RANKING_MODES.LATEST:
+                return dateDiff;
+
+            default:
+                console.error("Invalid scoringMode provided to sortByMetric");
+                return 0;
         }
     });
 };
@@ -219,10 +221,9 @@ const getPostLength = async (post) => {
 
 // Calculate a clip's video length translated to a "word count" using the average reading speed
 const calculateClipVideoLengthAsWordCount = async (fileURL) => {
-    const res = await getVideoDurationInSeconds(fileURL).catch((error) => {
+    const clipLength = await getVideoDurationInSeconds(fileURL).catch((error) => {
         console.error(error);
     });
-    const clipLength = res.data.clipLength;
     const clipLengthAsWordCount = Math.ceil(clipLength * AVERAGE_WORDS_READ_PER_SECOND);
     return clipLengthAsWordCount;
 };
