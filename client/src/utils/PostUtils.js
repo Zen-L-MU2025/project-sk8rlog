@@ -44,7 +44,12 @@ export const getUserPostsByType = async (activeUser, postType, setUserPosts) => 
 
 // Gets all posts by specified postType and sets the posts array state
 // If scoringPayload is provided, will score the posts for the provided user and set the posts array state
-export const getAllPostsByType = async (postType, setPosts, scoringPayload = { scoringMode: RANKING_MODES.DEFAULT, activeUser: null }) => {
+export const getAllPostsByType = async (
+    postType,
+    setPosts,
+    scoringPayload = { scoringMode: RANKING_MODES.DEFAULT, activeUser: null },
+    setIsInitialized
+) => {
     const { scoringMode, activeUser } = scoringPayload;
 
     await axios
@@ -55,6 +60,9 @@ export const getAllPostsByType = async (postType, setPosts, scoringPayload = { s
         .catch((error) => {
             console.error("getAllPostsByType error: ", error);
         });
+
+    setIsInitialized(true);
+    return;
 };
 
 // Provided a postID, gets the post data

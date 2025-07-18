@@ -109,7 +109,7 @@ router.post("/all/:type/:scoringMode", async (req, res, _next) => {
         });
 
         if (posts.length < 1) {
-            return res.status(STATUS_CODES.NO_CONTENT).json({ message: "No posts found" });
+            return res.status(STATUS_CODES.NO_CONTENT).json({ posts, message: "No posts found" });
         }
 
         let rankedPosts = await scorePosts(posts, activeUser, scoringMode);
