@@ -3,7 +3,6 @@ const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 import axios from "axios";
 import { tokenize } from "./recommendationUtils.js";
 import { LIKE, UNLIKE, RANKING_MODES } from "./constants.js";
-import { scorePosts } from "./recommendationUtils.js";
 
 // Uploads a post, starting with the file attachment to GCS and then the full post data to server
 // Updates user's posts array state when complete
@@ -49,25 +48,9 @@ export const getAllPostsByType = async (postType, setPosts, scoringPayload = { s
     const { scoringMode, activeUser } = scoringPayload;
 
     await axios
-        .get(`${baseUrl}/posts/all/${postType}`)
+        .post(`${baseUrl}/posts/all/${postType}/${scoringMode}`, { activeUser })
         .then((res) => {
-            switch (scoringMode) {
-                // Score posts by provided mode
-                case RANKING_MODES.DEFAULT:
-                case RANKING_MODES.RECOMMENDED:
-                case RANKING_MODES.POPULAR:
-                    scorePosts(res.data.posts, activeUser, setPosts, scoringMode);
-                    break;
-
-                // Or just sort by date if set to latest (NEAR_YOU isn't implemented yet)
-                case NEAR_YOU:
-                case LATEST:
-                    setPosts(res.data.posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate)));
-                    break;
-
-                default:
-                    console.error("Invalid sorting mode provided");
-            }
+            setPosts(res.data.posts);
         })
         .catch((error) => {
             console.error("getUserPostsByType error: ", error);
