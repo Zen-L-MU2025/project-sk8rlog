@@ -4,8 +4,8 @@ const router = require("express").Router();
 const webtoken = require("jsonwebtoken");
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 const STATUS_CODES = require("../statusCodes");
-const { LIKE } = require("../constants");
-const { recalculateSessionAverages, recalculateInteractionAverages } = require("../sessionUtils");
+const { LIKE } = require("../utils/constants");
+const { recalculateSessionAverages, recalculateInteractionAverages } = require("../utils/sessionUtils");
 
 const prisma = new PrismaClient();
 
