@@ -1,8 +1,9 @@
 const { PrismaClient } = require("../generated/prisma");
 const router = require("express").Router();
 const STATUS_CODES = require("../statusCodes");
-const { QUICKTIME, MOV, COMMENT, CREATE } = require("../constants");
-const { recalculateInteractionAverages } = require("../sessionUtils");
+const { QUICKTIME, MOV, COMMENT, CREATE } = require("../utils/constants");
+const { recalculateInteractionAverages } = require("../utils/sessionUtils");
+const { scorePosts } = require("../utils/postRecommendationUtils");
 const GCS = require("../utils/GCS");
 const { getVideoDurationInSeconds } = require("get-video-duration");
 
@@ -96,11 +97,12 @@ router.get("/by/:userID/:type", async (req, res, _next) => {
     }
 });
 
-// GET /posts/all/:type
-// Retrieves *all* posts of specified type
-router.get("/all/:type", async (req, res, _next) => {
+// POST /posts/all/:type
+// Retrieves *all* posts of specified type and scores them if requested through parameter
+router.post("/all/:type/:scoringMode", async (req, res, _next) => {
     try {
-        const { type } = req.params;
+        const { activeUser } = req.body;
+        const { type, scoringMode } = req.params;
 
         const posts = await prisma.post.findMany({
             where: { type },
@@ -109,6 +111,8 @@ router.get("/all/:type", async (req, res, _next) => {
         if (posts.length < 1) {
             return res.status(STATUS_CODES.NO_CONTENT).json({ message: "No posts found" });
         }
+
+        posts = await scorePosts(posts, activeUser, scoringMode);
 
         return res.status(STATUS_CODES.OK).json({ posts, message: "Posts retrieved" });
     } catch (error) {
