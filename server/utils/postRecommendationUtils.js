@@ -1,6 +1,6 @@
 import { removeStopwords, eng } from "stopword";
 import { getVideoDurationInSeconds } from "get-video-duration";
-import { PrismaClient } from "../generated/prisma";
+import { PrismaClient } from "../generated/prisma/index.js";
 
 const prisma = new PrismaClient();
 
@@ -50,7 +50,12 @@ export const tokenize = async (post, activeUser, action) => {
 };
 
 // Score every post based on the user's frequency map and set client posts state to results
-export const scorePosts = async (posts, activeUser, setPosts, scoringMode) => {
+export const scorePosts = async (posts, activeUser, scoringMode) => {
+    // Scoring by creation date (and proximity until stretch feature is implemented) is a default
+    if (scoringMode === RANKING_MODES.LATEST || scoringMode === RANKING_MODES.NEAR_YOU) {
+        return await posts.toSorted((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
+    }
+
     const userFrequency = activeUser.user_Frequency;
 
     // If the user has no liked posts, manually override the scoring mode to popularity
@@ -122,7 +127,7 @@ export const scorePosts = async (posts, activeUser, setPosts, scoringMode) => {
     // Let tie breakers be handled by other option and finally by creation date
     posts = sortByMetric(posts, scoringMode);
 
-    await setPosts(posts);
+    return posts;
 };
 
 // Filters out posts that are older than AGE_CUTOFF_IN_DAYS (7) days
@@ -187,6 +192,7 @@ const sortByMetric = (posts, scoringMode) => {
         const dateDiff = new Date(b.creationDate) - new Date(a.creationDate);
 
         switch (scoringMode) {
+            case RANKING_MODES.DEFAULT:
             case RANKING_MODES.RECOMMENDED:
                 if (scoreDiff !== 0) return scoreDiff;
                 if (popularityDiff !== 0) return popularityDiff;
