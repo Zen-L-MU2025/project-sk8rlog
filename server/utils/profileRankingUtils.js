@@ -14,17 +14,17 @@ export const rankCandidates = async (hostUserID) => {
         where: { userID: { not: hostUserID } },
     });
 
-    for (const candidate in candidates) {
-        candidate["score"] = await evaluateCandidate(user, candidate, scorePosts);
+    for (const candidate of candidates) {
+        candidate["candidacyScore"] = await evaluateCandidate(user, candidate);
     }
 
-    candidates.sort((a, b) => b.score - a.score);
+    candidates.sort((a, b) => b.candidacyScore - a.candidacyScore);
 
     return candidates;
 };
 
 // Evaluate a suggestion candidate for a user based on their posts score, interests similarity, and mutual following
-const evaluateCandidate = async (user, candidate, scorePosts) => {
+const evaluateCandidate = async (user, candidate) => {
     if (!user || !candidate) {
         console.log("evaluateCandidate: user or candidate is null");
         return NaN;
@@ -43,6 +43,7 @@ const evaluateCandidate = async (user, candidate, scorePosts) => {
         let rankedCandidatePosts = await scorePosts(candidatePosts, user, RANKING_MODES.RECOMMENDED);
         let totalScore = 0;
         for (const post of rankedCandidatePosts) {
+            console.log(`post score: ${post.score}, popularity: ${post.popularity}`);
             totalScore += post.score;
         }
         postOvr = totalScore / candidatePosts.length;
