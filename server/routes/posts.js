@@ -112,9 +112,9 @@ router.post("/all/:type/:scoringMode", async (req, res, _next) => {
             return res.status(STATUS_CODES.NO_CONTENT).json({ message: "No posts found" });
         }
 
-        posts = await scorePosts(posts, activeUser, scoringMode);
+        let rankedPosts = await scorePosts(posts, activeUser, scoringMode);
 
-        return res.status(STATUS_CODES.OK).json({ posts, message: "Posts retrieved" });
+        return res.status(STATUS_CODES.OK).json({ posts: rankedPosts, message: "Posts retrieved" });
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error });
     }

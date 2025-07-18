@@ -53,7 +53,7 @@ export const getAllPostsByType = async (postType, setPosts, scoringPayload = { s
             setPosts(res.data.posts);
         })
         .catch((error) => {
-            console.error("getUserPostsByType error: ", error);
+            console.error("getAllPostsByType error: ", error);
         });
 };
 
