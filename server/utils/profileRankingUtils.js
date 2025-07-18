@@ -19,7 +19,7 @@ export const evaluateCandidate = async (user, candidate, scorePosts) => {
     }
 
     // update prisma db + statement
-    if (user.suggestedCandidates.includes(candidate.userID)) {
+    if (user.suggestedCandidates.includes(candidate.userID) || user.followedUsers.includes(candidate.userID)) {
         return -Infinity;
     }
 
@@ -37,9 +37,9 @@ export const evaluateCandidate = async (user, candidate, scorePosts) => {
 
     const userFreq = user.userFrequency;
     const candidateFreq = candidate.userFrequency;
+    // then vectorize
+    // then pass insto cosine similarity function
 
-    // vectorize
-    // pass insto cosine similarity function
     const similarityScore = 1738; // placeholder
     const similarityFactor = similarityScore < 0 ? -1 + similarityScore : 1 + similarityScore;
 
