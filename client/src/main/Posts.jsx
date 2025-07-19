@@ -41,7 +41,7 @@ const Posts = ({ postType }) => {
     useEffect(() => {
         setIsReadyToDisplayContent(false);
         if (activeUser?.userID) {
-            getAllPostsByType(postType, setPosts, { scoringMode: RANKING_MODES.RECOMMENDED, activeUser }, setIsReadyToDisplayContent);
+            getAllPostsByType(postType, setPosts, { scoringMode: filterState, activeUser }, setIsReadyToDisplayContent);
         }
     }, [postType, activeUser, filterState]);
 
