@@ -38,18 +38,22 @@ const evaluateCandidate = async (user, candidate) => {
     // Rank posts using created recommendation algorithm
     const candidatePosts = await prisma.post.findMany({ where: { authorID: candidate.userID } });
     let postOvr = 0;
+    let popularityOvr = 0;
     if (candidatePosts.length > 0) {
         // Average post scores an overall posts score
         let rankedCandidatePosts = await scorePosts(candidatePosts, user, RANKING_MODES.RECOMMENDED);
         let totalScore = 0;
+        let totalPopularity = 0;
         for (const post of rankedCandidatePosts) {
-            console.log(`post score: ${post.score}, popularity: ${post.popularity}`);
+            console.log(`post ${post.description} with popularity ${post.popularity}`);
             totalScore += post.score;
+            totalPopularity += post.popularity;
         }
         postOvr = totalScore / candidatePosts.length;
+        popularityOvr = totalPopularity / candidatePosts.length;
     }
 
-    return postOvr; // for now
+    return postOvr + popularityOvr; // for now
 
     // Vectorize the users' frequency objects and perform a cosine similarity comparison
     const userFreq = user.userFrequency;
