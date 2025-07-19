@@ -17,11 +17,18 @@ const HomePostsView = ({ postType }) => {
     const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
-        getAllPostsByType(postType, setPosts, { scoringMode: RANKING_MODES.RECOMMENDED, activeUser });
-        setIsInitialized(true);
+        if (activeUser?.userID) {
+            getAllPostsByType(postType, setPosts, { scoringMode: RANKING_MODES.RECOMMENDED, activeUser }, setIsInitialized);
+        }
     }, [activeUser]);
 
-    if (!isInitialized) return <p>Loading...</p>;
+    if (!isInitialized) {
+        return (
+            <div id={`home_${postTypeLowerCase}`} className="column">
+                <h3>Loading {postType}...</h3>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -29,12 +36,15 @@ const HomePostsView = ({ postType }) => {
                 <Link to={`/${postTypeLowerCase}`}>
                     <h3 className="columnHeader">{postType}</h3>
                 </Link>
-
-                <div id={`${postTypeLowerCase}ColumnContent`} className="columnContent">
-                    {posts?.slice(0, HOME_PAGE_POST_COUNT).map((post) => {
-                        return <PostCard key={post.postID} post={post} postType={postType} origin={HOME_ORIGIN} />;
-                    })}
-                </div>
+                {posts?.length === 0 ? (
+                    <p>No posts to show</p>
+                ) : (
+                    <div id={`${postTypeLowerCase}ColumnContent`} className="columnContent">
+                        {posts?.slice(0, HOME_PAGE_POST_COUNT).map((post) => {
+                            return <PostCard key={post.postID} post={post} postType={postType} origin={HOME_ORIGIN} />;
+                        })}
+                    </div>
+                )}
             </div>
         </>
     );

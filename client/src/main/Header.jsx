@@ -54,7 +54,7 @@ const Header = ({ HEADER_TEXT, activeUser }) => {
                     <div className="notifications">
                         {notifications?.length ? (
                             notifications.map((notification) => {
-                                return <p>{notification}</p>;
+                                return <p key={new Date().getTime() * Math.random()}>{notification}</p>;
                             })
                         ) : (
                             <p>No notifications...</p>

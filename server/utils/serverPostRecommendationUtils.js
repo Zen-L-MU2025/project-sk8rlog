@@ -1,8 +1,9 @@
-const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-import axios from "axios";
 import { removeStopwords, eng } from "stopword";
-import { getPostByID } from "./PostUtils.js";
+import { getVideoDurationInSeconds } from "get-video-duration";
+import { PrismaClient } from "../generated/prisma/index.js";
+
+const prisma = new PrismaClient();
+
 import {
     LIKE,
     NON_ALPHANUMERIC_REGEX,
@@ -49,7 +50,7 @@ export const tokenize = async (post, activeUser, action) => {
 };
 
 // Score every post based on the user's frequency map and set client posts state to results
-export const scorePosts = async (posts, activeUser, setPosts, scoringMode) => {
+export const scorePosts = async (posts, activeUser, scoringMode) => {
     const userFrequency = activeUser.user_Frequency;
 
     // If the user has no liked posts, manually override the scoring mode to popularity
@@ -120,8 +121,7 @@ export const scorePosts = async (posts, activeUser, setPosts, scoringMode) => {
     // Sort posts by either recommendation score or popularity
     // Let tie breakers be handled by other option and finally by creation date
     posts = sortByMetric(posts, scoringMode);
-
-    await setPosts(posts);
+    return posts;
 };
 
 // Filters out posts that are older than AGE_CUTOFF_IN_DAYS (7) days
@@ -152,7 +152,7 @@ const calculateBiasFactors = async (activeUser) => {
     const likedPostsCount = activeUser.likedPosts.length;
 
     for (const postID of activeUser.likedPosts) {
-        const post = await getPostByID(postID);
+        const post = await prisma.post.findUnique({ where: { postID } });
 
         totalLikedContentLength += await getPostLength(post);
 
@@ -170,11 +170,11 @@ const calculateBiasFactors = async (activeUser) => {
 };
 
 // Filter out stop words and non-alphanumeric characters from the content of a post
-const filterTokens = async (content) => {
+const filterTokens = (content) => {
     // Convert to lowercase, remove non-alphanumeric characters
-    const contentToArray = await new String(content).toLowerCase().split(NON_ALPHANUMERIC_REGEX);
+    const contentToArray = new String(content).toLowerCase().split(NON_ALPHANUMERIC_REGEX);
     // remove stop words and further filter resulting tokens < 3 characters long
-    const filteredContent = await removeStopwords(contentToArray).filter((token) => token.length > 2);
+    const filteredContent = removeStopwords(contentToArray).filter((token) => token.length > 2);
     return filteredContent;
 };
 
@@ -186,6 +186,7 @@ const sortByMetric = (posts, scoringMode) => {
         const dateDiff = new Date(b.creationDate) - new Date(a.creationDate);
 
         switch (scoringMode) {
+            case RANKING_MODES.DEFAULT:
             case RANKING_MODES.RECOMMENDED:
                 if (scoreDiff !== 0) return scoreDiff;
                 if (popularityDiff !== 0) return popularityDiff;
@@ -195,6 +196,14 @@ const sortByMetric = (posts, scoringMode) => {
                 if (popularityDiff !== 0) return popularityDiff;
                 if (scoreDiff !== 0) return scoreDiff;
                 return dateDiff;
+
+            case RANKING_MODES.NEAR_YOU:
+            case RANKING_MODES.LATEST:
+                return dateDiff;
+
+            default:
+                console.error("Invalid scoringMode provided to sortByMetric");
+                return 0;
         }
     });
 };
@@ -212,10 +221,9 @@ const getPostLength = async (post) => {
 
 // Calculate a clip's video length translated to a "word count" using the average reading speed
 const calculateClipVideoLengthAsWordCount = async (fileURL) => {
-    const res = await axios.post(`${baseUrl}/posts/clipLength`, { fileURL }).catch((error) => {
+    const clipLength = await getVideoDurationInSeconds(fileURL).catch((error) => {
         console.error(error);
     });
-    const clipLength = res.data.clipLength;
     const clipLengthAsWordCount = Math.ceil(clipLength * AVERAGE_WORDS_READ_PER_SECOND);
     return clipLengthAsWordCount;
 };

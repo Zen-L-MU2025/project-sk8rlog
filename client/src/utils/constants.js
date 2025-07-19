@@ -51,18 +51,6 @@ export const NON_ALPHANUMERIC_REGEX = /[^a-zA-Z0-9]/;
 export const MILLISECONDS_IN_DAY = 86400000;
 export const AGE_CUTOFF_IN_DAYS = 7;
 
-export const LIKE_WEIGHT = 0.1;
-export const COMMENT_WEIGHT = 0.33;
-export const CLIP_DESCRIPTION_WEIGHT = 0.33;
-const AVERAGE_WORDS_READ_PER_MINUTE = 230;
-const SECONDS_IN_MINUTE = 60;
-export const AVERAGE_WORDS_READ_PER_SECOND = AVERAGE_WORDS_READ_PER_MINUTE / SECONDS_IN_MINUTE;
-
-export const RECOMMENDED = "recommended";
-export const LATEST = "latest";
-export const POPULAR = "popular";
-export const NEAR_YOU = "near_you";
-
 export const NOT_APPLICABLE = -1;
 
 export const RANKING_MODES = {

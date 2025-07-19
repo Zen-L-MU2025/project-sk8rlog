@@ -40,20 +40,15 @@ const Posts = ({ postType }) => {
 
     useEffect(() => {
         setIsReadyToDisplayContent(false);
-        getAllPostsByType(postType, setPosts, { scoringMode: RANKING_MODES.RECOMMENDED, activeUser });
-        setIsReadyToDisplayContent(true);
-    }, [postType, activeUser]);
-
-    useEffect(() => {
-        getAllPostsByType(postType, setPosts, { scoringMode: filterState, activeUser });
-    }, [filterState]);
+        if (activeUser?.userID) {
+            getAllPostsByType(postType, setPosts, { scoringMode: RANKING_MODES.RECOMMENDED, activeUser }, setIsReadyToDisplayContent);
+        }
+    }, [postType, activeUser, filterState]);
 
     const handleFilterChange = (event) => {
         event.preventDefault();
         setFilterState(event.target.value);
     };
-
-    if (!isReadyToDisplayContent) return <p>Loading posts...</p>;
 
     return (
         <>
@@ -72,9 +67,13 @@ const Posts = ({ postType }) => {
                     </form>
 
                     <div className="posts">
-                        {posts?.map((post) => {
-                            return <PostCard key={post.postID} post={post} postType={postType} origin={POSTS[postType]} />;
-                        })}
+                        {!isReadyToDisplayContent ? (
+                            <p>Loading posts...</p>
+                        ) : (
+                            posts?.map((post) => {
+                                return <PostCard key={post.postID} post={post} postType={postType} origin={POSTS[postType]} />;
+                            })
+                        )}
                     </div>
                 </section>
             </section>

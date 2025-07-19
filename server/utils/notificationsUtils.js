@@ -1,4 +1,4 @@
-import { DELIVER_NOTIFICATION, ROLL_THRESHOLD } from "../constants.js";
+import { DELIVER_NOTIFICATION, ROLL_THRESHOLD } from "./constants.js";
 
 // Dummy system: randomly decide whether to send a notification to the client or not
 export const rollForNotification = (socket) => {

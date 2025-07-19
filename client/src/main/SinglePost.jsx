@@ -45,7 +45,7 @@ const SinglePost = () => {
     useEffect(() => {
         verifyAccess(setHasAccess);
         hasAccess === false && navigate("/unauthorized");
-    }, [activeUser]);
+    }, [activeUser, hasAccess]);
 
     useEffect(() => {
         setPostLikeCount(post?.likeCount);
