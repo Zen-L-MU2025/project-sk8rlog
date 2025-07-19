@@ -50,8 +50,6 @@ const Posts = ({ postType }) => {
         setFilterState(event.target.value);
     };
 
-    if (!isReadyToDisplayContent) return <p>Loading posts...</p>;
-
     return (
         <>
             <Header HEADER_TEXT={HEADER_TEXT} activeUser={activeUser} />
@@ -69,9 +67,13 @@ const Posts = ({ postType }) => {
                     </form>
 
                     <div className="posts">
-                        {posts?.map((post) => {
-                            return <PostCard key={post.postID} post={post} postType={postType} origin={POSTS[postType]} />;
-                        })}
+                        {!isReadyToDisplayContent ? (
+                            <p>Loading posts...</p>
+                        ) : (
+                            posts?.map((post) => {
+                                return <PostCard key={post.postID} post={post} postType={postType} origin={POSTS[postType]} />;
+                            })
+                        )}
                     </div>
                 </section>
             </section>
