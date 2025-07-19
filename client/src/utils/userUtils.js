@@ -193,15 +193,16 @@ export const handleUserFollowing = async (activeUser, userBeingReferencedID, act
     await axios
         .put(`${baseUrl}/users/${activeUser.userID}/followedUsers/${action}`, { userBeingReferencedID })
         .then(() => {
-            setActiveUser((prev) => {
-                return {
-                    ...prev,
-                    followedUsers:
-                        action === FOLLOW
-                            ? [...prev.followedUsers, userBeingReferencedID]
-                            : prev.followedUsers.filter((uID) => uID !== userBeingReferencedID),
-                };
-            });
+            const updatedUser = {
+                ...activeUser,
+                followedUsers:
+                    action === FOLLOW
+                        ? [...activeUser.followedUsers, userBeingReferencedID]
+                        : activeUser.followedUsers.filter((uID) => uID !== userBeingReferencedID),
+            };
+
+            setActiveUser(updatedUser);
+            sessionStorage.setItem("user", JSON.stringify(updatedUser));
         })
         .catch((error) => {
             console.error(error);
