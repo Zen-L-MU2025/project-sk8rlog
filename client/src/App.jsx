@@ -40,7 +40,7 @@ function App() {
 
                         <Route path="/blogs" element={<Posts postType={BLOGS} />} />
 
-                        <Route path="/:origin/post/:postID" element={<SinglePost />} />
+                        <Route path="/:origin/:profileID/post/:postID" element={<SinglePost />} />
 
                         <Route
                             path="/unauthorized"

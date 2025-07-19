@@ -41,6 +41,8 @@ export const ORIGINS = {
     [PROFILE_ORIGIN]: "profile",
 };
 
+export const PROFILE_NOT_APPLICABLE = "_";
+
 export const LIKE = "like";
 export const UNLIKE = "unlike";
 
