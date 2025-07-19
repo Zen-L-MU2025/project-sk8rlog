@@ -45,7 +45,6 @@ const evaluateCandidate = async (user, candidate) => {
         let totalScore = 0;
         let totalPopularity = 0;
         for (const post of rankedCandidatePosts) {
-            console.log(`post ${post.description} with popularity ${post.popularity}`);
             totalScore += post.score;
             totalPopularity += post.popularity;
         }
