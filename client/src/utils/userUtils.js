@@ -42,7 +42,7 @@ export const register = async (formObject, setIsSuccessful) => {
             newUserID = newUserData.userID;
 
             // Set session cookies
-            await setCookies(token, userID, setIsSuccessful);
+            await setCookies(token, newUserID, setIsSuccessful);
         })
         .catch((error) => {
             console.error("register error: ", error);
@@ -191,11 +191,17 @@ const setCookies = async (token, userID, setIsSuccessful = null) => {
 // Adds/removes a user from active user's following list
 export const handleUserFollowing = async (activeUser, userBeingReferencedID, action, setActiveUser) => {
     await axios
-        .put(`${baseUrl}/users/${activeUser.userID}/followedUsers/:action`, { userBeingReferencedID })
+        .put(`${baseUrl}/users/${activeUser.userID}/followedUsers/${action}`, { userBeingReferencedID })
         .then(() => {
-            action === FOLLOW
-                ? setActiveUser([...activeUser.followedUsers, userBeingReferencedID])
-                : setActiveUser(activeUser.followedUsers.filter((uID) => uID !== userBeingReferencedID));
+            setActiveUser((prev) => {
+                return {
+                    ...prev,
+                    followedUsers:
+                        action === FOLLOW
+                            ? [...prev.followedUsers, userBeingReferencedID]
+                            : prev.followedUsers.filter((uID) => uID !== userBeingReferencedID),
+                };
+            });
         })
         .catch((error) => {
             console.error(error);

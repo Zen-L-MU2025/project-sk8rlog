@@ -31,6 +31,13 @@ router.post("/register", async (req, res) => {
             },
         });
 
+        await prisma.sessionData.create({
+            data: {
+                userID: newUser.userID,
+                lastSessionStartTime: new Date(),
+            },
+        });
+
         const tokenPayload = { userID: newUser.userID, username: newUser.username };
         const token = webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: "1h" });
 
@@ -139,8 +146,8 @@ router.put("/:userID/followedUsers/:action", async (req, res, _next) => {
     try {
         const { userID, action } = req.params;
         const { userBeingReferencedID } = req.body;
-        const user = await prisma.user.findUnique({ where: { userID } });
 
+        const user = await prisma.user.findUnique({ where: { userID } });
         await prisma.user.update({
             where: { userID },
             data: {

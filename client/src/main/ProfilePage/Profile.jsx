@@ -65,7 +65,6 @@ const Profile = () => {
                 <div className="profileContent">
                     <ProfileHead
                         userToDisplay={userToDisplay}
-                        activeUser={activeUser}
                         setProfileContentView={setProfileContentView}
                         toggleCreatePostModal={toggleCreatePostModal}
                     />
