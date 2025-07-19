@@ -15,6 +15,7 @@ const ProfileHead = ({ userToDisplay, activeUser, setProfileContentView, toggleC
                 </p>
                 <p>📍 {userToDisplay?.location || "Location not set"}</p>
                 <p>Bio: {userToDisplay?.bio || "No bio provided"}</p>
+                {!isSelfProfile && <button className="followButton">+ Follow User</button>}
             </div>
             <div className="contentButtons">
                 <p className="contentButton" onClick={() => setProfileContentView(CLIPS)}>

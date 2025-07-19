@@ -13,10 +13,10 @@
     width: 150px;
     height: 150px;
 
-    border: 1px solid #3b0747; border-radius: 3px;
+    border: 1px solid #3b0747;
+    border-radius: 3px;
     border-radius: 50%;
 }
-
 .contentButtons {
     display: flex;
     flex-flow: row wrap;
@@ -24,14 +24,18 @@
     gap: 20px;
 }
 
-.contentButton {
+.contentButton,
+.followButton {
     margin-bottom: 10px;
     padding: 3px;
     transition: 0.5s ease-in-out;
+    border: 1px solid rgba(65, 149, 182, 0.629);
+    border-radius: 3px;
 }
-.contentButton:hover {
+.contentButton:hover,
+.followButton:hover {
     cursor: pointer;
-    border: 1px solid #3b0747; border-radius: 3px;
+    border: 1px solid #3b0747;
     border-radius: 3px;
 }
 

@@ -2,11 +2,7 @@ const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 import axios from "axios";
 
-// Tracks if landing page submission is login or register
-const OPTIONS = {
-    LOGIN: "login",
-    REGISTER: "register",
-};
+import { OPTIONS, FOLLOW, UNFOLLOW } from "./constants.js";
 
 // Handle login/register submission
 export const handleLoginOrRegister = async (formData, submissionType, setIsSuccessful) => {
@@ -189,5 +185,20 @@ const setCookies = async (token, userID, setIsSuccessful = null) => {
             console.error("setCookie error: ", error);
             if (setIsSuccessful) setIsSuccessful(false);
             return;
+        });
+};
+
+// Adds/removes a user from active user's following list
+export const handleUserFollowing = async (activeUser, userBeingReferencedID, action, setActiveUser) => {
+    await axios
+        .put(`${baseUrl}/users/${activeUser.userID}/followedUsers/:action`, { userBeingReferencedID })
+        .then(() => {
+            action === FOLLOW
+                ? setActiveUser([...activeUser.followedUsers, userBeingReferencedID])
+                : setActiveUser(activeUser.followedUsers.filter((uID) => uID !== userBeingReferencedID));
+        })
+        .catch((error) => {
+            console.error(error);
+            window.alert(`Failed to ${action} user, please try again.`);
         });
 };
