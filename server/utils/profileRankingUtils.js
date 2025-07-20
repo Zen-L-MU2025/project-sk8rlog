@@ -1,5 +1,5 @@
 import { PrismaClient } from "../generated/prisma/index.js";
-import { RANKING_MODES } from "./constants.js";
+import { RANKING_MODES, POST_OVR_WEIGHT, POPULARITY_OVR_WEIGHT } from "./constants.js";
 import { scorePosts } from "./serverPostRecommendationUtils.js";
 
 const prisma = new PrismaClient();
@@ -52,14 +52,14 @@ const evaluateCandidate = async (user, candidate) => {
         popularityOvr = totalPopularity / candidatePosts.length;
     }
 
-    return postOvr + popularityOvr; // for now
+    const baseScore = postOvr * POST_OVR_WEIGHT + popularityOvr * POPULARITY_OVR_WEIGHT;
 
     // Vectorize the users' frequency objects and perform a cosine similarity comparison
     const userFreq = user.userFrequency;
     const candidateFreq = candidate.userFrequency;
     // then vectorize
     // then pass insto cosine similarity function
-    const similarityScore = 0.1738; // placeholder
+    const similarityScore = 0.1738; // this number is a placeholder and means nothing
 
     // Convert the similarity score to a scalar factor
     const similarityFactor = similarityScore < 0 ? -1 + similarityScore : 1 + similarityScore;
@@ -71,7 +71,8 @@ const evaluateCandidate = async (user, candidate) => {
 
     // Hold this overlap against all users they follow to create a mutual following factor
     const followingUnion = new Set(userFollowing.concat(candidateFollowing));
-    const mutualFollowFrequency = followingOverlap.length / followingUnion.size;
+    let mutualFollowFrequency = followingOverlap.length / followingUnion.size;
+    mutualFollowFrequency = isNaN(mutualFollowFrequency) ? 0 : mutualFollowFrequency;
 
     // Finalize and return the candidate's score
     const candidateScore = postOvr * similarityFactor * (1 + mutualFollowFrequency);

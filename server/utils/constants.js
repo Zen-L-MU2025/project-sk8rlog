@@ -36,3 +36,6 @@ export const RANKING_MODES = {
 
 export const FOLLOW = "follow";
 export const UNFOLLOW = "unfollow";
+
+export const POST_OVR_WEIGHT = 0.7;
+export const POPULARITY_OVR_WEIGHT = 0.3;
