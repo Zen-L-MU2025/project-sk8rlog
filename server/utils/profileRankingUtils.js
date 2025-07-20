@@ -75,6 +75,6 @@ const evaluateCandidate = async (user, candidate) => {
     mutualFollowFrequency = isNaN(mutualFollowFrequency) ? 0 : mutualFollowFrequency;
 
     // Finalize and return the candidate's score
-    const candidateScore = postOvr * similarityFactor * (1 + mutualFollowFrequency);
+    const candidateScore = baseScore * similarityFactor * (1 + mutualFollowFrequency);
     return candidateScore;
 };
