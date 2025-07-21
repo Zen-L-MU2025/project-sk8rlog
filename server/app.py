@@ -46,7 +46,9 @@ def root():
 # Create vector embeddings for user and candidate frequency objects and send results in response
 @app.route("/embedUserFrequency", methods=['POST'])
 def embedUserFrequency():
+    # Node translation: data = req.body
     data = request.get_json()
+
     # Vectorization returns a NumPy array, standardize this to a normal array that can be processed into JSON using tolist()
     userFrequencyEmbedding = vectorize(data["userKeywords"], data["userFrequency"]).tolist()
     candidateFrequencyEmbedding = vectorize(data["candidateKeywords"], data["candidateFrequency"]).tolist()
@@ -61,12 +63,14 @@ def embedUserFrequency():
     else:
         cosineSimilarityScore = dot(userFrequencyEmbedding, candidateFrequencyEmbedding) / (userNorm * candidateNorm)
 
+    # Node translation: return res.json()
     return jsonify({
         "userFrequencyEmbedding" : userFrequencyEmbedding,
         "candidateFrequencyEmbedding" : candidateFrequencyEmbedding,
         "dimension" : len(userFrequencyEmbedding),
         "cosineSimilarityScore" : cosineSimilarityScore
     })
+
 
 if __name__ == "__main__":
     app.run()
