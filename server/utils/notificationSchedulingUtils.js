@@ -77,7 +77,7 @@ const notifyUsers = async (usersToNotify, socket) => {
         const candidates = await res.json();
         topCandidate = candidates[0];
 
-        const suggestionMessage = `Suggested for ${user.username}: ${topCandidate.username}`;
+        const suggestionMessage = `For @${user.username}: You might be interested in @${topCandidate.username}`;
         socket.emit(DELIVER_NOTIFICATION, `${suggestionMessage} | ${new Date().toLocaleTimeString()}`);
     }
 };
