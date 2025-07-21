@@ -6,7 +6,7 @@ const SECONDS_IN_HOUR = MINUTES_IN_HOUR * SECONDS_IN_MINUTE;
 import { LIKE, COMMENT, CREATE } from "./constants.js";
 
 // Converts a date object to a number of seconds since midnight
-const toSecondOfDay = (date) => {
+export const toSecondOfDay = (date) => {
     return date.getHours() * SECONDS_IN_HOUR + date.getMinutes() * SECONDS_IN_MINUTE + date.getSeconds();
 };
 
