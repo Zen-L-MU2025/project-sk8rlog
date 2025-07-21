@@ -10,6 +10,20 @@ export const DISCONNECT = "disconnect";
 export const REQUEST_NOTIFICATION = "request notification";
 export const DELIVER_NOTIFICATION = "deliver notification";
 
+/*
+Guide to cron interval strings (from node-cron docs):
+┌────────────── second (optional)
+│ ┌──────────── minute
+│ │ ┌────────── hour
+│ │ │ ┌──────── day of month
+│ │ │ │ ┌────── month
+│ │ │ │ │ ┌──── day of week
+│ │ │ │ │ │
+│ │ │ │ │ │
+* * * * * *
+To specify an amount at any position, append /<number> to the star (*)
+Leaving all stars (*) will default to every minute
+*/
 export const CRON_INTERVAL_STRING = "*/40 * * * * *";
 export const CRON_INTERVAL_DESCRIPTOR = "40 seconds";
 
