@@ -1,5 +1,5 @@
 import { PrismaClient } from "../generated/prisma/index.js";
-import { RANKING_MODES, POST_OVR_WEIGHT, POPULARITY_OVR_WEIGHT } from "./constants.js";
+import { RANKING_MODES, POST_OVR_WEIGHT, POPULARITY_OVR_WEIGHT, NO_CORRELATION } from "./constants.js";
 import { scorePosts } from "./serverPostRecommendationUtils.js";
 
 const prisma = new PrismaClient();
@@ -40,6 +40,26 @@ const evaluateCandidate = async (user, candidate) => {
     // }
 
     // Rank posts using created recommendation algorithm
+    const { postOvr, popularityOvr } = await computeCandidatePostMetrics(user, candidate);
+
+    const baseScore = postOvr * POST_OVR_WEIGHT + popularityOvr * POPULARITY_OVR_WEIGHT;
+
+    // Compute the similarity score between the users
+    const cosineSimilarityScore = await computeSimilarityScore(user, candidate);
+
+    // Convert the similarity score to a scalar factor
+    const similarityFactor = cosineSimilarityScore < 0 ? -1 + cosineSimilarityScore : 1 + cosineSimilarityScore;
+
+    // Find the mutual following frequency between the users
+    const mutualFollowFrequency = computeMutualFollowingFrequency(user, candidate);
+
+    // Finalize and return the candidate's score
+    const candidateScore = baseScore * similarityFactor * (1 + mutualFollowFrequency);
+    return candidateScore;
+};
+
+// Computes overall posts score and popularity score for a candidate
+const computeCandidatePostMetrics = async (user, candidate) => {
     const candidatePosts = await prisma.post.findMany({ where: { authorID: candidate.userID } });
     let postOvr = 0;
     let popularityOvr = 0;
@@ -56,8 +76,11 @@ const evaluateCandidate = async (user, candidate) => {
         popularityOvr = totalPopularity / candidatePosts.length;
     }
 
-    const baseScore = postOvr * POST_OVR_WEIGHT + popularityOvr * POPULARITY_OVR_WEIGHT;
+    return { postOvr, popularityOvr };
+};
 
+// Vectorize the users' frequency objects and performs a cosine similarity comparison to get a similarity score
+const computeSimilarityScore = async (user, candidate) => {
     // Vectorize the users' frequency objects and perform a cosine similarity comparison
     const userFrequency = user.user_Frequency || {};
     const candidateFrequency = candidate.user_Frequency || {};
@@ -79,15 +102,17 @@ const evaluateCandidate = async (user, candidate) => {
         .then((data) => {
             userEmbedding = data.userEmbedding;
             candidateEmbedding = data.candidateEmbedding;
-            cosineSimilarityScore = isNaN(data.cosineSimilarityScore) ? 0.1738 : data.cosineSimilarityScore;
+            cosineSimilarityScore = isNaN(data.cosineSimilarityScore) ? NO_CORRELATION : data.cosineSimilarityScore;
         })
         .catch((err) => {
             console.log(err);
         });
 
-    // Convert the similarity score to a scalar factor
-    const similarityFactor = cosineSimilarityScore < 0 ? -1 + cosineSimilarityScore : 1 + cosineSimilarityScore;
+    return cosineSimilarityScore;
+};
 
+// Calculates the mutual following frequency between the user and candidate
+const computeMutualFollowingFrequency = (user, candidate) => {
     // Find users' following overlap
     const userFollowing = user.followedUsers;
     const candidateFollowing = candidate.followedUsers;
@@ -98,7 +123,5 @@ const evaluateCandidate = async (user, candidate) => {
     let mutualFollowFrequency = followingOverlap.length / followingUnion.size;
     mutualFollowFrequency = isNaN(mutualFollowFrequency) ? 0 : mutualFollowFrequency;
 
-    // Finalize and return the candidate's score
-    const candidateScore = baseScore * similarityFactor * (1 + mutualFollowFrequency);
-    return candidateScore;
+    return mutualFollowFrequency;
 };
