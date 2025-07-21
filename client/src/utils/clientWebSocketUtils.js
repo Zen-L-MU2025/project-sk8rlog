@@ -8,9 +8,7 @@ export const establishWebSocketConnection = (setNotifications, setHasNewNotifica
     const identifier = new Date().getMilliseconds();
 
     const socket = io(VITE_SERVER_URL);
-    socket.on(CONNECT, () => {
-        console.log(`Websocket connection established at ${new Date().toLocaleTimeString()}`);
-    });
+    socket.on(CONNECT, () => {});
 
     socket.on(DISCONNECT, () => {
         console.log(`disconnected at ${new Date().toLocaleTimeString()}`);
