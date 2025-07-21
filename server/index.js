@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
 const { createServer } = require("node:http");
+const { requestNotificationScheduling } = require("./utils/notificationSchedulingUtils");
 
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
@@ -50,7 +51,10 @@ enableCORSinBucket();
 const server = createServer(app);
 
 // Init socket instance
-createWebSocket(server, corsConfig);
+const socketServer = createWebSocket(server, corsConfig);
+
+// Invoke notification scheduling utils
+requestNotificationScheduling(socketServer);
 
 server.listen(PORT, () => {
     console.log(`Server listening on port http://localhost:${PORT}`);
