@@ -4,7 +4,7 @@ const router = require("express").Router();
 const webtoken = require("jsonwebtoken");
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 const STATUS_CODES = require("../statusCodes");
-const { LIKE } = require("../utils/constants");
+const { LIKE, FOLLOW, UNFOLLOW } = require("../utils/constants");
 const { recalculateSessionAverages, recalculateInteractionAverages } = require("../utils/sessionUtils");
 
 const prisma = new PrismaClient();
@@ -28,6 +28,13 @@ router.post("/register", async (req, res) => {
                 password,
                 name,
                 location,
+            },
+        });
+
+        await prisma.sessionData.create({
+            data: {
+                userID: newUser.userID,
+                lastSessionStartTime: new Date(),
             },
         });
 
@@ -128,6 +135,30 @@ router.put("/:userID/likedPosts/:action", async (req, res, _next) => {
         await recalculateInteractionAverages(userID, prisma, LIKE);
 
         return res.status(STATUS_CODES.OK).json({ message: "Liked posts updated" });
+    } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+    }
+});
+
+// PUT /users/:userID/followedUsers/:action
+// Given a userID, another user, and an action (follow or unfollow), action is performed on user's followedUsers array
+router.put("/:userID/followedUsers/:action", async (req, res, _next) => {
+    try {
+        const { userID, action } = req.params;
+        const { userBeingReferencedID } = req.body;
+
+        const user = await prisma.user.findUnique({ where: { userID } });
+        await prisma.user.update({
+            where: { userID },
+            data: {
+                followedUsers:
+                    action === FOLLOW
+                        ? [...user.followedUsers, userBeingReferencedID]
+                        : user.followedUsers.filter((uID) => uID !== userBeingReferencedID),
+            },
+        });
+
+        return res.status(STATUS_CODES.OK).json({ message: "Followed users updated" });
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
     }

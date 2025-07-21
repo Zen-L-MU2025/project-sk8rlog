@@ -33,3 +33,6 @@ export const RANKING_MODES = {
     NEAR_YOU: "near_you",
     DEFAULT: "default",
 };
+
+export const FOLLOW = "follow";
+export const UNFOLLOW = "unfollow";
