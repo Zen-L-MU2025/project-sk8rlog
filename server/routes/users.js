@@ -38,6 +38,12 @@ router.post("/register", async (req, res) => {
             },
         });
 
+        await prisma.interactionData.create({
+            data: {
+                userID: newUser.userID,
+            },
+        });
+
         const tokenPayload = { userID: newUser.userID, username: newUser.username };
         const token = webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: "1h" });
 

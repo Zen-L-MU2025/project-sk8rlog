@@ -7,3 +7,6 @@ node_modules
 node_modules/
 
 sk8rlog.json
+
+__pycache__/
+GoogleNews-vectors-negative300.bin
