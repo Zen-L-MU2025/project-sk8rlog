@@ -7,10 +7,10 @@ export const createWebSocket = (server, corsConfig) => {
     const socketServer = new Server(server, { cors: corsConfig });
 
     socketServer.on(CONNECTION, (socket) => {
-        console.log("connected established");
+        console.log("socket utils: connection established");
 
         socket.on(DISCONNECT, () => {
-            console.log("connection terminated");
+            console.log("socket utils: connection terminated");
         });
 
         socket.on(REQUEST_NOTIFICATION, () => {
@@ -21,6 +21,8 @@ export const createWebSocket = (server, corsConfig) => {
         // Dummy system: periodically ping for a "new notification"
         periodicPing(socket);
     });
+
+    return socketServer;
 };
 
 // Dummy system: Rolls for a notification delivery every PING_INTERVAL ms
