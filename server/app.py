@@ -8,7 +8,7 @@ import numpy as np
 model_path = 'GoogleNews-vectors-negative300.bin'
 model = KeyedVectors.load_word2vec_format(model_path, binary=True)
 
-# Vectorizes each keyword in a user frequency object and averages out all vectors as an embedding for that particualr user
+# Vectorizes each keyword in a user frequency object and averages out all vectors as an embedding for that particular user
 def vectorize(keywords, frequencies):
     vectors = []
     collectiveWeight = 0
