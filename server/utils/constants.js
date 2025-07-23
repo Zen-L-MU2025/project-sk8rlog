@@ -68,3 +68,6 @@ export const LIKE_POINT_VALUE = 1;
 export const COMMENT_POINT_VALUE = 3;
 export const INTERACTION_POINTS_THRESHOLD = 4;
 export const USER_TIMING_BONUS = 2;
+
+export const USER_SUGGESTION = "user suggestion";
+export const POST_SUGGESTION = "post suggestion";
