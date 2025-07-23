@@ -1,5 +1,5 @@
 import { PrismaClient } from "../generated/prisma/index.js";
-import { RANKING_MODES, POST_OVR_WEIGHT, POPULARITY_OVR_WEIGHT, NO_CORRELATION } from "./constants.js";
+import { RANKING_MODES, POST_OVR_WEIGHT, POPULARITY_OVR_WEIGHT, NO_CORRELATION, MILLISECONDS_IN_DAY, RECENCY_CUTOFF_IN_DAYS } from "./constants.js";
 import { scorePosts } from "./serverPostRecommendationUtils.js";
 
 const prisma = new PrismaClient();
@@ -34,10 +34,11 @@ const evaluateCandidate = async (user, candidate) => {
         return NaN;
     }
 
-    // for when we have suggested markers
-    // if (user.suggestedCandidates.includes(candidate.userID)) {
-    //     return -Infinity;
-    // }
+    const isSuggestable = await checkSuggestionsEligibility(user, candidate);
+
+    if (!isSuggestable) {
+        return -Infinity;
+    }
 
     // Rank posts using created recommendation algorithm
     const { postOvr, popularityOvr } = await computeCandidatePostMetrics(user, candidate);
@@ -56,6 +57,30 @@ const evaluateCandidate = async (user, candidate) => {
     // Finalize and return the candidate's score
     const candidateScore = baseScore * similarityFactor * (1 + mutualFollowFrequency);
     return candidateScore;
+};
+
+// Returns boolean indicating if the candidate is eligible for suggestion
+const checkSuggestionsEligibility = async (user, candidate) => {
+    // Get recently suggested users and last suggestion date for candidate being evaluated
+    const recentlySuggestedUsers = user.suggestedUsers;
+    const lastSuggestedDate = recentlySuggestedUsers[candidate.userID] || null;
+
+    // If the candidate was recently suggested check, if they're eligible for re-suggestion
+    if (lastSuggestedDate) {
+        const daysSinceLastSuggested = (Date.now() - new Date(lastSuggestedDate)) / MILLISECONDS_IN_DAY;
+
+        // Too soon
+        if (daysSinceLastSuggested < RECENCY_CUTOFF_IN_DAYS) {
+            return false;
+        }
+
+        // It's been long enough, remove the candidate from the recently suggested list
+        else {
+            delete recentlySuggestedUsers[candidate.userID];
+            await prisma.user.update({ where: { userID: user.userID }, data: { suggestedUsers: recentlySuggestedUsers } });
+            return true;
+        }
+    }
 };
 
 // Computes overall posts score and popularity score for a candidate
