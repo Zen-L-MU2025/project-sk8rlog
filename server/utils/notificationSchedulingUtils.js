@@ -53,7 +53,7 @@ const getUsersToNotify = async (now) => {
 
 // Grab top candidate for each user lined up and emit the notification through the WebSocket
 const notifyUsers = async (usersToNotify, socketServer) => {
-    for (const user of usersToNotify) {
+    usersToNotify.forEach(async (user) => {
         // Acquire candidates and pick out top candidate (first in array)
         const res = await fetch(`http://localhost:3000/recommendations/acquireCandidates/for/${user.userID}`).catch((error) => {
             console.log(error);
@@ -63,5 +63,5 @@ const notifyUsers = async (usersToNotify, socketServer) => {
 
         const suggestionMessage = `Hey ${user.name || `@${user.username}`}, you might be interested in @${topCandidate.username}`;
         socketServer.to(`user_${user.userID}`).emit(DELIVER_NOTIFICATION, `${suggestionMessage} | ${new Date().toLocaleTimeString()}`);
-    }
+    });
 };
