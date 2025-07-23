@@ -1,6 +1,13 @@
 import cron from "node-cron";
 import { toSecondOfDay } from "./sessionUtils.js";
-import { DELIVER_NOTIFICATION, CRON_INTERVAL_STRING, CRON_INTERVAL_DESCRIPTOR, HALF_HOUR_IN_SECONDS, MIDDLE_OF_DAY_IN_SECONDS } from "./constants.js";
+import {
+    DELIVER_NOTIFICATION,
+    CRON_INTERVAL_STRING,
+    CRON_INTERVAL_DESCRIPTOR,
+    HALF_HOUR_IN_SECONDS,
+    MIDDLE_OF_DAY_IN_SECONDS,
+    USER_SUGGESTION,
+} from "./constants.js";
 import { PrismaClient } from "../generated/prisma/index.js";
 const prisma = new PrismaClient();
 
@@ -28,6 +35,7 @@ const getUsersToNotify = async (now) => {
     const halfHourAfter = nowAsSecondOfDay + HALF_HOUR_IN_SECONDS;
 
     const users = await prisma.user.findMany();
+    // TESTING: return users here to trigger mass notify
 
     // Iterate users and calculate best times
     for (const user of users) {
@@ -77,7 +85,11 @@ const notifyUsers = async (usersToNotify, socketServer) => {
             },
         });
 
-        const suggestionMessage = `Hey ${user.name || `@${user.username}`}, you might be interested in @${topCandidate.username}`;
-        socketServer.to(`user_${user.userID}`).emit(DELIVER_NOTIFICATION, `${suggestionMessage} | ${new Date().toLocaleTimeString()}`);
+        socketServer.to(`user_${user.userID}`).emit(DELIVER_NOTIFICATION, {
+            recipient: [user.name || `@${user.username}`],
+            type: USER_SUGGESTION,
+            data: topCandidate,
+            timestamp: new Date().toLocaleTimeString(),
+        });
     });
 };
