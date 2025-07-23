@@ -24,8 +24,8 @@ const fireNotifications = async (socketServer) => {
 // Calculates users' best notification times and queues them to be notified if it falls within the cron job window
 const getUsersToNotify = async (now) => {
     const nowAsSecondOfDay = toSecondOfDay(now);
-    const halfHourBefore = nowAsSecondOfDay - 20 * HALF_HOUR_IN_SECONDS;
-    const halfHourAfter = nowAsSecondOfDay + 20 * HALF_HOUR_IN_SECONDS;
+    const halfHourBefore = nowAsSecondOfDay - HALF_HOUR_IN_SECONDS;
+    const halfHourAfter = nowAsSecondOfDay + HALF_HOUR_IN_SECONDS;
 
     const users = await prisma.user.findMany();
 
