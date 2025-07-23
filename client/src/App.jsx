@@ -9,7 +9,7 @@ import Posts from "./main/Posts";
 import SinglePost from "./main/SinglePost";
 
 import UserContext from "/src/utils/UserContext.js";
-import { establishWebSocketConnection } from "/src/utils/clientWebSocketUtils.js";
+import { establishWebSocketConnection, joinUserSocketRoom } from "/src/utils/clientWebSocketUtils.js";
 import { CLIPS, BLOGS } from "/src/utils/constants";
 
 import "./App.css";
@@ -18,10 +18,24 @@ function App() {
     const [notifications, setNotifications] = useState([]);
     const [hasNewNotifications, setHasNewNotifications] = useState(false);
     const [activeUser, setActiveUser] = useState({});
+    const [socket, setSocket] = useState(null);
+
+    const connectSocket = async () => {
+        setSocket(await establishWebSocketConnection(setNotifications, setHasNewNotifications, activeUser));
+    };
+
+    const joinRoom = async () => {
+        await joinUserSocketRoom(socket, activeUser);
+    };
 
     useEffect(() => {
-        establishWebSocketConnection(setNotifications, setHasNewNotifications);
+        connectSocket();
     }, []);
+
+    // Join user socket room on successful load
+    useEffect(() => {
+        joinRoom();
+    }, [socket, activeUser]);
 
     return (
         <>
