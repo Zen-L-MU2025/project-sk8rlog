@@ -11,8 +11,7 @@ export const establishWebSocketConnection = (setNotifications, setHasNewNotifica
 
     socket.on(DISCONNECT, () => {});
 
-    socket.on(DELIVER_NOTIFICATION, (content) => {
-        const notification = `${content}`;
+    socket.on(DELIVER_NOTIFICATION, (notification) => {
         setNotifications((prev) => [notification, ...prev]);
         setHasNewNotifications(true);
     });
