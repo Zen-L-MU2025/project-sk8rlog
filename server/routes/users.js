@@ -155,6 +155,13 @@ router.put("/:userID/followedUsers/:action", async (req, res, _next) => {
         const { userBeingReferencedID } = req.body;
 
         const user = await prisma.user.findUnique({ where: { userID } });
+
+        // Remove user to follow from suggested users if they're present in it
+        const recentlySuggestedUsers = user.suggestedUsers;
+        if (recentlySuggestedUsers[userBeingReferencedID]) {
+            delete recentlySuggestedUsers[candidate.userID];
+        }
+
         await prisma.user.update({
             where: { userID },
             data: {
@@ -162,6 +169,8 @@ router.put("/:userID/followedUsers/:action", async (req, res, _next) => {
                     action === FOLLOW
                         ? [...user.followedUsers, userBeingReferencedID]
                         : user.followedUsers.filter((uID) => uID !== userBeingReferencedID),
+
+                suggestedUsers: recentlySuggestedUsers,
             },
         });
 
