@@ -3,7 +3,7 @@ import { Link } from "react-router";
 
 import UserContext from "/src/utils/UserContext.js";
 import { logout } from "/src/utils/userUtils.js";
-import { handleNotificationStatuses } from "/src/utils/notificationsUtils.js";
+import { handleNotificationStatuses, formatNotification } from "/src/utils/notificationsUtils.jsx";
 
 import skateboard from "/src/assets/skateboard.png";
 import notificationbell from "/src/assets/notificationbell.png";
@@ -54,7 +54,7 @@ const Header = ({ HEADER_TEXT, activeUser }) => {
                     <div className="notifications">
                         {notifications?.length ? (
                             notifications.map((notification) => {
-                                return <p key={new Date().getTime() * Math.random()}>{notification}</p>;
+                                return formatNotification(notification, toggleNotifications);
                             })
                         ) : (
                             <p>No notifications...</p>
