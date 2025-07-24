@@ -22,7 +22,7 @@ export const handleLoginOrRegister = async (formData, submissionType, setIsSucce
 };
 
 // Handle registration: store token and new user in session storage on completion
-export const register = async (formObject, setIsSuccessful) => {
+const register = async (formObject, setIsSuccessful) => {
     let token, newUserID;
 
     await axios
@@ -50,7 +50,7 @@ export const register = async (formObject, setIsSuccessful) => {
 };
 
 // Handle login: store token and user in session storage on completion
-export const login = async (formObject, setIsSuccessful) => {
+const login = async (formObject, setIsSuccessful) => {
     let token, userID;
 
     await axios
