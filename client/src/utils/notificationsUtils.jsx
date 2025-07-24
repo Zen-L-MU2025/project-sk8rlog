@@ -34,6 +34,7 @@ export const formatNotification = (notification, toggleNotifications) => {
                 </p>
             );
 
+        // Note: Post notifications are currently not implemented, this is for future reference
         case POST_SUGGESTION:
             const post = data;
             return (
