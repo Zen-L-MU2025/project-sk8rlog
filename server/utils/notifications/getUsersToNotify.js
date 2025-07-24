@@ -1,4 +1,4 @@
-import { toSecondOfDay } from "../sessionUtils.js";
+import toSecondOfDay from "../sessions/toSecondOfDay.js";
 import { HALF_HOUR_IN_SECONDS, MIDDLE_OF_DAY_IN_SECONDS } from "../constants.js";
 import { PrismaClient } from "../../generated/prisma/index.js";
 const prisma = new PrismaClient();

@@ -5,7 +5,8 @@ const webtoken = require("jsonwebtoken");
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 const STATUS_CODES = require("../statusCodes");
 const { LIKE, FOLLOW, UNFOLLOW } = require("../utils/constants");
-const { recalculateSessionAverages, recalculateInteractionAverages } = require("../utils/sessionUtils");
+const recalculateSessionAverages = require("../utils/sessions/recalculateSessionAverages").default;
+const recalculateInteractionAverages = require("../utils/sessions/recalculateInteractionAverages").default;
 
 const prisma = new PrismaClient();
 

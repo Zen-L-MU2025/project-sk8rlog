@@ -29,7 +29,9 @@ export const CRON_INTERVAL_STRING = "*/15 * * * * *";
 export const CRON_INTERVAL_DESCRIPTOR = "15 seconds";
 
 // Key values used in timing calculations
-const SECONDS_IN_MINUTE = 60;
+export const MS_IN_SECOND = 1000;
+export const SECONDS_IN_MINUTE = 60;
+export const SECONDS_IN_HOUR = 60 * SECONDS_IN_MINUTE;
 export const MILLISECONDS_IN_DAY = 86400000;
 export const HALF_HOUR_IN_SECONDS = 30 * SECONDS_IN_MINUTE;
 export const MIDDLE_OF_DAY_IN_SECONDS = 12 * 60 * SECONDS_IN_MINUTE;
