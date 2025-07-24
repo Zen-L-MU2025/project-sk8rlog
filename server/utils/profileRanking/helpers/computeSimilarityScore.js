@@ -9,7 +9,7 @@ const computeSimilarityScore = async (user, candidate) => {
     const userKeywords = Object.keys(userFrequency);
     const candidateKeywords = Object.keys(candidateFrequency);
 
-    let userEmbedding, candidateEmbedding, cosineSimilarityScore;
+    let cosineSimilarityScore;
 
     // Send data to Python server to generate embeddings and compute cosine similarity
     await fetch("http://localhost:1738/embedUserFrequency", {
@@ -21,8 +21,6 @@ const computeSimilarityScore = async (user, candidate) => {
     })
         .then((res) => res.json())
         .then((data) => {
-            userEmbedding = data.userEmbedding;
-            candidateEmbedding = data.candidateEmbedding;
             cosineSimilarityScore = isNaN(data.cosineSimilarityScore) ? NO_CORRELATION : data.cosineSimilarityScore;
         })
         .catch((err) => {
