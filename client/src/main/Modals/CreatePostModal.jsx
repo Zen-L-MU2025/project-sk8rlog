@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 import { uploadPost } from "/src/utils/postUtils";
-import { CLIPS, BLOGS, DEFAULT } from "/src/utils/constants";
+import { CLIPS, BLOGS, POST_TYPE_DEFAULT } from "/src/utils/constants";
 
 import "/src/css/createPostModal.css";
 
 const CreatePostModal = ({ activeUser, toggleCreatePostModal, setIsOutdated }) => {
-    const [postType, setPostType] = useState(DEFAULT);
+    const [postType, setPostType] = useState(POST_TYPE_DEFAULT);
 
     const handleForm = async (formData) => {
         await uploadPost(postType, formData, activeUser.userID, activeUser.location);
@@ -23,7 +23,7 @@ const CreatePostModal = ({ activeUser, toggleCreatePostModal, setIsOutdated }) =
             <form id="createModalContent" onClick={(event) => event.stopPropagation()} action={handleForm}>
                 <h2>New Post!</h2>
                 <select id="postType" onChange={handleSelect}>
-                    <option value={DEFAULT}>Select Post Type</option>
+                    <option value={POST_TYPE_DEFAULT}>Select Post Type</option>
                     <option value={CLIPS}>Clip</option>
                     <option value={BLOGS}>Blog</option>
                 </select>
@@ -51,7 +51,7 @@ const CreatePostModal = ({ activeUser, toggleCreatePostModal, setIsOutdated }) =
                     </>
                 )}
 
-                {postType !== DEFAULT && <button type="submit">Upload</button>}
+                {postType !== POST_TYPE_DEFAULT && <button type="submit">Upload</button>}
             </form>
         </section>
     );

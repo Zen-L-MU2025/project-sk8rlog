@@ -7,7 +7,7 @@ import Footer from "./Footer";
 import UserContext from "/src/utils/UserContext";
 import { getUserByID, verifyAccess, refreshUserSession } from "/src/utils/userUtils";
 import { getPostByID, handleLikeOrUnlikePost, getComments, createComment } from "/src/utils/postUtils";
-import { CLIPS, BLOGS, toSingular, ORIGINS, LIKE, UNLIKE, PROFILE_NOT_APPLICABLE } from "/src/utils/constants";
+import { CLIPS, BLOGS, toSingular, ORIGINS, LIKE, UNLIKE, PROFILE_ORIGIN_NOT_APPLICABLE } from "/src/utils/constants";
 
 import "/src/css/singlePost.css";
 import emptyheart from "/src/assets/heart.png";
@@ -129,7 +129,7 @@ const SinglePost = () => {
                     </div>
                 </section>
 
-                <Link to={`/${ORIGINS[origin]}/${profileID !== PROFILE_NOT_APPLICABLE ? profileID : ""}`}>
+                <Link to={`/${ORIGINS[origin]}/${profileID !== PROFILE_ORIGIN_NOT_APPLICABLE ? profileID : ""}`}>
                     <p className="goBackButton">Go Back</p>
                 </Link>
             </div>

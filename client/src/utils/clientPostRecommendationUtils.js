@@ -1,5 +1,5 @@
 import { removeStopwords, eng } from "stopword";
-import { LIKE, NON_ALPHANUMERIC_REGEX, MILLISECONDS_IN_DAY, AGE_CUTOFF_IN_DAYS } from "./constants.js";
+import { LIKE, NON_ALPHANUMERIC_REGEX } from "./constants.js";
 
 // Tokenize the content of a post, remove stop words
 // If the user has liked the post, increment the frequency of the tokens in the post; decrement if user is unliking
@@ -31,16 +31,6 @@ export const tokenize = async (post, activeUser, action) => {
     });
 
     return userFrequency;
-};
-
-// Filters out posts that are older than AGE_CUTOFF_IN_DAYS (7) days
-const filterPostsByCutoff = (posts) => {
-    return posts?.filter((post) => {
-        const postAgeInMS = new Date() - new Date(post.creationDate);
-        const postAgeInDays = Math.floor(postAgeInMS / MILLISECONDS_IN_DAY);
-        post["ageInDays"] = postAgeInDays;
-        return postAgeInDays < AGE_CUTOFF_IN_DAYS;
-    });
 };
 
 // Filter out stop words and non-alphanumeric characters from the content of a post
