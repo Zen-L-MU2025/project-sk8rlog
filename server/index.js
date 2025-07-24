@@ -2,14 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
 const { createServer } = require("node:http");
-const { requestNotificationScheduling } = require("./utils/notificationSchedulingUtils");
+const requestNotificationScheduling = require("./utils/notifications/requestNotificationScheduling.js").default;
 
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
 const postsRouter = require("./routes/posts");
 const recommendationsRouter = require("./routes/recommendations");
 
-const { enableCORSinBucket } = require("./utils/GCS");
+const { enableCORSinBucket } = require("./utils/googleCloudStorageUtils");
 const { createWebSocket } = require("./utils/serverWebSocketUtils");
 
 const corsConfig = {

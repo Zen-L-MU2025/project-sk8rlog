@@ -1,5 +1,3 @@
-// Sample of Google Cloud Storage usage in Sk8rlog
-
 import { Storage } from "@google-cloud/storage";
 
 // Enable CORS

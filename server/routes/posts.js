@@ -2,9 +2,9 @@ const { PrismaClient } = require("../generated/prisma");
 const router = require("express").Router();
 const STATUS_CODES = require("../statusCodes");
 const { QUICKTIME, MOV, COMMENT, CREATE } = require("../utils/constants");
-const { recalculateInteractionAverages } = require("../utils/sessionUtils");
-const { scorePosts } = require("../utils/serverPostRecommendationUtils");
-const GCS = require("../utils/GCS");
+const recalculateInteractionAverages = require("../utils/sessions/recalculateInteractionAverages").default;
+const scorePosts = require("../utils/postRecommendations/scorePosts").default;
+const { uploadFile, deleteFile } = require("../utils/googleCloudStorageUtils");
 const { getVideoDurationInSeconds } = require("get-video-duration");
 
 const Multer = require("multer");
@@ -31,7 +31,7 @@ router.get("/", async (req, res, _next) => {
 });
 
 // POST /posts/uploadFile
-// Uploads a pending post's file to GCS and returns the URL
+// Uploads a pending post's file to googleCloudStorageUtils and returns the URL
 router.post("/uploadFile", multer.single("postFile"), async (req, res, _next) => {
     try {
         if (!req.file) {
@@ -43,7 +43,7 @@ router.post("/uploadFile", multer.single("postFile"), async (req, res, _next) =>
             extension = MOV;
         }
         const DESTINATION = `${crypto.randomUUID()}.${extension}`;
-        const objectURL = await GCS.uploadFile(req.file, DESTINATION);
+        const objectURL = await uploadFile(req.file, DESTINATION);
 
         return res.status(STATUS_CODES.CREATED).json({ fileURL: objectURL, message: "File uploaded" });
     } catch (error) {
@@ -156,11 +156,11 @@ router.delete("/delete/:postID", async (req, res, _next) => {
 });
 
 // DELETE /posts/deleteFile
-// Deletes a post's file from GCS
+// Deletes a post's file from googleCloudStorageUtils
 router.delete("/deleteFile", async (req, res, _next) => {
     try {
         const { fileURL } = req.body;
-        await GCS.deleteFile(fileURL);
+        await deleteFile(fileURL);
 
         return res.status(STATUS_CODES.OK).json({ message: "File deleted" });
     } catch (error) {

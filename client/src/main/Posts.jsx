@@ -7,9 +7,9 @@ import Footer from "./Footer";
 import PostCard from "./PostCard";
 
 import UserContext from "/src/utils/UserContext";
-import { verifyAccess, refreshUserSession } from "/src/utils/UserUtils";
-import { getAllPostsByType } from "/src/utils/postUtils";
-import { POSTS, RANKING_MODES } from "/src/utils/constants";
+import { verifyAccess, refreshUserSession } from "/src/utils/userUtils/userAuthUtils.js";
+import { getAllPostsByType } from "/src/utils/postUtils/postRetrievalUtils";
+import { POST_ORIGINS, RANKING_MODES } from "/src/utils/constants";
 
 import "/src/css/hasSidebar.css";
 import "/src/css/posts.css";
@@ -71,7 +71,7 @@ const Posts = ({ postType }) => {
                             <p>Loading posts...</p>
                         ) : (
                             posts?.map((post) => {
-                                return <PostCard key={post.postID} post={post} postType={postType} origin={POSTS[postType]} />;
+                                return <PostCard key={post.postID} post={post} postType={postType} origin={POST_ORIGINS[postType]} />;
                             })
                         )}
                     </div>

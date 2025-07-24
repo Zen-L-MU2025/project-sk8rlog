@@ -1,7 +1,17 @@
+/* GENERAL */
+
+// Sign-In Options
+export const OPTIONS = {
+    LOGIN: "login",
+    REGISTER: "register",
+};
+
+// Post types to dictate views in app
 export const CLIPS = "Clips";
 export const BLOGS = "Blogs";
-export const DEFAULT = "default";
+export const POST_TYPE_DEFAULT = "default";
 
+// Converts to singular form of post type for styling
 export const toSingular = (arg) => {
     if (arg === CLIPS) {
         return "Clip";
@@ -12,6 +22,7 @@ export const toSingular = (arg) => {
     }
 };
 
+// Used to stylize app greeting in Header
 export const WEEKDAYS = {
     0: "Sunday",
     1: "Monday",
@@ -22,37 +33,38 @@ export const WEEKDAYS = {
     6: "Saturday",
 };
 
+// Limits number of posts that load on Home page
 export const HOME_PAGE_POST_COUNT = 4;
 
+/**********************************************/
+
+/* PAGINATION */
+
+// Utility constants to handle redirection logic in client, largely concerning the "Go Back" button
 const CLIPS_ORIGIN = "c";
 const BLOGS_ORIGIN = "b";
-
-export const POSTS = {
+export const POST_ORIGINS = {
     Clips: CLIPS_ORIGIN,
     Blogs: BLOGS_ORIGIN,
 };
 export const HOME_ORIGIN = "h";
 export const PROFILE_ORIGIN = "u";
-
 export const ORIGINS = {
     [CLIPS_ORIGIN]: "clips",
     [BLOGS_ORIGIN]: "blogs",
     [HOME_ORIGIN]: "home",
     [PROFILE_ORIGIN]: "profile",
 };
+export const PROFILE_ORIGIN_NOT_APPLICABLE = "_";
 
-export const PROFILE_NOT_APPLICABLE = "_";
+/**********************************************/
 
-export const LIKE = "like";
-export const UNLIKE = "unlike";
+/* RECOMMENDATION HELPERS */
 
+// Regex for post tokenization
 export const NON_ALPHANUMERIC_REGEX = /[^a-zA-Z0-9]/;
 
-export const MILLISECONDS_IN_DAY = 86400000;
-export const AGE_CUTOFF_IN_DAYS = 7;
-
-export const NOT_APPLICABLE = -1;
-
+// For filtering posts
 export const RANKING_MODES = {
     RECOMMENDED: "reccommended",
     LATEST: "latest",
@@ -61,19 +73,22 @@ export const RANKING_MODES = {
     DEFAULT: "default",
 };
 
-export const CONNECT = "connect";
-export const DISCONNECT = "disconnect";
-export const REQUEST_NOTIFICATION = "request notification";
-export const DELIVER_NOTIFICATION = "deliver notification";
-export const ENTER_ROOM = "enter room";
+/**********************************************/
 
+/* EVENT TYPES */
+
+// App interaction event types
+export const LIKE = "like";
+export const UNLIKE = "unlike";
 export const FOLLOW = "follow";
 export const UNFOLLOW = "unfollow";
 
-export const OPTIONS = {
-    LOGIN: "login",
-    REGISTER: "register",
-};
-
+// WebSocket event types
+export const CONNECT = "connect";
+export const DISCONNECT = "disconnect";
+export const REQUEST_NOTIFICATION = "request notification";
+export const ENTER_ROOM = "enter room";
+export const DELIVER_NOTIFICATION = "deliver notification";
+// DELIVER_NOTIFICATION subtypes
 export const USER_SUGGESTION = "user suggestion";
 export const POST_SUGGESTION = "post suggestion";

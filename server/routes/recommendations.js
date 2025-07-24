@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { rankCandidates } = require("../utils/profileRankingUtils");
+const rankCandidates = require("../utils/profileRanking/rankCandidates").default;
 const STATUS_CODES = require("../statusCodes");
 
 router.get("/acquireCandidates/for/:userID", async (req, res) => {

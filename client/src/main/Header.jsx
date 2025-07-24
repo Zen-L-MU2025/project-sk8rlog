@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router";
 
 import UserContext from "/src/utils/UserContext.js";
-import { logout } from "/src/utils/userUtils.js";
+import { logout } from "/src/utils/userUtils/userAccessUtils.js";
 import { handleNotificationStatuses, formatNotification } from "/src/utils/notificationsUtils.jsx";
 
 import skateboard from "/src/assets/skateboard.png";

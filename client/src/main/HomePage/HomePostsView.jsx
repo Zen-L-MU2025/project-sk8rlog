@@ -5,7 +5,7 @@ import PostCard from "/src/main/PostCard";
 
 import UserContext from "/src/utils/UserContext";
 import { HOME_PAGE_POST_COUNT, HOME_ORIGIN, RANKING_MODES } from "/src/utils/constants";
-import { getAllPostsByType } from "/src/utils/postUtils";
+import { getAllPostsByType } from "/src/utils/postUtils/postRetrievalUtils";
 
 import "/src/css/home.css";
 
