@@ -61,3 +61,10 @@ export const POPULARITY_OVR_WEIGHT = 0.3;
 export const NO_CORRELATION = 0.0;
 
 export const RECENCY_CUTOFF_IN_DAYS = 2;
+
+export const RELEVANCY_CUTOFF = 5;
+export const MEANINFUL_INTERACTION_BONUS = 3;
+export const LIKE_POINT_VALUE = 1;
+export const COMMENT_POINT_VALUE = 3;
+export const INTERACTION_POINTS_THRESHOLD = 4;
+export const USER_TIMING_BONUS = 2;
