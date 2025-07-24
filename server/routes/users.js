@@ -156,32 +156,36 @@ router.put("/:userID/followedUsers/:action", async (req, res, _next) => {
 
         const user = await prisma.user.findUnique({ where: { userID } });
 
-        // Remove user to follow from suggested users if they're present in it
-        const recentlySuggestedUsers = user.suggestedUsers;
-        let isSuggestedUsersUpdated = false;
+        const updatedRecentlySuggestedUsers = updateRecentlySuggestedUsers(user, userBeingReferencedID);
 
-        if (recentlySuggestedUsers[userBeingReferencedID]) {
-            delete recentlySuggestedUsers[userBeingReferencedID];
-            isSuggestedUsersUpdated = true;
-        }
+        await prisma.user.update({
+            where: { userID },
+            data: {
+                followedUsers:
+                    action === FOLLOW
+                        ? [...user.followedUsers, userBeingReferencedID]
+                        : user.followedUsers.filter((uID) => uID !== userBeingReferencedID),
 
-        // Only fire a DB query if we need to update the user's suggestedUsers
-        isSuggestedUsersUpdated &&
-            (await prisma.user.update({
-                where: { userID },
-                data: {
-                    followedUsers:
-                        action === FOLLOW
-                            ? [...user.followedUsers, userBeingReferencedID]
-                            : user.followedUsers.filter((uID) => uID !== userBeingReferencedID),
-
-                    suggestedUsers: recentlySuggestedUsers,
-                },
-            }));
+                suggestedUsers: updatedRecentlySuggestedUsers,
+            },
+        });
 
         return res.status(STATUS_CODES.OK).json({ message: "Followed users updated" });
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
     }
 });
+
 module.exports = router;
+
+// Remove user to follow from suggested users if they're present in it
+const updateRecentlySuggestedUsers = (user, userBeingReferencedID) => {
+    // Remove user to follow from suggested users if they're present in it
+    const recentlySuggestedUsers = user.suggestedUsers;
+
+    if (recentlySuggestedUsers[userBeingReferencedID]) {
+        delete recentlySuggestedUsers[userBeingReferencedID];
+    }
+
+    return recentlySuggestedUsers;
+};
