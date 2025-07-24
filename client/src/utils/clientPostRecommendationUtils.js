@@ -4,7 +4,7 @@ import { LIKE, NON_ALPHANUMERIC_REGEX } from "./constants.js";
 // Tokenize the content of a post, remove stop words
 // If the user has liked the post, increment the frequency of the tokens in the post; decrement if user is unliking
 // Store updated frequency in user.user_Frequency
-export const tokenize = async (post, activeUser, action) => {
+const tokenize = async (post, activeUser, action) => {
     const userFrequency = activeUser.user_Frequency || {};
     const frequencyFactor = action === LIKE ? 1 : -1;
 
@@ -41,3 +41,5 @@ const filterTokens = async (content) => {
     const filteredContent = await removeStopwords(contentToArray).filter((token) => token.length > 2);
     return filteredContent;
 };
+
+export default tokenize;
