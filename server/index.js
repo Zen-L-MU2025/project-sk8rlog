@@ -9,7 +9,7 @@ const authRouter = require("./routes/auth");
 const postsRouter = require("./routes/posts");
 const recommendationsRouter = require("./routes/recommendations");
 
-const { enableCORSinBucket } = require("./utils/GCS");
+const { enableCORSinBucket } = require("./utils/googleCloudStorageUtils");
 const { createWebSocket } = require("./utils/serverWebSocketUtils");
 
 const corsConfig = {
