@@ -48,7 +48,7 @@ const evaluateCandidate = async (user, candidate) => {
     const cosineSimilarityScore = await computeSimilarityScore(user, candidate);
 
     // Convert the similarity score to a scalar factor
-    const similarityFactor = cosineSimilarityScore < 0 ? -1 + cosineSimilarityScore : 1 + cosineSimilarityScore;
+    const similarityFactor = (1 + Math.abs(cosineSimilarityScore)) * (cosineSimilarityScore < 0 ? -1 : 1);
 
     // Find the mutual following frequency between the users
     const mutualFollowFrequency = computeMutualFollowingFrequency(user, candidate);
@@ -106,6 +106,7 @@ const computeSimilarityScore = async (user, candidate) => {
         })
         .catch((err) => {
             console.log(err);
+            cosineSimilarityScore = 0;
         });
 
     return cosineSimilarityScore;
@@ -120,8 +121,7 @@ const computeMutualFollowingFrequency = (user, candidate) => {
 
     // Hold this overlap against all users they follow to create a mutual following factor
     const followingUnion = new Set(userFollowing.concat(candidateFollowing));
-    let mutualFollowFrequency = followingOverlap.length / followingUnion.size;
-    mutualFollowFrequency = isNaN(mutualFollowFrequency) ? 0 : mutualFollowFrequency;
+    const mutualFollowFrequency = followingUnion.size === 0 ? 0 : followingOverlap.length / followingUnion.size;
 
     return mutualFollowFrequency;
 };

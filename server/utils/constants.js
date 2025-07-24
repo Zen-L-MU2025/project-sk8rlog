@@ -9,6 +9,7 @@ export const CONNECTION = "connection";
 export const DISCONNECT = "disconnect";
 export const REQUEST_NOTIFICATION = "request notification";
 export const DELIVER_NOTIFICATION = "deliver notification";
+export const ENTER_ROOM = "enter room";
 
 /*
 Guide to cron interval strings (from node-cron docs):

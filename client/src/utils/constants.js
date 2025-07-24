@@ -65,6 +65,7 @@ export const CONNECT = "connect";
 export const DISCONNECT = "disconnect";
 export const REQUEST_NOTIFICATION = "request notification";
 export const DELIVER_NOTIFICATION = "deliver notification";
+export const ENTER_ROOM = "enter room";
 
 export const FOLLOW = "follow";
 export const UNFOLLOW = "unfollow";
