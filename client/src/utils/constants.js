@@ -74,3 +74,6 @@ export const OPTIONS = {
     LOGIN: "login",
     REGISTER: "register",
 };
+
+export const USER_SUGGESTION = "user suggestion";
+export const POST_SUGGESTION = "post suggestion";
