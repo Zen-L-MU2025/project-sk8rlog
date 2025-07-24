@@ -264,19 +264,4 @@ router.post("/comments/:postID", async (req, res, _next) => {
     }
 });
 
-// POST /posts/clipLength
-// Provided a post's file URL, returns the video length in seconds
-router.post("/clipLength", async (req, res, _next) => {
-    try {
-        const { fileURL } = req.body;
-        const clipLength = await getVideoDurationInSeconds(fileURL).catch((error) => {
-            console.error(error);
-        });
-
-        res.status(STATUS_CODES.OK).json({ clipLength, message: "Video length retrieved" });
-    } catch (error) {
-        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error });
-    }
-});
-
 module.exports = router;
