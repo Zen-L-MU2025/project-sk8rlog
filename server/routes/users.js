@@ -7,6 +7,7 @@ const STATUS_CODES = require("../statusCodes");
 const { LIKE, FOLLOW, UNFOLLOW } = require("../utils/constants");
 const recalculateSessionAverages = require("../utils/sessions/recalculateSessionAverages").default;
 const recalculateInteractionAverages = require("../utils/sessions/recalculateInteractionAverages").default;
+const updateRecentlySuggestedUsers = require("../utils/updateRecentlySuggestedUsers").default;
 
 const prisma = new PrismaClient();
 
@@ -178,15 +179,3 @@ router.put("/:userID/followedUsers/:action", async (req, res, _next) => {
 });
 
 module.exports = router;
-
-// Remove user to follow from suggested users if they're present in it
-const updateRecentlySuggestedUsers = (user, userBeingReferencedID) => {
-    // Remove user to follow from suggested users if they're present in it
-    const recentlySuggestedUsers = user.suggestedUsers;
-
-    if (recentlySuggestedUsers[userBeingReferencedID]) {
-        delete recentlySuggestedUsers[userBeingReferencedID];
-    }
-
-    return recentlySuggestedUsers;
-};
