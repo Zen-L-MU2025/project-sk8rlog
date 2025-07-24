@@ -59,7 +59,23 @@ const notifyUsers = async (usersToNotify, socketServer) => {
             console.log(error);
         });
         const candidates = await res.json();
+
         const topCandidate = candidates[0];
+
+        // If there are no valid candidates, do nothing
+        if (topCandidate.candidacyScore == null) {
+            return;
+        }
+
+        // Update the user's suggestedUsers column with the selected candidate
+        const userObject = await prisma.user.findUnique({ where: { userID: user.userID } });
+        const updatedSuggestedUsers = { ...userObject.suggestedUsers, [topCandidate.userID]: new Date() };
+        await prisma.user.update({
+            where: { userID: user.userID },
+            data: {
+                suggestedUsers: updatedSuggestedUsers,
+            },
+        });
 
         const suggestionMessage = `Hey ${user.name || `@${user.username}`}, you might be interested in @${topCandidate.username}`;
         socketServer.to(`user_${user.userID}`).emit(DELIVER_NOTIFICATION, `${suggestionMessage} | ${new Date().toLocaleTimeString()}`);

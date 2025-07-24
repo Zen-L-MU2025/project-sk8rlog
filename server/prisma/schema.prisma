@@ -15,18 +15,19 @@ datasource db {
 }
 
 model User {
-  userID            String  @id @default(cuid())
+  userID            String      @id @default(cuid())
   name              String?
-  username          String @unique
+  username          String      @unique
   password          String
-  joinDate          DateTime @default(now())
+  joinDate          DateTime    @default(now())
   location          String?
   bio               String?
   profilePicUrl     String?
-  following         String[] @default([])
-  favorites         String[] @default([])
-  likedPosts        String[] @default([])
-  followedUsers     String[] @default([])
+  following         String[]    @default([])
+  favorites         String[]    @default([])
+  likedPosts        String[]    @default([])
+  followedUsers     String[]    @default([])
+  suggestedUsers    Json?
   user_Frequency    Json?
 }
 

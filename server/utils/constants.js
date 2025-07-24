@@ -59,3 +59,5 @@ export const UNFOLLOW = "unfollow";
 export const POST_OVR_WEIGHT = 0.7;
 export const POPULARITY_OVR_WEIGHT = 0.3;
 export const NO_CORRELATION = 0.0;
+
+export const RECENCY_CUTOFF_IN_DAYS = 2;

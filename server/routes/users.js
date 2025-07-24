@@ -28,6 +28,7 @@ router.post("/register", async (req, res) => {
                 password,
                 name,
                 location,
+                suggestedUsers: {},
             },
         });
 
@@ -154,15 +155,29 @@ router.put("/:userID/followedUsers/:action", async (req, res, _next) => {
         const { userBeingReferencedID } = req.body;
 
         const user = await prisma.user.findUnique({ where: { userID } });
-        await prisma.user.update({
-            where: { userID },
-            data: {
-                followedUsers:
-                    action === FOLLOW
-                        ? [...user.followedUsers, userBeingReferencedID]
-                        : user.followedUsers.filter((uID) => uID !== userBeingReferencedID),
-            },
-        });
+
+        // Remove user to follow from suggested users if they're present in it
+        const recentlySuggestedUsers = user.suggestedUsers;
+        let isSuggestedUsersUpdated = false;
+
+        if (recentlySuggestedUsers[userBeingReferencedID]) {
+            delete recentlySuggestedUsers[userBeingReferencedID];
+            isSuggestedUsersUpdated = true;
+        }
+
+        // Only fire a DB query if we need to update the user's suggestedUsers
+        isSuggestedUsersUpdated &&
+            (await prisma.user.update({
+                where: { userID },
+                data: {
+                    followedUsers:
+                        action === FOLLOW
+                            ? [...user.followedUsers, userBeingReferencedID]
+                            : user.followedUsers.filter((uID) => uID !== userBeingReferencedID),
+
+                    suggestedUsers: recentlySuggestedUsers,
+                },
+            }));
 
         return res.status(STATUS_CODES.OK).json({ message: "Followed users updated" });
     } catch (error) {
