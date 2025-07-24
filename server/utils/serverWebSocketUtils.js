@@ -6,8 +6,6 @@ export const createWebSocket = (server, corsConfig) => {
     const socketServer = new Server(server, { cors: corsConfig });
 
     socketServer.on(CONNECTION, (socket) => {
-        console.log("socket utils: connection established");
-
         socket.on(DISCONNECT, () => {
             console.log("socket utils: connection terminated");
         });

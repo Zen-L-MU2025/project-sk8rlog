@@ -24,8 +24,8 @@ Guide to cron interval strings (from node-cron docs):
 To specify an amount at any position, append /<number> to the star (*)
 Leaving all stars (*) will default to every minute
 */
-export const CRON_INTERVAL_STRING = "*/40 * * * * *";
-export const CRON_INTERVAL_DESCRIPTOR = "40 seconds";
+export const CRON_INTERVAL_STRING = "*/15 * * * * *";
+export const CRON_INTERVAL_DESCRIPTOR = "15 seconds";
 
 export const CLIPS = "Clips";
 
