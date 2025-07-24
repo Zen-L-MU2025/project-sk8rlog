@@ -1,7 +1,8 @@
 import { useRef, useContext, useEffect, useState } from "react";
 import { Link } from "react-router";
 
-import { deletePost, handleLikeOrUnlikePost, waitForGCSToFinish } from "/src/utils/postUtils";
+import { deletePost, waitForGCSToFinish } from "/src/utils/postDataUtils";
+import { handleLikeOrUnlikePost } from "/src/utils/postInteractionUtils";
 
 import UserContext from "/src/utils/UserContext";
 import { CLIPS, BLOGS, LIKE, UNLIKE, PROFILE_ORIGIN_NOT_APPLICABLE } from "/src/utils/constants";

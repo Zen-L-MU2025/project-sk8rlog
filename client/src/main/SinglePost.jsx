@@ -7,7 +7,8 @@ import Footer from "./Footer";
 import UserContext from "/src/utils/UserContext";
 import { getUserByID } from "/src/utils/userDataUtils.js";
 import { verifyAccess, refreshUserSession } from "/src/utils/userAuthUtils.js";
-import { getPostByID, handleLikeOrUnlikePost, getComments, createComment } from "/src/utils/postUtils";
+import { getPostByID, getComments } from "/src/utils/postRetrievalUtils";
+import { handleLikeOrUnlikePost, createComment } from "/src/utils/postInteractionUtils";
 import { CLIPS, BLOGS, toSingular, ORIGINS, LIKE, UNLIKE, PROFILE_ORIGIN_NOT_APPLICABLE } from "/src/utils/constants";
 
 import "/src/css/singlePost.css";

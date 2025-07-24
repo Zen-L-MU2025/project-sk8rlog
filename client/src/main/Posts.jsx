@@ -8,7 +8,7 @@ import PostCard from "./PostCard";
 
 import UserContext from "/src/utils/UserContext";
 import { verifyAccess, refreshUserSession } from "/src/utils/userAuthUtils.js";
-import { getAllPostsByType } from "/src/utils/postUtils";
+import { getAllPostsByType } from "/src/utils/postRetrievalUtils";
 import { POST_ORIGINS, RANKING_MODES } from "/src/utils/constants";
 
 import "/src/css/hasSidebar.css";
