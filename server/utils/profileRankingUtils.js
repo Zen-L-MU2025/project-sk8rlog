@@ -1,8 +1,8 @@
 import { PrismaClient } from "../generated/prisma/index.js";
 import {
     RANKING_MODES,
-    POST_OVR_WEIGHT,
-    POPULARITY_OVR_WEIGHT,
+    POST_OVERALL_WEIGHT,
+    POPULARITY_OVERALL_WEIGHT,
     NO_CORRELATION,
     MILLISECONDS_IN_DAY,
     RECENCY_CUTOFF_IN_DAYS,
@@ -54,9 +54,9 @@ const evaluateCandidate = async (user, candidate) => {
 
     // 0) Rank candidate's posts using created recommendation algorithm and set base score
     // 1) Gauge if the user interacts with the candidate's in a meaningful capacity
-    const { postOvr, popularityOvr, meaningfulInteractionBonus } = await computeCandidatePostMetrics(user, candidate);
+    const { postOverall, popularityOverall, meaningfulInteractionBonus } = await computeCandidatePostMetrics(user, candidate);
 
-    const baseScore = postOvr * POST_OVR_WEIGHT + popularityOvr * POPULARITY_OVR_WEIGHT;
+    const baseScore = postOverall * POST_OVERALL_WEIGHT + popularityOverall * POPULARITY_OVERALL_WEIGHT;
 
     // 2A) Compute the similarity score between the users
     const cosineSimilarityScore = await computeSimilarityScore(user, candidate);
@@ -105,12 +105,12 @@ const checkSuggestionsEligibility = async (user, candidate) => {
 // Computes overall posts score and popularity score for a candidate
 const computeCandidatePostMetrics = async (user, candidate) => {
     const candidatePosts = await prisma.post.findMany({ where: { authorID: candidate.userID } });
-    let postOvr = 0;
-    let popularityOvr = 0;
+    let postOverall = 0;
+    let popularityOverall = 0;
     let meaningfulInteractionBonus = 0;
 
     // Return early if candidate has no posts
-    if (candidatePosts.length === 0) return { postOvr, popularityOvr, meaningfulInteractionBonus };
+    if (candidatePosts.length === 0) return { postOverall, popularityOverall, meaningfulInteractionBonus };
 
     meaningfulInteractionBonus = await computeMeaningfulInteractionBonus(user, candidatePosts);
 
@@ -122,10 +122,10 @@ const computeCandidatePostMetrics = async (user, candidate) => {
         totalScore += post.score;
         totalPopularity += post.popularity;
     }
-    postOvr = totalScore / candidatePosts.length;
-    popularityOvr = totalPopularity / candidatePosts.length;
+    postOverall = totalScore / candidatePosts.length;
+    popularityOverall = totalPopularity / candidatePosts.length;
 
-    return { postOvr, popularityOvr, meaningfulInteractionBonus };
+    return { postOverall, popularityOverall, meaningfulInteractionBonus };
 };
 
 // Vectorize the users' frequency objects and performs a cosine similarity comparison to get a similarity score
@@ -218,30 +218,25 @@ const createAppUsageVector = async (user) => {
 
     const userAverageHighInteractionDensityTime = computeAverageHighInteractionDensityTime(userInteractionData);
 
-    // Abbreviate to reduce clutter
-    const u_S_D = userSessionData;
-    const userAppUsageVector = [u_S_D.averageSessionStartTime, u_S_D.averageSessionTime, userAverageHighInteractionDensityTime];
+    const userAppUsageVector = [userSessionData.averageSessionStartTime, userSessionData.averageSessionTime, userAverageHighInteractionDensityTime];
 
     return userAppUsageVector;
 };
 
 // Returns average high interaction density time for provided user interaction data
 const computeAverageHighInteractionDensityTime = (interactionData) => {
-    // Abbreviate in these calculations to mitigate clutter
-    const i_D = interactionData;
-
-    const hasLiked = i_D.likeInteractionCount > 0 ? 1 : 0;
-    const hasCommented = i_D.commentInteractionCount > 0 ? 1 : 0;
-    const hasCreated = i_D.createInteractionCount > 0 ? 1 : 0;
+    const hasLiked = interactionData.likeInteractionCount > 0 ? 1 : 0;
+    const hasCommented = interactionData.commentInteractionCount > 0 ? 1 : 0;
+    const hasCreated = interactionData.createInteractionCount > 0 ? 1 : 0;
 
     const userTotalInteractionFields = hasLiked + hasCommented + hasCreated;
 
     // No point in proceeding
     if (userTotalInteractionFields === 0) return 0;
 
-    const inUseAverageLikeInteractionTime = hasLiked * i_D.averageLikeInteractionTime;
-    const inUseAverageCommentInteractionTime = hasCommented * i_D.averageCommentInteractionTime;
-    const inUseAverageCreateInteractionTime = hasCreated * i_D.averageCreateInteractionTime;
+    const inUseAverageLikeInteractionTime = hasLiked * interactionData.averageLikeInteractionTime;
+    const inUseAverageCommentInteractionTime = hasCommented * interactionData.averageCommentInteractionTime;
+    const inUseAverageCreateInteractionTime = hasCreated * interactionData.averageCreateInteractionTime;
 
     const userTimesAggregate = inUseAverageLikeInteractionTime + inUseAverageCommentInteractionTime + inUseAverageCreateInteractionTime;
 
