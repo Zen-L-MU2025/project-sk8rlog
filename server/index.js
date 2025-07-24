@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
 const { createServer } = require("node:http");
-const { requestNotificationScheduling } = require("./utils/notificationSchedulingUtils");
+const requestNotificationScheduling = require("./utils/notifications/requestNotificationScheduling.js").default;
 
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
