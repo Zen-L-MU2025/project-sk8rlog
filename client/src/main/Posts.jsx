@@ -7,7 +7,7 @@ import Footer from "./Footer";
 import PostCard from "./PostCard";
 
 import UserContext from "/src/utils/UserContext";
-import { verifyAccess, refreshUserSession } from "/src/utils/UserUtils";
+import { verifyAccess, refreshUserSession } from "/src/utils/userAuthUtils.js";
 import { getAllPostsByType } from "/src/utils/postUtils";
 import { POST_ORIGINS, RANKING_MODES } from "/src/utils/constants";
 

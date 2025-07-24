@@ -5,7 +5,8 @@ import Header from "./Header";
 import Footer from "./Footer";
 
 import UserContext from "/src/utils/UserContext";
-import { getUserByID, verifyAccess, refreshUserSession } from "/src/utils/userUtils";
+import { getUserByID } from "/src/utils/userDataUtils.js";
+import { verifyAccess, refreshUserSession } from "/src/utils/userAuthUtils.js";
 import { getPostByID, handleLikeOrUnlikePost, getComments, createComment } from "/src/utils/postUtils";
 import { CLIPS, BLOGS, toSingular, ORIGINS, LIKE, UNLIKE, PROFILE_ORIGIN_NOT_APPLICABLE } from "/src/utils/constants";
 

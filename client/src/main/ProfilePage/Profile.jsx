@@ -10,7 +10,8 @@ import Footer from "/src/main/Footer";
 
 import UserContext from "/src/utils/UserContext";
 import { CLIPS } from "/src/utils/constants";
-import { verifyAccess, refreshUserSession, getUserByID } from "/src/utils/UserUtils";
+import { getUserByID } from "/src/utils/userDataUtils.js";
+import { verifyAccess, refreshUserSession } from "/src/utils/userAuthUtils.js";
 
 import "/src/css/hasSidebar.css";
 import "/src/css/profile.css";
