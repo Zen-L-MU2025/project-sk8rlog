@@ -5,7 +5,7 @@ import {
     POPULARITY_OVERALL_WEIGHT,
     NO_CORRELATION,
     MILLISECONDS_IN_DAY,
-    RECENCY_CUTOFF_IN_DAYS,
+    SUGGESTION_RECENCY_CUTOFF_IN_DAYS,
     RELEVANCY_CUTOFF,
     MEANINFUL_INTERACTION_BONUS,
     LIKE_POINT_VALUE,
@@ -90,7 +90,7 @@ const checkSuggestionsEligibility = async (user, candidate) => {
     const daysSinceLastSuggested = (Date.now() - new Date(lastSuggestedDate)) / MILLISECONDS_IN_DAY;
 
     // Too soon
-    if (daysSinceLastSuggested < RECENCY_CUTOFF_IN_DAYS) {
+    if (daysSinceLastSuggested < SUGGESTION_RECENCY_CUTOFF_IN_DAYS) {
         return false;
     }
 
