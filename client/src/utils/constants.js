@@ -36,17 +36,17 @@ export const WEEKDAYS = {
 // Limits number of posts that load on Home page
 export const HOME_PAGE_POST_COUNT = 4;
 
-/**************************/
+/**********************************************/
 
 /* PAGINATION */
 
 // Utility constants to handle redirection logic in client, largely concerning the "Go Back" button
-export const POSTS = {
+const CLIPS_ORIGIN = "c";
+const BLOGS_ORIGIN = "b";
+export const POST_ORIGINS = {
     Clips: CLIPS_ORIGIN,
     Blogs: BLOGS_ORIGIN,
 };
-const CLIPS_ORIGIN = "c";
-const BLOGS_ORIGIN = "b";
 export const HOME_ORIGIN = "h";
 export const PROFILE_ORIGIN = "u";
 export const ORIGINS = {
@@ -57,7 +57,7 @@ export const ORIGINS = {
 };
 export const PROFILE_ORIGIN_NOT_APPLICABLE = "_";
 
-/**************************/
+/**********************************************/
 
 /* RECOMMENDATION HELPERS */
 
@@ -73,7 +73,7 @@ export const RANKING_MODES = {
     DEFAULT: "default",
 };
 
-/**************************/
+/**********************************************/
 
 /* EVENT TYPES */
 

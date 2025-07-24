@@ -7,7 +7,34 @@ export const MOV = "mov";
 // Used across recommendation utilities to drop values as needed
 export const NOT_APPLICABLE = -1;
 
-/**************************/
+/**********************************************/
+
+/* TIME */
+
+/*
+Guide to cron interval strings (from node-cron docs):
+┌────────────── second (optional)
+│ ┌──────────── minute
+│ │ ┌────────── hour
+│ │ │ ┌──────── day of month
+│ │ │ │ ┌────── month
+│ │ │ │ │ ┌──── day of week
+│ │ │ │ │ │
+│ │ │ │ │ │
+* * * * * *
+To specify an amount at any position, append /<number> to the star (*)
+Leaving all stars (*) will default to every minute
+*/
+export const CRON_INTERVAL_STRING = "*/15 * * * * *";
+export const CRON_INTERVAL_DESCRIPTOR = "15 seconds";
+
+// Key values used in timing calculations
+const SECONDS_IN_MINUTE = 60;
+export const MILLISECONDS_IN_DAY = 86400000;
+export const HALF_HOUR_IN_SECONDS = 30 * SECONDS_IN_MINUTE;
+export const MIDDLE_OF_DAY_IN_SECONDS = 12 * 60 * SECONDS_IN_MINUTE;
+
+/**********************************************/
 
 /* RECOMMENDATION AND RANKING */
 
@@ -44,7 +71,7 @@ export const MEANINFUL_INTERACTION_BONUS = 3;
 // Used in profile ranking -> user timing metric
 export const USER_TIMING_BONUS = 2;
 
-/**************************/
+/**********************************************/
 
 /* EVENT TYPES */
 
@@ -64,30 +91,3 @@ export const DELIVER_NOTIFICATION = "deliver notification";
 // DELIVER_NOTIFICATION subtypes
 export const USER_SUGGESTION = "user suggestion";
 export const POST_SUGGESTION = "post suggestion";
-
-/**************************/
-
-/* TIME */
-
-/*
-Guide to cron interval strings (from node-cron docs):
-┌────────────── second (optional)
-│ ┌──────────── minute
-│ │ ┌────────── hour
-│ │ │ ┌──────── day of month
-│ │ │ │ ┌────── month
-│ │ │ │ │ ┌──── day of week
-│ │ │ │ │ │
-│ │ │ │ │ │
-* * * * * *
-To specify an amount at any position, append /<number> to the star (*)
-Leaving all stars (*) will default to every minute
-*/
-export const CRON_INTERVAL_STRING = "*/15 * * * * *";
-export const CRON_INTERVAL_DESCRIPTOR = "15 seconds";
-
-// Key values used in timing calculations
-const SECONDS_IN_MINUTE = 60;
-export const MILLISECONDS_IN_DAY = 86400000;
-export const HALF_HOUR_IN_SECONDS = 30 * SECONDS_IN_MINUTE;
-export const MIDDLE_OF_DAY_IN_SECONDS = 12 * 60 * SECONDS_IN_MINUTE;
