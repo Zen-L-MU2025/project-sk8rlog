@@ -1,7 +1,7 @@
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 import axios from "axios";
-import tokenize from "./clientPostRecommendationUtils.js";
-import { LIKE, UNLIKE } from "./constants.js";
+import tokenize from "../clientPostRecommendationUtils.js";
+import { LIKE, UNLIKE } from "../constants.js";
 
 // Handles data related to liking/unliking a post
 export const handleLikeOrUnlikePost = async (event, post, action, activeUser, setActiveUser) => {

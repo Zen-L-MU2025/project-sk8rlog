@@ -5,10 +5,10 @@ import Header from "./Header";
 import Footer from "./Footer";
 
 import UserContext from "/src/utils/UserContext";
-import { getUserByID } from "/src/utils/userDataUtils.js";
-import { verifyAccess, refreshUserSession } from "/src/utils/userAuthUtils.js";
-import { getPostByID, getComments } from "/src/utils/postRetrievalUtils";
-import { handleLikeOrUnlikePost, createComment } from "/src/utils/postInteractionUtils";
+import { getUserByID } from "/src/utils/userUtils/userDataUtils.js";
+import { verifyAccess, refreshUserSession } from "/src/utils/userUtils/userAuthUtils.js";
+import { getPostByID, getComments } from "/src/utils/postUtils/postRetrievalUtils";
+import { handleLikeOrUnlikePost, createComment } from "/src/utils/postUtils/postInteractionUtils";
 import { CLIPS, BLOGS, toSingular, ORIGINS, LIKE, UNLIKE, PROFILE_ORIGIN_NOT_APPLICABLE } from "/src/utils/constants";
 
 import "/src/css/singlePost.css";

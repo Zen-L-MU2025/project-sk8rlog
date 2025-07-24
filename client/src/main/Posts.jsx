@@ -7,8 +7,8 @@ import Footer from "./Footer";
 import PostCard from "./PostCard";
 
 import UserContext from "/src/utils/UserContext";
-import { verifyAccess, refreshUserSession } from "/src/utils/userAuthUtils.js";
-import { getAllPostsByType } from "/src/utils/postRetrievalUtils";
+import { verifyAccess, refreshUserSession } from "/src/utils/userUtils/userAuthUtils.js";
+import { getAllPostsByType } from "/src/utils/postUtils/postRetrievalUtils";
 import { POST_ORIGINS, RANKING_MODES } from "/src/utils/constants";
 
 import "/src/css/hasSidebar.css";

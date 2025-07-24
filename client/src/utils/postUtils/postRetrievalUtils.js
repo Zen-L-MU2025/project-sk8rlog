@@ -1,6 +1,6 @@
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 import axios from "axios";
-import { RANKING_MODES } from "./constants.js";
+import { RANKING_MODES } from "../constants.js";
 
 // Provided a userID, gets all posts for that user by specified postType and sets the userPosts array state
 export const getUserPostsByType = async (activeUser, postType, setUserPosts) => {

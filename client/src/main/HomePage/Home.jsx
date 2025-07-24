@@ -7,7 +7,7 @@ import Footer from "/src/main/Footer";
 
 import UserContext from "/src/utils/UserContext";
 import { WEEKDAYS, CLIPS, BLOGS } from "/src/utils/constants";
-import { verifyAccess, refreshUserSession } from "/src/utils/userAuthUtils.js";
+import { verifyAccess, refreshUserSession } from "/src/utils/userUtils/userAuthUtils.js";
 
 import "/src/css/home.css";
 

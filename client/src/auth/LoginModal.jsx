@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 
-import { handleLoginOrRegister } from "/src/utils/userAccessUtils.js";
+import { handleLoginOrRegister } from "/src/utils/userUtils/userAccessUtils.js";
 
 import "/src/css/landingModal.css";
 

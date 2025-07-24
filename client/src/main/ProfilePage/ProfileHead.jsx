@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
 import UserContext from "/src/utils/UserContext";
-import { handleUserFollowing } from "/src/utils/userDataUtils.js";
+import { handleUserFollowing } from "/src/utils/userUtils/userDataUtils.js";
 import { CLIPS, BLOGS, FOLLOW, UNFOLLOW } from "/src/utils/constants";
 
 import skateboard from "/src/assets/skateboard.png";
