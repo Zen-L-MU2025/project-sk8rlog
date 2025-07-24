@@ -1,5 +1,6 @@
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 import axios from "axios";
+import { setCookies, locateCookie } from "./cookieUtils.js";
 
 // Verify user access to protected resource
 // Sets hasAccess to true if access is verified, false otherwise

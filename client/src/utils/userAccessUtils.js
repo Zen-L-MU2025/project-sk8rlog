@@ -1,7 +1,7 @@
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 import axios from "axios";
 import { OPTIONS } from "./constants.js";
-import { setCookies, locateCookie } from "./userAuthUtils.js";
+import { setCookies, locateCookie } from "./cookieUtils.js";
 
 // Handle login/register submission
 export const handleLoginOrRegister = async (formData, submissionType, setIsSuccessful) => {
