@@ -50,7 +50,7 @@ router.post("/register", async (req, res) => {
         const tokenPayload = { userID: newUser.userID, username: newUser.username };
         const token = webtoken.sign(tokenPayload, TOKEN_SECRET, { expiresIn: "1h" });
 
-        await res.cookie("webtoken", token, { Domain: "localhost", Path: "/", maxAge: 3600000 });
+        res.cookie("webtoken", token, { Domain: "localhost", Path: "/", maxAge: 3600000 });
         return res.status(STATUS_CODES.CREATED).json({ newUser, isSuccessful: true, token });
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message, isSuccessful: false });
@@ -111,7 +111,7 @@ router.get("/find/:userID", async (req, res, _next) => {
             return res.status(STATUS_CODES.NOT_FOUND);
         }
 
-        res.status(STATUS_CODES.OK).json({ user });
+        return res.status(STATUS_CODES.OK).json({ user });
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
     }

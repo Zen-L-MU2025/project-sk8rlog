@@ -37,7 +37,7 @@ const calculateSinglePostScore = async (
     // Default popularity score to 1
     const popularityScore = 1 + post.likeCount * LIKE_WEIGHT + post.comments?.length * COMMENT_WEIGHT;
 
-    const filteredPostContent = await filterTokens(post.description);
+    const filteredPostContent = filterTokens(post.description);
     let overlap = {};
 
     // For each unique token in the post, check if it is in the user's frequency map and add to overlap
@@ -81,7 +81,7 @@ const calculateSinglePostScore = async (
     const biasFactor = popularityScore * (1 + typeBias) * postLengthBias;
 
     // Calculate proximity bias as constant factor added to overall score
-    const proximityBias = calculateProximityBias(userLocation, post.location);
+    const proximityBias = calculateProximityBias(post, userLocation, post.location);
 
     // Apply relative interest factor and bias factor to raw post score to get the final score
     const finalScore = rawPostScore * relativeInterestFactor * biasFactor + proximityBias;

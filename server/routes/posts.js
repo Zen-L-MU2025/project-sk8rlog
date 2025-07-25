@@ -38,7 +38,7 @@ router.post("/uploadFile", multer.single("postFile"), async (req, res, _next) =>
             return res.status(STATUS_CODES.BAD_REQUEST).json({ message: "No file provided", isSuccessful: false });
         }
 
-        let extension = await new String(req.file.mimetype).split("/")[1];
+        let extension = new String(req.file.mimetype).split("/")[1];
         if (extension === QUICKTIME) {
             extension = MOV;
         }
@@ -185,6 +185,8 @@ router.put("/:postID/likes/:action", async (req, res, _next) => {
             where: { postID: postID },
             data: { likeCount: action === INCREMENT ? post.likeCount + 1 : post.likeCount - 1 },
         });
+
+        return res.status(STATUS_CODES.OK).json({ message: "Like count updated" });
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error });
     }

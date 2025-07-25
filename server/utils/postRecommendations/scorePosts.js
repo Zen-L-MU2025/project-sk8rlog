@@ -13,8 +13,8 @@ const scorePosts = async (posts, activeUser, scoringMode) => {
         scoringMode = RANKING_MODES.POPULAR;
     }
 
-    // TODO: Uncomment age cutoff when fully prod-ready
-    //posts = await filterPostsByCutoff(posts)
+    // [Testing] Omit as comment when testing
+    posts = await filterPostsByCutoff(posts);
 
     // Find the user's post type and length biases
     const { portionOfLikedPostsThatAreClips, avgLengthOfLikedPosts } = await calculateBiasFactors(activeUser);

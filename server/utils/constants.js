@@ -121,3 +121,6 @@ export const LOCATIONS_COORDINATES = {
 
 // Default proximity bias when distance is 0
 export const BASE_PROXIMITY_BIAS = 2;
+
+// Facilitate calling calculateProximityBias without manipulating post info
+export const WITHOUT_POST = null;

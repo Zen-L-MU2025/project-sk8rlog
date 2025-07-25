@@ -1,4 +1,4 @@
-import { POST_OVERALL_WEIGHT, POPULARITY_OVERALL_WEIGHT } from "../constants.js";
+import { POST_OVERALL_WEIGHT, POPULARITY_OVERALL_WEIGHT, WITHOUT_POST } from "../constants.js";
 import checkSuggestionsEligibility from "./helpers/checkSuggestionsEligibility.js";
 import computeCandidatePostMetrics from "./helpers/computeCandidatePostMetrics.js";
 import computeSimilarityScore from "./helpers/computeSimilarityScore.js";
@@ -38,7 +38,8 @@ const evaluateCandidate = async (user, candidate) => {
     const userTimingBonus = await computeUserTimingBonus(user, candidate);
 
     // 5) Apply a bonus corresponding to the user's proximity to the candidate
-    const proximityBonus = calculateProximityBias(user.location, candidate.location);
+    // Specify that we are not using a post in this calculation
+    const proximityBonus = calculateProximityBias(WITHOUT_POST, user.location, candidate.location);
 
     // Combine the bonuses
     const bonuses = meaningfulInteractionBonus + userTimingBonus + proximityBonus;

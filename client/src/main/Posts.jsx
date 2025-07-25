@@ -43,7 +43,7 @@ const Posts = ({ postType }) => {
         if (activeUser?.userID) {
             getAllPostsByType(postType, setPosts, { scoringMode: filterState, activeUser }, setIsReadyToDisplayContent);
         }
-    }, [postType, activeUser, filterState]);
+    }, [postType, activeUser?.userID, filterState]);
 
     const handleFilterChange = (event) => {
         event.preventDefault();

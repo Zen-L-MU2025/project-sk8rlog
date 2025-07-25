@@ -36,9 +36,9 @@ const tokenize = async (post, activeUser, action) => {
 // Filter out stop words and non-alphanumeric characters from the content of a post
 const filterTokens = async (content) => {
     // Convert to lowercase, remove non-alphanumeric characters
-    const contentToArray = await new String(content).toLowerCase().split(NON_ALPHANUMERIC_REGEX);
+    const contentToArray = new String(content).toLowerCase().split(NON_ALPHANUMERIC_REGEX);
     // remove stop words and further filter resulting tokens < 3 characters long
-    const filteredContent = await removeStopwords(contentToArray).filter((token) => token.length > 2);
+    const filteredContent = removeStopwords(contentToArray).filter((token) => token.length > 2);
     return filteredContent;
 };
 
