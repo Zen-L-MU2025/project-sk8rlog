@@ -8,7 +8,7 @@ const NotificationsModal = ({ toggleNotifications, notificationBell, isShowingNo
                 <>
                     <div className="notifications">
                         <p className="notifcationModalExit" onClick={toggleNotifications}>
-                            ❌
+                            ✖️
                         </p>
                         {notifications?.length ? (
                             notifications.map((notification) => {
