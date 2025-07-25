@@ -6,6 +6,16 @@ export const OPTIONS = {
     REGISTER: "register",
 };
 
+// Selectable locations on signup
+export const LOCATIONS = {
+    DEFAULT: "none",
+    MIA: "Miami",
+    SEA: "Seattle",
+    SFO: "San Francisco",
+    LAX: "Los Angeles",
+    NYC: "New York City",
+};
+
 // Post types to dictate views in app
 export const CLIPS = "Clips";
 export const BLOGS = "Blogs";
@@ -67,7 +77,7 @@ export const NON_ALPHANUMERIC_REGEX = /[^a-zA-Z0-9]/;
 // For filtering posts
 export const RANKING_MODES = {
     RECOMMENDED: "reccommended",
-    LATEST: "latest",
+    LATEST: "latitudeest",
     POPULAR: "popular",
     NEAR_YOU: "near_you",
     DEFAULT: "default",

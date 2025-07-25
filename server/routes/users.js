@@ -101,9 +101,9 @@ router.post("/logout", async (req, res, _next) => {
     }
 });
 
-// GET /users/:userID
+// GET /users/find/:userID
 // Returns the user object for the given userID
-router.get("/:userID", async (req, res, _next) => {
+router.get("/find/:userID", async (req, res, _next) => {
     try {
         const { userID } = req.params;
         const user = await prisma.user.findUnique({ where: { userID } });

@@ -6,7 +6,7 @@ import { FOLLOW, UNFOLLOW } from "../constants.js";
 export const getUserByID = async (userID, setUser) => {
     if (!userID) return;
     await axios
-        .get(`${baseUrl}/users/${userID}`, { withCredentials: true })
+        .get(`${baseUrl}/users/find/${userID}`, { withCredentials: true })
         .then((res) => {
             // No need to store password in user state
             delete res.data.user.password;
