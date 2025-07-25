@@ -1,13 +1,15 @@
 .ClipsPostCard {
     width: 200px;
     min-height: 300px;
-    border: 1px solid #3b0747; border-radius: 3px;
+    border: 1px solid #3b0747;
+    border-radius: 3px;
 }
 
 .BlogsPostCard {
     width: 300px;
     min-height: 300px;
-    border: 1px solid #3b0747; border-radius: 3px;
+    border: 1px solid #3b0747;
+    border-radius: 3px;
 }
 
 .ClipsPostCardEmbed {
@@ -28,6 +30,26 @@
     border-radius: 3px;
 }
 
+@media screen and (max-width: 400px) {
+    .BlogsPostCard {
+        width: 50vw;
+        min-width: 200px;
+        min-height: 300px;
+        border: 1px solid #3b0747;
+        border-radius: 3px;
+    }
+
+    .BlogsPostCardEmbed {
+        margin-top: 20px;
+        width: 45vw;
+        min-width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border: 1px solid #3b0747;
+        border-radius: 3px;
+    }
+}
+
 [class$="PostCard"] {
     transition: 0.5s;
 }
@@ -38,16 +60,18 @@
 }
 
 .postRedirect {
-    color: rgba(255, 255, 255, 0.87)
+    color: rgba(255, 255, 255, 0.87);
 }
 
-.deletePostButton, .likeButton {
+.deletePostButton,
+.likeButton {
     width: 20px;
     height: 20px;
     padding: 2px;
     transition: 0.5s ease-in-out;
 }
-.deletePostButton:hover, .likeButton:hover {
+.deletePostButton:hover,
+.likeButton:hover {
     border: 1px solid #3b0747;
     border-radius: 5px;
 }

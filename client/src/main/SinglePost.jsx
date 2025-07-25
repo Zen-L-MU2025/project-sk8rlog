@@ -90,7 +90,9 @@ const SinglePost = () => {
                         <p className="location">📍 {post?.location}</p>
                         {post?.type === CLIPS && <video src={post?.fileURL} controls={true} className="singlePostMedia" />}
                         {post?.type === BLOGS && <img src={post?.fileURL} className="singlePostMedia" />}
-                        <p>{post?.description}</p>
+                        <div className="postDescription">
+                            <p>{post?.description}</p>
+                        </div>
                         <p className="likes">
                             {`${postLikeCount} like${postLikeCount !== 1 ? "s" : ""} `}
                             {activeUser.likedPosts?.includes(postID) ? (
