@@ -4,7 +4,7 @@ import { PrismaClient } from "../../generated/prisma/index.js";
 const prisma = new PrismaClient();
 
 // Calculates users' best notification times and queues them to be notified if it falls within the cron job window
-const getUsersToNotify = async (now) => {
+const getUsersToSendCandidateTo = async (now) => {
     const nowAsSecondOfDay = toSecondOfDay(now);
     const halfHourBefore = nowAsSecondOfDay - HALF_HOUR_IN_SECONDS;
     const halfHourAfter = nowAsSecondOfDay + HALF_HOUR_IN_SECONDS;
@@ -34,4 +34,4 @@ const getUsersToNotify = async (now) => {
     return notifiableUsers;
 };
 
-export default getUsersToNotify;
+export default getUsersToSendCandidateTo;
