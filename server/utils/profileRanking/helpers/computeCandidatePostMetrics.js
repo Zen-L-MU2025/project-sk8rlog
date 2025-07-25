@@ -1,6 +1,6 @@
 import { PrismaClient } from "../../../generated/prisma/index.js";
 import { RANKING_MODES } from "../../constants.js";
-import { scorePosts } from "../../postRecommendations/scorePosts.js";
+import scorePosts from "../../postRecommendations/scorePosts.js";
 import computeMeaningfulInteractionBonus from "./computeMeaningfulInteractionBonus.js";
 
 const prisma = new PrismaClient();

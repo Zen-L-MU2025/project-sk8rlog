@@ -7,7 +7,7 @@ import getPostLength from "./helpers/getPostLength.js";
 import sortByMetric from "./helpers/sortByMetric.js";
 
 // Score every post based on the user's frequency map and set client posts state to results
-export const scorePosts = async (posts, activeUser, scoringMode) => {
+const scorePosts = async (posts, activeUser, scoringMode) => {
     const userFrequency = activeUser.user_Frequency;
 
     // If the user has no liked posts, manually override the scoring mode to popularity
