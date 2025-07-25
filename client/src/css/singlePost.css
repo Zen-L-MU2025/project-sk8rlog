@@ -9,9 +9,15 @@
 
 .page {
     margin-bottom: 30px;
+    animation: slowFadeIn 3s;
+}
+.singlePostContent {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
 }
 .singlePost {
-    animation: slowFadeIn 2.5s;
+    animation: slowFadeIn 4s;
 
     display: flex;
     flex-flow: row wrap;
