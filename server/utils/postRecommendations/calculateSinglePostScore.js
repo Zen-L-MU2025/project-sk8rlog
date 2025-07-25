@@ -82,7 +82,6 @@ const calculateSinglePostScore = async (
 
     // Calculate proximity bias as constant factor added to overall score
     const proximityBias = calculateProximityBias(userLocation, post.location);
-    console.log(`distance between ${userLocation} and ${post.location}, proximityBias is ${proximityBias}`);
 
     // Apply relative interest factor and bias factor to raw post score to get the final score
     const finalScore = rawPostScore * relativeInterestFactor * biasFactor + proximityBias;
