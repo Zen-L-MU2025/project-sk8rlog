@@ -24,6 +24,7 @@ export const uploadPost = async (postType, formData, user, socket) => {
             console.error("uploadFile error: ", error);
         });
 
+    // Create the post in DB and fire socket event to trigger post notification
     await axios
         .post(`${baseUrl}/posts/create/${user.userID}`, { textContent, location: user.location, postType, fileURL })
         .then((res) => {
