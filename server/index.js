@@ -26,7 +26,7 @@ const sessionConfig = {
     secret: process.env.SESSION_SECRET,
     cookie: {
         maxAge: 1000 * 60 * 60,
-        // TODO Hold off on securing the cookie until the app is deployed with Render
+        // [Gen] Hold off on securing the cookie until the app is deployed
         httpOnly: true,
         secure: false,
         sameSite: "lax",
