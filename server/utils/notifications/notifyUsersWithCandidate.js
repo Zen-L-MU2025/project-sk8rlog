@@ -3,7 +3,7 @@ import { PrismaClient } from "../../generated/prisma/index.js";
 const prisma = new PrismaClient();
 
 // Grab top candidate for each user lined up and emit the notification through the WebSocket
-const notifyUsers = async (usersToNotify, socketServer) => {
+const notifyUsersWithCandidate = async (usersToNotify, socketServer) => {
     usersToNotify.forEach(async (user) => {
         // Acquire candidates and pick out top candidate (first in array)
         const res = await fetch(`http://localhost:3000/recommendations/acquireCandidates/for/${user.userID}`).catch((error) => {
@@ -37,4 +37,4 @@ const notifyUsers = async (usersToNotify, socketServer) => {
     });
 };
 
-export default notifyUsers;
+export default notifyUsersWithCandidate;

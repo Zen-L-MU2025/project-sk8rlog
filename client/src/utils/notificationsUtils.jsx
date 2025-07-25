@@ -39,9 +39,9 @@ export const formatNotification = (notification, toggleNotifications) => {
             const post = data;
             return (
                 <p key={timestamp}>
-                    {timestamp} | Hey {recipient}, you might be interested in seing this&nbsp;
-                    <Link to={`/post/${post.postID}`} onClick={toggleNotifications}>
-                        post
+                    {timestamp} | Hey {recipient}, you might be interested in seeing this&nbsp;
+                    <Link to={`/h/_/post/${post.postID}`} onClick={toggleNotifications}>
+                        post&nbsp;
                     </Link>
                     from {post.authorIdentifier}!
                 </p>

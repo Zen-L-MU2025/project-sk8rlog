@@ -56,6 +56,7 @@ export const LIKE_WEIGHT = 0.1;
 export const COMMENT_WEIGHT = 0.33;
 const AVERAGE_WORDS_READ_PER_MINUTE = 230;
 export const AVERAGE_WORDS_READ_PER_SECOND = AVERAGE_WORDS_READ_PER_MINUTE / SECONDS_IN_MINUTE;
+export const POST_SCORE_THRESHOLD = 0.5;
 
 // Used in profile ranking
 export const POST_OVERALL_WEIGHT = 0.7;
@@ -87,8 +88,8 @@ export const UNFOLLOW = "unfollow";
 // WebSocket event types
 export const CONNECTION = "connection";
 export const DISCONNECT = "disconnect";
-export const REQUEST_NOTIFICATION = "request notification";
 export const ENTER_ROOM = "enter room";
+export const NEW_POST = "new post";
 export const DELIVER_NOTIFICATION = "deliver notification";
 // DELIVER_NOTIFICATION subtypes
 export const USER_SUGGESTION = "user suggestion";

@@ -1,9 +1,10 @@
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import { NEW_POST } from "/src/utils/constants.js";
 import axios from "axios";
 
 // Uploads a post, starting with the file attachment to GCS and then the full post data to server
 // Updates user's posts array state when complete
-export const uploadPost = async (postType, formData, userID, location) => {
+export const uploadPost = async (postType, formData, user, socket) => {
     const textContent = await formData.get("textContent");
     const file = await formData.get("postFile");
 
@@ -23,7 +24,17 @@ export const uploadPost = async (postType, formData, userID, location) => {
             console.error("uploadFile error: ", error);
         });
 
-    await axios.post(`${baseUrl}/posts/create/${userID}`, { textContent, location, postType, fileURL });
+    // Create the post in DB and fire socket event to trigger post notification
+    await axios
+        .post(`${baseUrl}/posts/create/${user.userID}`, { textContent, location: user.location, postType, fileURL })
+        .then((res) => {
+            const post = res.data.post;
+            post["authorIdentifier"] = user.name || `@${user.username}`;
+            socket.emit(NEW_POST, post);
+        })
+        .catch((error) => {
+            console.error("createPost error: ", error);
+        });
 };
 
 // Provided a postID, deletes the post and updates the user's posts array state
