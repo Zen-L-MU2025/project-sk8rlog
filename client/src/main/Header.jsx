@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router";
 
 import UserContext from "/src/utils/UserContext.js";
+import NotificationsModal from "/src/main/Modals/NotificationsModal";
 import { logout } from "/src/utils/userUtils/userAccessUtils.js";
 import { handleNotificationStatuses, formatNotification } from "/src/utils/notificationsUtils.jsx";
 
@@ -48,20 +49,13 @@ const Header = ({ HEADER_TEXT, activeUser }) => {
                 </button>
             </Link>
 
-            <div className="notificationsContainer">
-                <img className="notificationsToggle" onClick={toggleNotifications} src={notificationBell} />
-                {isShowingNotifications && (
-                    <div className="notifications">
-                        {notifications?.length ? (
-                            notifications.map((notification) => {
-                                return formatNotification(notification, toggleNotifications);
-                            })
-                        ) : (
-                            <p>No notifications...</p>
-                        )}
-                    </div>
-                )}
-            </div>
+            <NotificationsModal
+                toggleNotifications={toggleNotifications}
+                notificationBell={notificationBell}
+                isShowingNotifications={isShowingNotifications}
+                notifications={notifications}
+                formatNotification={formatNotification}
+            />
 
             {/* Switch the div nesting of the gear icon so that it's aligned with the buttons when they're visible*/}
             {!isIconOverlayOpen && <img className="gearIcon" onClick={toggleIconOverlay} src={gear} alt="gear icon" />}
