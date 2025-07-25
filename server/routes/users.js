@@ -111,7 +111,7 @@ router.get("/find/:userID", async (req, res, _next) => {
             return res.status(STATUS_CODES.NOT_FOUND);
         }
 
-        res.status(STATUS_CODES.OK).json({ user });
+        return res.status(STATUS_CODES.OK).json({ user });
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
     }
