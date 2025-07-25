@@ -11,7 +11,7 @@ const tokenize = async (post, activeUser, action) => {
     const content = post.description;
     const filteredContent = await filterTokens(content);
 
-    const tokensUsedInThisInstance = [];
+    const tokensUsedInThisInstance = new Set();
 
     filteredContent.forEach((token) => {
         // If the token is not in the user's frequency map, initialize it
@@ -24,9 +24,9 @@ const tokenize = async (post, activeUser, action) => {
         userFrequency[token]["totalFrequencyAcrossLikedPosts"] = (userFrequency[token].totalFrequencyAcrossLikedPosts || 0) + frequencyFactor;
 
         // For every unique token in the post, increment/decrement the total number of posts the token is present in by 1/-1
-        if (!tokensUsedInThisInstance.includes(token)) {
+        if (!tokensUsedInThisInstance.has(token)) {
             userFrequency[token].likedPostsPresentIn = (userFrequency[token].likedPostsPresentIn || 0) + frequencyFactor;
-            tokensUsedInThisInstance.push(token);
+            tokensUsedInThisInstance.add(token);
         }
     });
 

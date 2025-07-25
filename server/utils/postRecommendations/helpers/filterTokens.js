@@ -1,4 +1,4 @@
-import { removeStopwords, eng } from "stopword";
+import { removeStopwords } from "stopword";
 import { NON_ALPHANUMERIC_REGEX } from "../../constants.js";
 
 // Filter out stop words and non-alphanumeric characters from the content of a post

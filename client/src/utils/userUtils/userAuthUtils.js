@@ -44,7 +44,7 @@ export const refreshUserSession = async (setActiveUser) => {
         return;
     }
 
-    const res = await axios.get(`${baseUrl}/users/${userID}`, { withCredentials: true }).catch((error) => {
+    const res = await axios.get(`${baseUrl}/users/find/${userID}`, { withCredentials: true }).catch((error) => {
         console.error("verifyAccess error: ", error);
     });
 

@@ -1,6 +1,6 @@
 const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 import axios from "axios";
-import { FOLLOW, UNFOLLOW } from "../constants.js";
+import { FOLLOW } from "../constants.js";
 
 // Finds a user by provided ID and sets corresponding user in state
 export const getUserByID = async (userID, setUser) => {

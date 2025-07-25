@@ -24,7 +24,6 @@ const ProfileHead = ({ userToDisplay, setProfileContentView, toggleCreatePostMod
                     {userToDisplay?.name || ""} <em>{`@${userToDisplay?.username}`}</em>
                 </p>
                 <p>📍 {userToDisplay?.location || "Location not set"}</p>
-                <p>Bio: {userToDisplay?.bio || "No bio provided"}</p>
                 {!isSelfProfile && (
                     <button
                         className="followButton"
