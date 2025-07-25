@@ -13,7 +13,9 @@ const scorePosts = async (posts, activeUser, scoringMode) => {
         scoringMode = RANKING_MODES.POPULAR;
     }
 
-    posts = await filterPostsByCutoff(posts);
+    if (scoringMode === RANKING_MODES.RECOMMENDED) {
+        posts = await filterPostsByCutoff(posts);
+    }
 
     // Find the user's post type and length biases
     const { portionOfLikedPostsThatAreClips, avgLengthOfLikedPosts } = await calculateBiasFactors(activeUser);
