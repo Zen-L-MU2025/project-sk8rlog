@@ -77,7 +77,7 @@ export const NON_ALPHANUMERIC_REGEX = /[^a-zA-Z0-9]/;
 // For filtering posts
 export const RANKING_MODES = {
     RECOMMENDED: "reccommended",
-    LATEST: "latitudeest",
+    LATEST: "latest",
     POPULAR: "popular",
     NEAR_YOU: "near_you",
     DEFAULT: "default",
