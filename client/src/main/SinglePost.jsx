@@ -65,6 +65,10 @@ const SinglePost = () => {
     };
 
     const handleCommentFormSubmit = () => {
+        if (commentBoxContent === "") {
+            window.alert("You can't submit an empty comment!");
+            return;
+        }
         createComment(commentBoxContent, activeUser, postID, setComments);
         setCommentBoxContent("");
     };
