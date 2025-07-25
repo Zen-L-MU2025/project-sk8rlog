@@ -185,6 +185,8 @@ router.put("/:postID/likes/:action", async (req, res, _next) => {
             where: { postID: postID },
             data: { likeCount: action === INCREMENT ? post.likeCount + 1 : post.likeCount - 1 },
         });
+
+        return res.status(STATUS_CODES.OK).json({ message: "Like count updated" });
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error });
     }
