@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import { CONNECTION, DISCONNECT, ENTER_ROOM, NEW_POST } from "./constants.js";
+import notifyUsersWithPost from "./notifications/notifyUsersWithPost.js";
 
 // Creates a websocket server and listens for notification requests
 export const createWebSocket = (server, corsConfig) => {
@@ -9,7 +10,7 @@ export const createWebSocket = (server, corsConfig) => {
         socket.on(DISCONNECT, () => {});
 
         socket.on(NEW_POST, (post) => {
-            console.log("Ground control to Major Tom", post);
+            notifyUsersWithPost(post, socketServer);
         });
 
         socket.on(ENTER_ROOM, (userID) => {
