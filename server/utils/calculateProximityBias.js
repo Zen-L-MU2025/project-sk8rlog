@@ -10,11 +10,12 @@ const calculateDistance = (locationStringA, locationStringB) => {
 };
 
 // Calculates distance between two locations in km and generates a proximity bias score based on it
-const calculateProximityBias = (post, locationStringA, locationStringB) => {
+// A post can be optionally provided if we're calculating proximity bias between user and post
+const calculateProximityBias = (post = null, locationStringA, locationStringB) => {
     const doesNotApply = locationStringA === LOCATIONS.DEFAULT || locationStringB === LOCATIONS.DEFAULT;
 
     const distanceInKM = doesNotApply ? NOT_APPLICABLE : calculateDistance(locationStringA, locationStringB);
-    post["distanceFromUser"] = distanceInKM;
+    if (post) post["distanceFromUser"] = distanceInKM;
 
     // Proximity score base cases
     if (doesNotApply) return 0;
