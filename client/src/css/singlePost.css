@@ -1,6 +1,10 @@
 @keyframes slowFadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 .page {
@@ -21,35 +25,29 @@
     color: rgb(40, 154, 195);
     cursor: pointer;
 }
-.location {
-    margin-bottom: -20px;
-}
 
 .singlePostMedia {
-    width: 500px;
-    height: 400px;
+    width: 100%;
+    max-height: 250px;
+}
 
-
-    /* Pending Implementation */
-    /* width: 80vw;
-    height: 40vh;
-    max-width: 500px;
-    max-height: 400px;
-    object-fit: cover;
-    aspect-ratio: auto; */
+.postDescription {
+    width: 100%;
+    max-width: 300px;
 }
 
 .singlePostComments {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-top: 30px;
 }
 
 .commentsBox {
     display: flex;
     flex-flow: column-reverse;
     align-items: baseline;
-    width: 500px;
+    width: 95%;
     height: 200px;
     padding: 10px;
     border-radius: 3px;
@@ -61,11 +59,12 @@
 .comment {
     display: flex;
     flex-flow: row;
+    border-bottom: 0.5px solid #3b0747;
 }
 
 .commentDate {
     margin: 0 10px 0 5px;
-    color: rgba(211, 211, 211, 0.5)
+    color: rgba(211, 211, 211, 0.5);
 }
 
 .commentContent {
@@ -75,11 +74,11 @@
 .addCommentBox {
     display: flex;
     flex-flow: row;
-    gap: 10px
+    gap: 10px;
 }
 
 .commentInput {
-    width: 80%
+    width: 80%;
 }
 
 .likes {
