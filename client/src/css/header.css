@@ -25,6 +25,14 @@
     .toProfile#iconOverlayOpen_true {
         margin-bottom: 15px;
     }
+
+    .toProfile {
+        margin-right: 10px;
+    }
+
+    .gearIcon {
+        margin-left: 10px;
+    }
 }
 
 .gearIcon {
