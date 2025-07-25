@@ -17,11 +17,16 @@
     border-radius: 50%;
 }
 
-.noticationModalExit {
-    font-size: large;
+.notifcationModalExit {
+    width: 15px;
+    height: 15px;
+    margin-top: 15px;
+    transition: all 0.1s ease-in-out;
 }
 .notifcationModalExit:hover {
+    padding: 3px;
     border: 1px solid #3b0747;
+    border-radius: 3px;
 }
 
 @media screen and (max-width: 804px) {

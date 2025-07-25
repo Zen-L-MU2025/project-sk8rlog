@@ -1,4 +1,5 @@
 import "/src/css/notifications.css";
+import x_icon from "/src/assets/xicon.svg";
 
 const NotificationsModal = ({ toggleNotifications, notificationBell, isShowingNotifications, notifications, formatNotification }) => {
     return (
@@ -7,9 +8,7 @@ const NotificationsModal = ({ toggleNotifications, notificationBell, isShowingNo
             {isShowingNotifications && (
                 <>
                     <div className="notifications">
-                        <p className="notifcationModalExit" onClick={toggleNotifications}>
-                            ✖️
-                        </p>
+                        <img className="notifcationModalExit" onClick={toggleNotifications} src={x_icon} />
                         {notifications?.length ? (
                             notifications.map((notification) => {
                                 return formatNotification(notification, toggleNotifications);
