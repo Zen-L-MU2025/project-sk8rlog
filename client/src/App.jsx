@@ -39,7 +39,7 @@ function App() {
 
     return (
         <>
-            <UserContext.Provider value={{ activeUser, setActiveUser, notifications, hasNewNotifications, setHasNewNotifications }}>
+            <UserContext.Provider value={{ activeUser, setActiveUser, notifications, hasNewNotifications, setHasNewNotifications, socket }}>
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<LoginModal />} />

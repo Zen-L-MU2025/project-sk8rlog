@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
+import UserContext from "/src/utils/UserContext.js";
 import { uploadPost } from "/src/utils/postUtils/postDataUtils";
 import { CLIPS, BLOGS, POST_TYPE_DEFAULT } from "/src/utils/constants";
 
 import "/src/css/createPostModal.css";
 
 const CreatePostModal = ({ activeUser, toggleCreatePostModal, setIsOutdated }) => {
+    const { socket } = useContext(UserContext);
+
     const [postType, setPostType] = useState(POST_TYPE_DEFAULT);
 
     const handleForm = async (formData) => {
-        await uploadPost(postType, formData, activeUser.userID, activeUser.location);
+        await uploadPost(postType, formData, activeUser, socket);
         setIsOutdated(true);
         toggleCreatePostModal();
     };
