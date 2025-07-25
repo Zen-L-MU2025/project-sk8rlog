@@ -18,8 +18,11 @@ const computeMeaningfulInteractionBonus = async (user, candidatePosts) => {
     let userLikesTally = 0;
     let userCommentsTally = 0;
 
+    // Convert user's liked posts to a set for quick lookup
+    const userLikedPostsSet = new Set(user.likedPosts);
+
     for (const post of postsToAssess) {
-        if (user.likedPosts.includes(post.postID)) userLikesTally++;
+        if (userLikedPostsSet.has(post.postID)) userLikesTally++;
 
         const userCommentsOnPost = await prisma.comment.findMany({ where: { commentID: { in: post.comments }, authorID: user.userID } });
         userCommentsTally += userCommentsOnPost.length;
