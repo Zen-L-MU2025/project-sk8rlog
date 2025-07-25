@@ -6,7 +6,7 @@ import getPostLength from "./helpers/getPostLength.js";
 
 // Wrapper function for calculateSinglePostScore > takes in a user obj as argument to generate full set of params
 // Used in the post notifications flow
-export const calculateSinglePostScoreWithUser = async (post, user) => {
+export const calculateSinglePostScoreWithUserObject = async (post, user) => {
     const userFrequency = user.user_Frequency;
     const { portionOfLikedPostsThatAreClips, avgLengthOfLikedPosts } = await calculateBiasFactors(user);
     const portionOfLikedPostsThatAreBlogs = 1 - portionOfLikedPostsThatAreClips;
