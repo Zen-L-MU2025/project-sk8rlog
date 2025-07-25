@@ -8,8 +8,8 @@ export const uploadPost = async (postType, formData, user, socket) => {
     const textContent = await formData.get("textContent");
     const file = await formData.get("postFile");
 
-    let fileFormData = await new FormData();
-    await fileFormData.append("postFile", file);
+    let fileFormData = new FormData();
+    fileFormData.append("postFile", file);
 
     let fileURL = "";
 

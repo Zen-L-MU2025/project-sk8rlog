@@ -14,7 +14,7 @@ export const enableCORSinBucket = async () => {
         const bucket = storage.bucket(BUCKET_NAME);
 
         // Enable CORS
-        await bucket.setCorsConfiguration([
+        bucket.setCorsConfiguration([
             {
                 MAX_AGE,
                 method: [METHOD],
