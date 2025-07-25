@@ -20,7 +20,7 @@ const HomePostsView = ({ postType }) => {
         if (activeUser?.userID) {
             getAllPostsByType(postType, setPosts, { scoringMode: RANKING_MODES.RECOMMENDED, activeUser }, setIsInitialized);
         }
-    }, [activeUser]);
+    }, [activeUser?.userID]);
 
     if (!isInitialized) {
         return (
