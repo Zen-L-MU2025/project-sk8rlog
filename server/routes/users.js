@@ -178,18 +178,4 @@ router.put("/:userID/followedUsers/:action", async (req, res, _next) => {
     }
 });
 
-// GET /users/location
-// Returns the user's location
-router.get("/location", async (req, res, _next) => {
-    console.log("enter route");
-    try {
-        console.log("enter try");
-        const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-        return res.status(STATUS_CODES.OK).json({ location: ip });
-    } catch (error) {
-        console.log("caught");
-        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
-    }
-});
-
 module.exports = router;
