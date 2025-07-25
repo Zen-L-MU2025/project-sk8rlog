@@ -94,3 +94,30 @@ export const DELIVER_NOTIFICATION = "deliver notification";
 // DELIVER_NOTIFICATION subtypes
 export const USER_SUGGESTION = "user suggestion";
 export const POST_SUGGESTION = "post suggestion";
+
+/**********************************************/
+
+/* LOCATIONS */
+
+// Pool of locations the user could select from in registration
+export const LOCATIONS = {
+    DEFAULT: "none",
+    MIA: "Miami",
+    SEA: "Seattle",
+    SFO: "San Francisco",
+    LAX: "Los Angeles",
+    NYC: "New York City",
+};
+
+// Locations mapped to coordinates for distance calculations
+export const LOCATIONS_COORDINATES = {
+    [LOCATIONS.DEFAULT]: { latitude: 0, longitude: 0 },
+    [LOCATIONS.MIA]: { latitude: 25.782, longitude: -80.193 },
+    [LOCATIONS.SEA]: { latitude: 47.6062, longitude: -122.3321 },
+    [LOCATIONS.SFO]: { latitude: 37.6213, longitude: -122.379 },
+    [LOCATIONS.LAX]: { latitude: 34.0522, longitude: -118.2437 },
+    [LOCATIONS.NYC]: { latitude: 40.73061, longitude: -73.935242 },
+};
+
+// Default proximity bias when distance is 0
+export const BASE_PROXIMITY_BIAS = 2;

@@ -20,8 +20,18 @@ const scorePosts = async (posts, activeUser, scoringMode) => {
     const { portionOfLikedPostsThatAreClips, avgLengthOfLikedPosts } = await calculateBiasFactors(activeUser);
     const portionOfLikedPostsThatAreBlogs = 1 - portionOfLikedPostsThatAreClips;
 
+    // Grab user's location for proximity biasing
+    const userLocation = activeUser.location;
+
     for (const post of posts) {
-        await calculateSinglePostScore(post, userFrequency, avgLengthOfLikedPosts, portionOfLikedPostsThatAreClips, portionOfLikedPostsThatAreBlogs);
+        await calculateSinglePostScore(
+            post,
+            userFrequency,
+            avgLengthOfLikedPosts,
+            portionOfLikedPostsThatAreClips,
+            portionOfLikedPostsThatAreBlogs,
+            userLocation
+        );
     }
 
     // Sort posts by either recommendation score or popularity
