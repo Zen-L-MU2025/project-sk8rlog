@@ -86,7 +86,6 @@ export const UNFOLLOW = "unfollow";
 // WebSocket event types
 export const CONNECT = "connect";
 export const DISCONNECT = "disconnect";
-export const REQUEST_NOTIFICATION = "request notification";
 export const ENTER_ROOM = "enter room";
 export const NEW_POST = "new post";
 export const DELIVER_NOTIFICATION = "deliver notification";
