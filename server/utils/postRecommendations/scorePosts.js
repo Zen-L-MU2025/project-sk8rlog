@@ -13,7 +13,6 @@ const scorePosts = async (posts, activeUser, scoringMode) => {
         scoringMode = RANKING_MODES.POPULAR;
     }
 
-    // [Testing] Omit as comment when testing
     posts = await filterPostsByCutoff(posts);
 
     // Find the user's post type and length biases
