@@ -101,9 +101,9 @@ router.post("/logout", async (req, res, _next) => {
     }
 });
 
-// GET /users/:userID
+// GET /users/find/:userID
 // Returns the user object for the given userID
-router.get("/:userID", async (req, res, _next) => {
+router.get("/find/:userID", async (req, res, _next) => {
     try {
         const { userID } = req.params;
         const user = await prisma.user.findUnique({ where: { userID } });
@@ -174,6 +174,20 @@ router.put("/:userID/followedUsers/:action", async (req, res, _next) => {
 
         return res.status(STATUS_CODES.OK).json({ message: "Followed users updated" });
     } catch (error) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
+    }
+});
+
+// GET /users/location
+// Returns the user's location
+router.get("/location", async (req, res, _next) => {
+    console.log("enter route");
+    try {
+        console.log("enter try");
+        const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+        return res.status(STATUS_CODES.OK).json({ location: ip });
+    } catch (error) {
+        console.log("caught");
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error.message });
     }
 });
