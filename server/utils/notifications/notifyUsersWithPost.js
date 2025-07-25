@@ -1,4 +1,4 @@
-import { POST_SCORE_THRESHOLD, POST_SUGGESTION } from "../constants.js";
+import { POST_SCORE_THRESHOLD, POST_SUGGESTION, DELIVER_NOTIFICATION } from "../constants.js";
 import { calculateSinglePostScoreWithUserObject } from "../postRecommendations/calculateSinglePostScore.js";
 import { PrismaClient } from "../../generated/prisma/index.js";
 
