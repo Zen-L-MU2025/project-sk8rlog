@@ -8,8 +8,8 @@ export const createWebSocket = (server, corsConfig) => {
     socketServer.on(CONNECTION, (socket) => {
         socket.on(DISCONNECT, () => {});
 
-        socket.on(NEW_POST, () => {
-            console.log("request notification received from client");
+        socket.on(NEW_POST, (post) => {
+            console.log("Ground control to Major Tom", post);
         });
 
         socket.on(ENTER_ROOM, (userID) => {
