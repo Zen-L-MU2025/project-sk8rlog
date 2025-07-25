@@ -24,7 +24,8 @@ const calculateSinglePostScore = async (
 ) => {
     let rawPostScore = 0;
 
-    const popularityScore = post.likeCount * LIKE_WEIGHT + post.comments?.length * COMMENT_WEIGHT;
+    // Default popularity score to 1
+    const popularityScore = 1 + post.likeCount * LIKE_WEIGHT + post.comments?.length * COMMENT_WEIGHT;
 
     const filteredPostContent = await filterTokens(post.description);
     let overlap = {};
@@ -49,14 +50,15 @@ const calculateSinglePostScore = async (
     let postLength = await getPostLength(post);
     post["postLength"] = postLength;
 
-    // Calculate post length bias as percentage difference from average length of liked posts
+    // Calculate post length bias based on percentage disparity from average length of liked posts
     let postLengthBias = 1;
     if (avgLengthOfLikedPosts !== NOT_APPLICABLE) {
-        postLengthBias = Math.abs(1 - postLength / avgLengthOfLikedPosts);
+        const percentageLengthDisparity = Math.abs(1 - postLength / avgLengthOfLikedPosts) * 100;
+        postLengthBias = 1 / Math.sqrt(percentageLengthDisparity);
     }
 
     // Select appropriate post type bias
-    let typeBias = 1;
+    let typeBias = 0;
     if (portionOfLikedPostsThatAreClips !== NOT_APPLICABLE) {
         typeBias = post.type === CLIPS ? portionOfLikedPostsThatAreClips : portionOfLikedPostsThatAreBlogs;
     }
