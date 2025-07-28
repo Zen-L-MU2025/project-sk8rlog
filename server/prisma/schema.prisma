@@ -39,7 +39,7 @@ model Post {
   location          String
   type              String
   fileURL           String
-  clipLength        Float?
+  length            Int
   likeCount         Int     @default(0)
   comments          String[]  @default([])
 }

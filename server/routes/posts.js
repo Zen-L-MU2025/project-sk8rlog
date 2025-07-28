@@ -5,6 +5,7 @@ const { QUICKTIME, MOV, COMMENT, CREATE } = require("../utils/constants");
 const recalculateInteractionAverages = require("../utils/sessions/recalculateInteractionAverages").default;
 const scorePosts = require("../utils/postRecommendations/scorePosts").default;
 const { uploadFile, deleteFile } = require("../utils/googleCloudStorageUtils");
+const getPostLength = require("../utils/postRecommendations/helpers/getPostLength").default;
 
 const Multer = require("multer");
 const multer = Multer({
