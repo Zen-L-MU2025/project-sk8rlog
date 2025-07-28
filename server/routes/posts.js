@@ -6,6 +6,7 @@ const recalculateInteractionAverages = require("../utils/sessions/recalculateInt
 const scorePosts = require("../utils/postRecommendations/scorePosts").default;
 const { uploadFile, deleteFile } = require("../utils/googleCloudStorageUtils");
 const getPostLength = require("../utils/postRecommendations/helpers/getPostLength").default;
+const { waitForGCSToFinish } = require("../utils/googleCloudStorageUtils");
 
 const Multer = require("multer");
 const multer = Multer({
@@ -45,6 +46,10 @@ router.post("/uploadFile", multer.single("postFile"), async (req, res, _next) =>
         const DESTINATION = `${crypto.randomUUID()}.${extension}`;
         const objectURL = await uploadFile(req.file, DESTINATION);
 
+        console.log("calling waitForGCSToFinish");
+        await waitForGCSToFinish(objectURL);
+        console.log("done with GCS");
+
         return res.status(STATUS_CODES.CREATED).json({ fileURL: objectURL, message: "File uploaded" });
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error });
@@ -57,6 +62,10 @@ router.post("/create/:userID", async (req, res, _next) => {
     try {
         const { userID } = req.params;
         const { textContent, location, postType, fileURL } = req.body;
+        console.log(textContent, location, postType, fileURL);
+        console.log("getting post length");
+        const postLength = await getPostLength({ description: textContent, type: postType, fileURL });
+        console.log(`Post length: ${postLength}`);
 
         const post = await prisma.post.create({
             data: {
@@ -65,6 +74,7 @@ router.post("/create/:userID", async (req, res, _next) => {
                 location,
                 type: postType,
                 fileURL,
+                length: postLength,
             },
         });
 

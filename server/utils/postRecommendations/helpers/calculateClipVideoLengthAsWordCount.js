@@ -4,7 +4,7 @@ import { AVERAGE_WORDS_READ_PER_SECOND } from "../../constants.js";
 // Calculate a clip's video length translated to a "word count" using the average reading speed
 const calculateClipVideoLengthAsWordCount = async (fileURL) => {
     const clipLength = await getVideoDurationInSeconds(fileURL).catch((error) => {
-        console.error(error);
+        console.error(`getVideoDurationInSeconds: failed`);
     });
     const clipLengthAsWordCount = Math.ceil(clipLength * AVERAGE_WORDS_READ_PER_SECOND);
     return clipLengthAsWordCount;
