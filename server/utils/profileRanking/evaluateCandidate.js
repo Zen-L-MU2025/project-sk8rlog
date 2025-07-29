@@ -9,7 +9,7 @@ import calculateProximityBias from "../calculateProximityBias.js";
 // Evaluate a suggestion candidate for a user based on outlined metrics
 const evaluateCandidate = async (user, candidate) => {
     if (!user || !candidate) {
-        console.log("evaluateCandidate: user or candidate is null");
+        console.error("evaluateCandidate: user or candidate is null");
         return NaN;
     }
 

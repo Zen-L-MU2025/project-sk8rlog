@@ -24,7 +24,7 @@ const computeSimilarityScore = async (user, candidate) => {
             cosineSimilarityScore = isNaN(data.cosineSimilarityScore) ? NO_CORRELATION : data.cosineSimilarityScore;
         })
         .catch((err) => {
-            console.log(err);
+            console.error(err);
             cosineSimilarityScore = 0;
         });
 
