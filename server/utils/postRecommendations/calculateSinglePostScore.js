@@ -56,14 +56,10 @@ const calculateSinglePostScore = async (
         rawPostScore += tokenScore;
     }
 
-    // Get and save post length
-    let postLength = await getPostLength(post);
-    post["postLength"] = postLength;
-
     // Calculate post length bias based on percentage disparity from average length of liked posts
     let postLengthBias = 1;
     if (avgLengthOfLikedPosts !== NOT_APPLICABLE) {
-        const percentageLengthDisparity = Math.abs(1 - postLength / avgLengthOfLikedPosts) * 100;
+        const percentageLengthDisparity = Math.abs(1 - post.length / avgLengthOfLikedPosts) * 100;
         postLengthBias = 1 / Math.sqrt(percentageLengthDisparity);
     }
 
