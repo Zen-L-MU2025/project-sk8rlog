@@ -72,29 +72,15 @@ export const deleteFile = async (fileURL) => {
 
 // Timeout for GCS to finish uploading file on post creation
 export const waitForGCSToFinish = async (fileURL) => {
-    console.log("entered wfGCS");
-    const fetchInterval = 500;
+    const res = await fetch(fileURL, { method: "HEAD" }).catch((error) => {
+        console.error("waitForGCSToFinish: video URL fetch outright failed");
+    });
 
-    const checkForFile = async () => {
-        try {
-            // Use HEAD to prevent download
-            const res = await fetch(fileURL, { method: "HEAD" }).catch((error) => {
-                /* Do nothing, keep trying */
-                console.log("not ready yet");
-            });
-            if (res.ok) {
-                /* Ready */
-                console.log("ready");
-                return;
-            }
-        } catch (error) {
-            /* Do nothing, keep trying */
-        }
-
-        setTimeout(async () => {
-            return await checkForFile();
-        }, fetchInterval);
-    };
-
-    return await checkForFile();
+    if (res.ok) {
+        /* Ready */
+        return true;
+    } else {
+        /* Not ready yet */
+        return false;
+    }
 };

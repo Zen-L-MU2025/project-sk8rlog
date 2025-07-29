@@ -1,7 +1,7 @@
 const { PrismaClient } = require("../generated/prisma");
 const router = require("express").Router();
 const STATUS_CODES = require("../statusCodes");
-const { QUICKTIME, MOV, COMMENT, CREATE } = require("../utils/constants");
+const { QUICKTIME, MOV, COMMENT, CREATE, GCS_CHECK_INTERVAL } = require("../utils/constants");
 const recalculateInteractionAverages = require("../utils/sessions/recalculateInteractionAverages").default;
 const scorePosts = require("../utils/postRecommendations/scorePosts").default;
 const { uploadFile, deleteFile } = require("../utils/googleCloudStorageUtils");
@@ -46,9 +46,12 @@ router.post("/uploadFile", multer.single("postFile"), async (req, res, _next) =>
         const DESTINATION = `${crypto.randomUUID()}.${extension}`;
         const objectURL = await uploadFile(req.file, DESTINATION);
 
-        console.log("calling waitForGCSToFinish");
-        await waitForGCSToFinish(objectURL);
-        console.log("done with GCS");
+        // 'False' as in the URL is not ready yet, 'True' as in the URL is ready
+        while ((await waitForGCSToFinish(objectURL)) === false) {
+            setTimeout(async () => {
+                await waitForGCSToFinish(objectURL);
+            }, GCS_CHECK_INTERVAL);
+        }
 
         return res.status(STATUS_CODES.CREATED).json({ fileURL: objectURL, message: "File uploaded" });
     } catch (error) {
@@ -62,10 +65,7 @@ router.post("/create/:userID", async (req, res, _next) => {
     try {
         const { userID } = req.params;
         const { textContent, location, postType, fileURL } = req.body;
-        console.log(textContent, location, postType, fileURL);
-        console.log("getting post length");
         const postLength = await getPostLength({ description: textContent, type: postType, fileURL });
-        console.log(`Post length: ${postLength}`);
 
         const post = await prisma.post.create({
             data: {

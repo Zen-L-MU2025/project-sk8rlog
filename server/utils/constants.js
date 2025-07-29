@@ -7,6 +7,9 @@ export const MOV = "mov";
 // Used across recommendation utilities to drop values as needed
 export const NOT_APPLICABLE = -1;
 
+// Timeout for waitForGCSToFinish
+export const GCS_CHECK_INTERVAL = 500;
+
 /**********************************************/
 
 /* TIME */
