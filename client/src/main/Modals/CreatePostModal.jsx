@@ -11,6 +11,8 @@ const CreatePostModal = ({ activeUser, toggleCreatePostModal, setIsOutdated }) =
 
     const [postType, setPostType] = useState(POST_TYPE_DEFAULT);
 
+    const [uploadButtonText, setUploadButtonText] = useState("Upload");
+
     const handleForm = async (formData) => {
         await uploadPost(postType, formData, activeUser, socket);
         setIsOutdated(true);
@@ -54,7 +56,16 @@ const CreatePostModal = ({ activeUser, toggleCreatePostModal, setIsOutdated }) =
                     </>
                 )}
 
-                {postType !== POST_TYPE_DEFAULT && <button type="submit">Upload</button>}
+                {postType !== POST_TYPE_DEFAULT && (
+                    <button
+                        type="submit"
+                        onClick={() => {
+                            setUploadButtonText("Uploading...");
+                        }}
+                    >
+                        {uploadButtonText}
+                    </button>
+                )}
             </form>
         </section>
     );
