@@ -69,3 +69,18 @@ export const deleteFile = async (fileURL) => {
         console.error(error);
     }
 };
+
+// Timeout for GCS to finish uploading file on post creation
+export const waitForGCSToFinish = async (fileURL) => {
+    const res = await fetch(fileURL, { method: "HEAD" }).catch((error) => {
+        console.error("waitForGCSToFinish: video URL fetch outright failed");
+    });
+
+    if (res.ok) {
+        /* Ready */
+        return true;
+    } else {
+        /* Not ready yet */
+        return false;
+    }
+};

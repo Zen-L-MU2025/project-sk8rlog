@@ -7,7 +7,7 @@ const notifyUsersWithCandidate = async (usersToNotify, socketServer) => {
     usersToNotify.forEach(async (user) => {
         // Acquire candidates and pick out top candidate (first in array)
         const res = await fetch(`http://localhost:3000/recommendations/acquireCandidates/for/${user.userID}`).catch((error) => {
-            console.log(error);
+            console.error(error);
         });
         const candidates = await res.json();
 

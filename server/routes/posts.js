@@ -1,10 +1,12 @@
 const { PrismaClient } = require("../generated/prisma");
 const router = require("express").Router();
 const STATUS_CODES = require("../statusCodes");
-const { QUICKTIME, MOV, COMMENT, CREATE } = require("../utils/constants");
+const { QUICKTIME, MOV, COMMENT, CREATE, GCS_CHECK_INTERVAL } = require("../utils/constants");
 const recalculateInteractionAverages = require("../utils/sessions/recalculateInteractionAverages").default;
 const scorePosts = require("../utils/postRecommendations/scorePosts").default;
 const { uploadFile, deleteFile } = require("../utils/googleCloudStorageUtils");
+const getPostLength = require("../utils/postRecommendations/helpers/getPostLength").default;
+const { waitForGCSToFinish } = require("../utils/googleCloudStorageUtils");
 
 const Multer = require("multer");
 const multer = Multer({
@@ -44,6 +46,13 @@ router.post("/uploadFile", multer.single("postFile"), async (req, res, _next) =>
         const DESTINATION = `${crypto.randomUUID()}.${extension}`;
         const objectURL = await uploadFile(req.file, DESTINATION);
 
+        // 'False' as in the URL is not ready yet, 'True' as in the URL is ready
+        while ((await waitForGCSToFinish(objectURL)) === false) {
+            setTimeout(async () => {
+                await waitForGCSToFinish(objectURL);
+            }, GCS_CHECK_INTERVAL);
+        }
+
         return res.status(STATUS_CODES.CREATED).json({ fileURL: objectURL, message: "File uploaded" });
     } catch (error) {
         return res.status(STATUS_CODES.SERVER_ERROR).json({ message: error });
@@ -56,6 +65,7 @@ router.post("/create/:userID", async (req, res, _next) => {
     try {
         const { userID } = req.params;
         const { textContent, location, postType, fileURL } = req.body;
+        const postLength = await getPostLength({ description: textContent, type: postType, fileURL });
 
         const post = await prisma.post.create({
             data: {
@@ -64,6 +74,7 @@ router.post("/create/:userID", async (req, res, _next) => {
                 location,
                 type: postType,
                 fileURL,
+                length: postLength,
             },
         });
 

@@ -6,7 +6,9 @@ const getPostLength = async (post) => {
     let postLength = new String(post.description).split(NON_ALPHANUMERIC_REGEX).length;
 
     if (post.type === CLIPS) {
-        postLength += await calculateClipVideoLengthAsWordCount(post.fileURL);
+        postLength += await calculateClipVideoLengthAsWordCount(post.fileURL).catch((error) => {
+            console.error("calculateClipVideoLengthAsWordCount: failed");
+        });
     }
 
     return postLength;

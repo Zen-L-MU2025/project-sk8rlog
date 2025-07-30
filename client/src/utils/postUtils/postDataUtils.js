@@ -55,29 +55,3 @@ export const deletePost = async (post, setUserPosts) => {
         console.error("deletePost/File: ", error);
     });
 };
-
-// Timeout for GCS to finish uploading file
-export const waitForGCSToFinish = async (fileURL, setFileIsLoaded) => {
-    const fetchInterval = 500;
-
-    const checkForFile = async () => {
-        try {
-            // Use HEAD to prevent download
-            const res = await fetch(fileURL, { method: "HEAD" }).catch((error) => {
-                /* Do nothing, keep trying */
-            });
-            if (res.ok) {
-                setFileIsLoaded(true);
-                return;
-            }
-        } catch (error) {
-            /* Do nothing, keep trying */
-        }
-
-        setTimeout(() => {
-            return checkForFile();
-        }, fetchInterval);
-    };
-
-    return await checkForFile();
-};
