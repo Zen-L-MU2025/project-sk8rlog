@@ -16,6 +16,16 @@ export const LOCATIONS = {
     NYC: "New York City",
 };
 
+// Locations mapped to coordinates for distance calculations
+export const LOCATIONS_COORDINATES = {
+    [LOCATIONS.DEFAULT]: { latitude: 0, longitude: 0 },
+    [LOCATIONS.MIA]: { latitude: 25.782, longitude: -80.193 },
+    [LOCATIONS.SEA]: { latitude: 47.6062, longitude: -122.3321 },
+    [LOCATIONS.SFO]: { latitude: 37.6213, longitude: -122.379 },
+    [LOCATIONS.LAX]: { latitude: 34.0522, longitude: -118.2437 },
+    [LOCATIONS.NYC]: { latitude: 40.73061, longitude: -73.935242 },
+};
+
 // Post types to dictate views in app
 export const CLIPS = "Clips";
 export const BLOGS = "Blogs";

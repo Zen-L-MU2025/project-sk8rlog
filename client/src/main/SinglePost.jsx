@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, Link, useNavigate } from "react-router";
+import {APIProvider, Map} from '@vis.gl/react-google-maps';
 
 import Header from "./Header";
 import Footer from "./Footer";
@@ -9,7 +10,7 @@ import { getUserByID } from "/src/utils/userUtils/userDataUtils.js";
 import { verifyAccess, refreshUserSession } from "/src/utils/userUtils/userAuthUtils.js";
 import { getPostByID, getComments } from "/src/utils/postUtils/postRetrievalUtils";
 import { handleLikeOrUnlikePost, createComment } from "/src/utils/postUtils/postInteractionUtils";
-import { CLIPS, BLOGS, toSingular, ORIGINS, LIKE, UNLIKE, PROFILE_ORIGIN_NOT_APPLICABLE } from "/src/utils/constants";
+import { CLIPS, BLOGS, toSingular, ORIGINS, LIKE, UNLIKE, PROFILE_ORIGIN_NOT_APPLICABLE, LOCATIONS_COORDINATES } from "/src/utils/constants";
 
 import "/src/css/singlePost.css";
 import emptyheart from "/src/assets/heart.png";
@@ -75,8 +76,19 @@ const SinglePost = () => {
 
     return (
         <>
+
             <Header HEADER_TEXT={HEADER_TEXT} activeUser={activeUser} />
             <div className="page">
+                {/* <APIProvider apiKey={"AIzaSyClHgPa2BgQ1iLSWq84Vrd2Dag0j9pnuww"}>
+                    <Map
+                    style={{width: '50vw', height: '50vh'}}
+                    defaultCenter={{lat: LOCATIONS_COORDINATES[post?.location]?.latitude, lng: LOCATIONS_COORDINATES[post?.location]?.longitude}}
+                    defaultZoom={7}
+                    gestureHandling={'greedy'}
+                    disableDefaultUI={true}
+                    />
+                </APIProvider> */}
+
                 <section className="singlePost">
                     <div className="singlePostContent">
                         <h3>
