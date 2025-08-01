@@ -79,7 +79,7 @@ const SinglePost = () => {
 
             <Header HEADER_TEXT={HEADER_TEXT} activeUser={activeUser} />
             <div className="page">
-                {/* <APIProvider apiKey={"AIzaSyClHgPa2BgQ1iLSWq84Vrd2Dag0j9pnuww"}>
+                {/* <APIProvider apiKey={"key"}>
                     <Map
                     style={{width: '50vw', height: '50vh'}}
                     defaultCenter={{lat: LOCATIONS_COORDINATES[post?.location]?.latitude, lng: LOCATIONS_COORDINATES[post?.location]?.longitude}}
