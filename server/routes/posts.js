@@ -113,16 +113,20 @@ router.post("/all/:type/:scoringMode", async (req, res, _next) => {
     try {
         const { activeUser } = req.body;
         const { type, scoringMode } = req.params;
+        console.log(type, "here1");
 
         const posts = await prisma.post.findMany({
             where: { type },
         });
+        console.log(type, "here2");
 
         if (posts.length < 1) {
             return res.status(STATUS_CODES.NO_CONTENT).json({ posts, message: "No posts found" });
         }
+        console.log(type, "here3");
 
-        let rankedPosts = await scorePosts(posts, activeUser, scoringMode);
+        let rankedPosts = await scorePosts(posts, activeUser, scoringMode).catch((error) => {console.error(error)});
+        console.log(type, "here4");
 
         return res.status(STATUS_CODES.OK).json({ posts: rankedPosts, message: "Posts retrieved" });
     } catch (error) {

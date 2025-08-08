@@ -23,6 +23,7 @@ const calculateBiasFactors = async (activeUser) => {
 
     for (const postID of activeUser.likedPosts) {
         const post = await prisma.post.findUnique({ where: { postID } });
+        if (!post) continue;
 
         totalLikedContentLength += await getPostLength(post);
 

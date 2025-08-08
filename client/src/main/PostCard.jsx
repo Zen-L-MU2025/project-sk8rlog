@@ -54,7 +54,7 @@ const PostCard = ({ post, postType, origin, profileID = PROFILE_ORIGIN_NOT_APPLI
                     />
                 )}
                 {postType === BLOGS && <img className={`${postType}PostCardEmbed`} src={post.fileURL} alt={post.title} />}
-                <p>{post.description}</p>
+                <p>{post.description.substring(0, 20) + (post.description.length > 20 ? "..." : "")}</p>
 
                 {activeUser?.likedPosts?.includes(post.postID) ? (
                     <img className="likeButton" src={fullheart} onClick={(event) => handleHeartClick(event, UNLIKE)} />

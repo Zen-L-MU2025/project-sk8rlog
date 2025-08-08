@@ -10,6 +10,7 @@ const getUsersToSendCandidateTo = async (now) => {
     const halfHourAfter = nowAsSecondOfDay + HALF_HOUR_IN_SECONDS;
 
     const users = await prisma.user.findMany();
+    return users;
 
     // Iterate users and calculate best times
     for (const user of users) {
